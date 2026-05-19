@@ -151,17 +151,23 @@ fn lock_is_byte_identical_across_two_separate_processes() {
     let manifest = sb.join("shellpkg.lisp");
     write_manifest(&manifest, "alpha", &pkg);
 
-    // Two separate child processes; each gets its own cache root.
-    // If anything in the lock pipeline carried hidden process-local
-    // state (PIDs in paths, time-dependent serialization, HashMap
-    // iteration order leaking), this test would expose it.
-    let cache_a = sb.join("cache-a");
-    let cache_b = sb.join("cache-b");
+    // Two separate child processes sharing one cache root — this
+    // models the canonical "same operator, same machine, two
+    // invocations" determinism claim. The lockfile records
+    // `materialized-path` which is rooted in the cache, so using
+    // different caches would (correctly) yield different bytes; that
+    // would be testing cross-machine reproducibility (which estante
+    // doesn't promise for absolute materialized paths) rather than
+    // pipeline determinism. If anything in the lock pipeline carried
+    // hidden process-local state (PIDs in paths, time-dependent
+    // serialization, HashMap iteration order leaking), this test
+    // would expose it.
+    let cache = sb.join("cache");
     let lock_a = sb.join("a.lock.lisp");
     let lock_b = sb.join("b.lock.lisp");
 
-    let bytes_a = run_lock(&manifest, &lock_a, &cache_a);
-    let bytes_b = run_lock(&manifest, &lock_b, &cache_b);
+    let bytes_a = run_lock(&manifest, &lock_a, &cache);
+    let bytes_b = run_lock(&manifest, &lock_b, &cache);
 
     // String equality (the wire form).
     assert_eq!(
@@ -393,12 +399,12 @@ fn lock_emit_receipt_writes_both_artifacts_deterministically() {
     let manifest = sb.join("shellpkg.lisp");
     write_manifest(&manifest, "pi", &pkg);
 
-    let cache_a = sb.join("cache-a");
+    let cache = sb.join("cache");
     let lockfile = sb.join("shellpkg.lock.lisp");
     let receipt = sb.join("shellpkg.receipt.json");
 
     // First emit produces both artifacts.
-    let out_a = estante_cmd(&cache_a)
+    let out_a = estante_cmd(&cache)
         .arg("--manifest")
         .arg(&manifest)
         .arg("--lockfile")
@@ -427,7 +433,7 @@ fn lock_emit_receipt_writes_both_artifacts_deterministically() {
     // The receipt is consumable by attest --check immediately —
     // the artifact emitted by `lock --emit-receipt` IS the same one
     // attest --check would expect. Closes the loop.
-    let check = estante_cmd(&cache_a)
+    let check = estante_cmd(&cache)
         .arg("--manifest")
         .arg(&manifest)
         .arg("--lockfile")
@@ -442,12 +448,14 @@ fn lock_emit_receipt_writes_both_artifacts_deterministically() {
         String::from_utf8_lossy(&check.stderr),
     );
 
-    // Stash receipt bytes, re-run lock --emit-receipt in a fresh
-    // cache, confirm the new receipt is byte-identical.
+    // Stash receipt bytes, re-run lock --emit-receipt with the same
+    // cache, confirm the new receipt is byte-identical. (Re-running
+    // against a different cache path would correctly diverge — the
+    // lockfile records the materialized-path; cross-machine
+    // reproducibility of absolute paths is not a framework promise.)
     let receipt_bytes_a = std::fs::read(&receipt).unwrap();
 
-    let cache_b = sb.join("cache-b");
-    let out_b = estante_cmd(&cache_b)
+    let out_b = estante_cmd(&cache)
         .arg("--manifest")
         .arg(&manifest)
         .arg("--lockfile")
