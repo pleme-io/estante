@@ -19,6 +19,12 @@ pedantic = { level = "warn", priority = -1 }
 missing_errors_doc = "allow"
 missing_panics_doc = "allow"
 module_name_repetitions = "allow"
+# Doc comments routinely mention SCREAMING-CASE acronyms (BLAKE3,
+# JSON, CLI, CI, XDG, …) and product names (NixOS, MacOS). Putting
+# every one of these in backticks adds noise without correctness
+# value — the lint is about API identifiers that resemble English
+# words, not about general acronyms.
+doc_markdown = "allow"
 
 [workspace.dependencies]
 # Workspace crates

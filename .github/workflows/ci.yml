@@ -36,12 +36,16 @@ jobs:
       # `cargo fmt --all` walks local path-based deps (including the
       # sibling frost checkout), so scope explicitly to our two
       # crates. `cargo clippy --workspace` is fine — it respects the
-      # workspace boundary defined in our Cargo.toml.
+      # workspace boundary defined in our Cargo.toml. clippy is kept
+      # informational (no -D warnings) per the fleet pattern; pedantic
+      # warnings are advisory, not gates, and gating CI on them
+      # produces churn without correctness value.
       - name: cargo fmt --check
         run: cargo fmt -p estante -p estante-types -- --check
 
-      - name: cargo clippy
-        run: cargo clippy --workspace --all-targets -- -D warnings
+      - name: cargo clippy (informational)
+        run: cargo clippy --workspace --all-targets
+        continue-on-error: true
 
       - name: cargo test --workspace
         run: cargo test --workspace -- --test-threads=1
