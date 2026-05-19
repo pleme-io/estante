@@ -8,7 +8,14 @@ a git repo and consumed via `(defload …)` from `frost`'s tatara-lisp
 rc files. No central registry. Git refs are the version surface;
 GitHub topic search (`topic:estante-pkg`) is the discovery surface.
 
-## Status: framework-ready. Resolver / lockfile / receipt / verify / doctor / Nix integration all shipped. M2 (caixa-frost renderer) next — see CLAUDE.md.
+**Status: framework-ready.** Resolver / lockfile / receipt / verify
+/ doctor / Nix integration all shipped, CI-dogfooded across macOS +
+Linux. M2 (caixa-frost renderer) is the next phase.
+
+**Canonical reference:** [`pleme-io/docs/estante.md`](https://github.com/pleme-io/blackmatter-pleme/blob/main/docs/pleme-io-docs/estante.md)
+— when to use, full surface, integration points, decision matrix.
+This README is the operator quick-start; the canonical doc is the
+locked-in framework-readiness reference.
 
 ## Quick start
 
