@@ -387,6 +387,129 @@ fn attest_verify_round_trips_clean_then_fails_on_drift() {
     );
 }
 
+/// `estante doctor --json` emits a structured report whose schema
+/// is the CI contract: { checks: [...], passed, failed, total }.
+/// Pinned here so accidental shape drift breaks the test before it
+/// breaks downstream CI parsers.
+#[test]
+fn doctor_json_output_is_parseable_and_schema_stable() {
+    let sb = Sandbox::new("doctor-json");
+    let pkg = write_pkg(&sb, "theta", "echo theta-value");
+    let manifest = sb.join("shellpkg.lisp");
+    write_manifest(&manifest, "theta", &pkg);
+
+    let cache = sb.join("cache");
+    let lockfile = sb.join("shellpkg.lock.lisp");
+    run_lock(&manifest, &lockfile, &cache);
+
+    let out = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("doctor")
+        .arg("--json")
+        .output()
+        .expect("spawn doctor --json");
+    assert!(out.status.success(), "doctor --json failed; stderr:\n{}", String::from_utf8_lossy(&out.stderr));
+
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout)
+        .unwrap_or_else(|e| panic!("doctor --json stdout not parseable JSON ({e})\nstdout:\n{}", String::from_utf8_lossy(&out.stdout)));
+    assert!(v.get("checks").is_some(), "missing checks array");
+    assert!(v.get("passed").and_then(|x| x.as_u64()).is_some());
+    assert!(v.get("failed").and_then(|x| x.as_u64()).is_some());
+    assert!(v.get("total").and_then(|x| x.as_u64()).is_some());
+    assert_eq!(
+        v["passed"].as_u64().unwrap() + v["failed"].as_u64().unwrap(),
+        v["total"].as_u64().unwrap(),
+        "passed + failed must sum to total",
+    );
+
+    let checks = v["checks"].as_array().unwrap();
+    assert!(!checks.is_empty(), "at least one check must run");
+    for c in checks {
+        assert!(c.get("name").and_then(|n| n.as_str()).is_some());
+        assert!(c.get("passed").and_then(|p| p.as_bool()).is_some());
+        assert!(c.get("detail").and_then(|d| d.as_str()).is_some());
+    }
+}
+
+/// `estante attest --verify --json` emits a structured diff payload
+/// with the same shape regardless of whether the receipt matched.
+/// On match: { matched: true, diffs: [] }. On drift: { matched:
+/// false, diffs: [{ field, claimed, actual }] }. Process exits
+/// non-zero on drift.
+#[test]
+fn attest_verify_json_output_shape_is_stable_clean_and_drifted() {
+    let sb = Sandbox::new("attest-verify-json");
+    let pkg = write_pkg(&sb, "iota", "echo iota-value");
+    let manifest = sb.join("shellpkg.lisp");
+    write_manifest(&manifest, "iota", &pkg);
+
+    let cache = sb.join("cache");
+    let lockfile = sb.join("shellpkg.lock.lisp");
+    run_lock(&manifest, &lockfile, &cache);
+
+    let receipt = sb.join("receipt.json");
+    let st = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("attest")
+        .arg("--out")
+        .arg(&receipt)
+        .status()
+        .expect("attest --out");
+    assert!(st.success());
+
+    // Clean case: matched=true, diffs=[].
+    let clean = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("attest")
+        .arg("--verify")
+        .arg(&receipt)
+        .arg("--json")
+        .output()
+        .expect("attest --verify --json clean");
+    assert!(clean.status.success());
+    let v: serde_json::Value = serde_json::from_slice(&clean.stdout).unwrap();
+    assert_eq!(v["matched"], serde_json::Value::Bool(true));
+    assert_eq!(v["diffs"].as_array().unwrap().len(), 0);
+    assert_eq!(v["entryCount"].as_u64().unwrap(), 1);
+
+    // Drift case: mutate, expect matched=false + diffs populated.
+    let mut body = std::fs::read(&manifest).unwrap();
+    body.push(b' ');
+    std::fs::write(&manifest, body).unwrap();
+
+    let drifted = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("attest")
+        .arg("--verify")
+        .arg(&receipt)
+        .arg("--json")
+        .output()
+        .expect("attest --verify --json drifted");
+    assert!(!drifted.status.success());
+    let v: serde_json::Value = serde_json::from_slice(&drifted.stdout).unwrap();
+    assert_eq!(v["matched"], serde_json::Value::Bool(false));
+    let diffs = v["diffs"].as_array().unwrap();
+    assert!(!diffs.is_empty(), "drift must populate diffs");
+    let fields: Vec<&str> = diffs.iter().map(|d| d["field"].as_str().unwrap()).collect();
+    assert!(fields.contains(&"manifest.blake3"));
+    for d in diffs {
+        assert!(d.get("claimed").and_then(|v| v.as_str()).is_some());
+        assert!(d.get("actual").and_then(|v| v.as_str()).is_some());
+    }
+}
+
 /// `estante doctor` finds a sibling `shellpkg.receipt.json` and
 /// fails the `receipt:matches` check when the manifest is mutated
 /// after the receipt was emitted. Closes the "did a published

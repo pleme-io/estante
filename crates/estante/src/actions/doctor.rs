@@ -7,6 +7,7 @@
 use std::path::Path;
 
 use estante_types::{Placement, Source};
+use serde_json::json;
 
 use crate::config::Config;
 use crate::lockfile_io;
@@ -22,7 +23,15 @@ pub struct CheckResult {
     pub detail: String,
 }
 
-pub async fn run(manifest_path: &Path, lockfile_path: &Path, cfg: &Config) -> anyhow::Result<()> {
+/// Collect every check result without rendering. Extracted so JSON
+/// output and human output share the same source of truth, and so
+/// integration tests can exercise the check pipeline without
+/// parsing stdout.
+pub fn collect_checks(
+    manifest_path: &Path,
+    lockfile_path: &Path,
+    cfg: &Config,
+) -> Vec<CheckResult> {
     let mut results: Vec<CheckResult> = Vec::new();
 
     // 1. Manifest parses.
@@ -128,18 +137,24 @@ pub async fn run(manifest_path: &Path, lockfile_path: &Path, cfg: &Config) -> an
 
     // 6. BLAKE3 verification.
     if lock.is_some() {
-        let report = verify::verify_at(lockfile_path, verify::Opts::default())?;
-        results.push(CheckResult {
-            name: "lockfile:blake3-verify",
-            passed: report.is_ok(),
-            detail: format!(
-                "{} verified, {} drifted, {} missing, {} skipped",
-                report.verified.len(),
-                report.drifted.len(),
-                report.missing.len(),
-                report.skipped.len(),
-            ),
-        });
+        match verify::verify_at(lockfile_path, verify::Opts::default()) {
+            Ok(report) => results.push(CheckResult {
+                name: "lockfile:blake3-verify",
+                passed: report.is_ok(),
+                detail: format!(
+                    "{} verified, {} drifted, {} missing, {} skipped",
+                    report.verified.len(),
+                    report.drifted.len(),
+                    report.missing.len(),
+                    report.skipped.len(),
+                ),
+            }),
+            Err(e) => results.push(CheckResult {
+                name: "lockfile:blake3-verify",
+                passed: false,
+                detail: e.to_string(),
+            }),
+        }
     }
 
     // 7. Nix-placed entries actually point at /nix/store paths.
@@ -217,7 +232,41 @@ pub async fn run(manifest_path: &Path, lockfile_path: &Path, cfg: &Config) -> an
         results.push(check_result);
     }
 
-    // ─── Render + exit. ──────────────────────────────────────────────
+    results
+}
+
+pub async fn run(manifest_path: &Path, lockfile_path: &Path, cfg: &Config) -> anyhow::Result<()> {
+    run_with_opts(manifest_path, lockfile_path, cfg, false).await
+}
+
+pub async fn run_with_opts(
+    manifest_path: &Path,
+    lockfile_path: &Path,
+    cfg: &Config,
+    json_out: bool,
+) -> anyhow::Result<()> {
+    let results = collect_checks(manifest_path, lockfile_path, cfg);
+
+    if json_out {
+        let payload = json!({
+            "checks": results.iter().map(|r| json!({
+                "name": r.name,
+                "passed": r.passed,
+                "detail": r.detail,
+            })).collect::<Vec<_>>(),
+            "passed": results.iter().filter(|r| r.passed).count(),
+            "failed": results.iter().filter(|r| !r.passed).count(),
+            "total": results.len(),
+        });
+        println!("{}", serde_json::to_string_pretty(&payload)?);
+        let failed = results.iter().filter(|r| !r.passed).count();
+        if failed > 0 {
+            anyhow::bail!("{failed} of {} checks failed", results.len());
+        }
+        return Ok(());
+    }
+
+    // ─── Render + exit (human). ──────────────────────────────────────
 
     let mut failed = 0_usize;
     for r in &results {

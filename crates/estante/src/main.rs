@@ -154,7 +154,12 @@ enum Command {
     /// Full health audit — composes manifest+lockfile parse,
     /// source-URL validity, placement consistency, materialized-path
     /// existence, BLAKE3 verification, and cache layout checks.
-    Doctor,
+    Doctor {
+        /// Emit a JSON report on stdout instead of the human-formatted
+        /// pass/fail table. Suitable for CI consumption.
+        #[arg(long)]
+        json: bool,
+    },
     /// Emit a deterministic JSON attestation receipt — the tameshi-
     /// chain anchor. The receipt's own BLAKE3 is a one-line proof
     /// that the manifest, lockfile, and every locked entry agree.
@@ -169,6 +174,10 @@ enum Command {
         /// Mutually exclusive with `--out`.
         #[arg(long)]
         verify: Option<std::path::PathBuf>,
+        /// Emit machine-readable JSON on stdout (combines with --verify
+        /// to produce structured diff output for CI).
+        #[arg(long)]
+        json: bool,
     },
 }
 
@@ -238,13 +247,16 @@ async fn main() -> anyhow::Result<()> {
         Command::Verify { strict, json } => {
             actions::verify::run(&cli.lockfile, actions::verify::Opts { strict, json }).await
         }
-        Command::Doctor => actions::doctor::run(&cli.manifest, &cli.lockfile, &cfg).await,
-        Command::Attest { out, verify } => {
+        Command::Doctor { json } => {
+            actions::doctor::run_with_opts(&cli.manifest, &cli.lockfile, &cfg, json).await
+        }
+        Command::Attest { out, verify, json } => {
             actions::attest::run(
                 &cli.manifest,
                 &cli.lockfile,
                 out.as_deref(),
                 verify.as_deref(),
+                json,
             )
             .await
         }

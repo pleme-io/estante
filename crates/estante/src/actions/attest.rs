@@ -226,6 +226,7 @@ pub async fn run(
     lockfile_path: &Path,
     out: Option<&Path>,
     verify: Option<&Path>,
+    json_out: bool,
 ) -> anyhow::Result<()> {
     if let Some(receipt_path) = verify {
         let claimed_bytes = std::fs::read(receipt_path)
@@ -234,6 +235,24 @@ pub async fn run(
             .with_context(|| ["parsing receipt ", &receipt_path.display().to_string()].concat())?;
         let actual = build_receipt(manifest_path, lockfile_path)?;
         let diffs = diff_receipts(&claimed, &actual);
+        if json_out {
+            let payload = serde_json::json!({
+                "matched": diffs.is_empty(),
+                "manifestBlake3": actual.manifest.blake3,
+                "lockfileBlake3": actual.lockfile.blake3,
+                "entryCount": actual.entries.len(),
+                "diffs": diffs.iter().map(|d| serde_json::json!({
+                    "field": d.field,
+                    "claimed": d.claimed,
+                    "actual": d.actual,
+                })).collect::<Vec<_>>(),
+            });
+            println!("{}", serde_json::to_string_pretty(&payload)?);
+            if !diffs.is_empty() {
+                anyhow::bail!("receipt verification failed: {} mismatch(es)", diffs.len());
+            }
+            return Ok(());
+        }
         if diffs.is_empty() {
             println!(
                 "\x1b[32m✓\x1b[0m receipt matches; manifest.blake3 = {}, lockfile.blake3 = {}, entries = {}",
