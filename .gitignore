@@ -1,0 +1,10 @@
+/target
+/result
+/result-*
+.direnv/
+.envrc.local
+
+# editor scratch
+*.swp
+*.swo
+.DS_Store

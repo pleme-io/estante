@@ -1,0 +1,45 @@
+[package]
+name = "estante"
+description = "Cargo for shell. Nix-native, git-as-registry, Rust + Tatara-Lisp shell-package manager — fetches shareable behavior libraries by git ref and emits typed lockfiles consumable by frost-lisp's `defload`."
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+homepage.workspace = true
+repository.workspace = true
+authors.workspace = true
+
+[lints]
+workspace = true
+
+[[bin]]
+name = "estante"
+path = "src/main.rs"
+
+[dependencies]
+estante-types = { workspace = true }
+frost-lisp = { workspace = true }
+tatara-lisp = { workspace = true }
+
+serde = { workspace = true }
+serde_json = { workspace = true }
+thiserror = { workspace = true }
+anyhow = { workspace = true }
+blake3 = { workspace = true }
+clap = { workspace = true }
+tokio = { workspace = true }
+octocrab = { workspace = true }
+http-body-util = { workspace = true }
+tar = { workspace = true }
+flate2 = { workspace = true }
+tempfile = { workspace = true }
+dirs = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
+
+[dev-dependencies]
+pretty_assertions = { workspace = true }
+# Integration tests drive frost-lisp's full apply pipeline through a
+# real ShellEnv to prove the lockfile estante emits is consumable.
+frost-exec = { path = "../../../frost/crates/frost-exec" }
+blake3 = { workspace = true }

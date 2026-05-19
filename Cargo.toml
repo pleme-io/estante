@@ -1,0 +1,90 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/estante-types",
+    "crates/estante",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+rust-version = "1.89.0"
+license = "MIT OR Apache-2.0"
+homepage = "https://github.com/pleme-io/estante"
+repository = "https://github.com/pleme-io/estante"
+authors = ["pleme-io"]
+
+[workspace.lints.clippy]
+pedantic = { level = "warn", priority = -1 }
+missing_errors_doc = "allow"
+missing_panics_doc = "allow"
+module_name_repetitions = "allow"
+
+[workspace.dependencies]
+# Workspace crates
+estante-types = { path = "crates/estante-types" }
+
+# pleme-io sibling crates — the typed forms (PkgSpec, LoadSpec,
+# LockedPkgSpec) live in frost-lisp::pkg; estante is a consumer, not
+# a duplicate source of truth (Pillar 12: solve once).
+frost-lisp = { path = "../frost/crates/frost-lisp" }
+
+# tatara-lisp pinned to the same rev frost uses so a single copy
+# resolves in the dep graph (no duplicate DeriveTataraDomain impls).
+tatara-lisp = { git = "https://github.com/pleme-io/tatara", rev = "a1062f8069bb336a87cb9b2c68a85885665e3234" }
+
+# Serialization
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+
+# Error handling
+thiserror = "2"
+anyhow = "1"
+
+# Hashing — BLAKE3 is the tameshi-chain attestation primitive.
+blake3 = "1"
+
+# CLI
+clap = { version = "4", features = ["derive", "env"] }
+
+# Async / IO
+tokio = { version = "1", features = ["rt-multi-thread", "macros", "fs", "process", "io-util"] }
+
+# GitHub SDK — the only registry. octocrab is the canonical Rust
+# client; search + tarball download + rate-limit budgeting all
+# flow through it.
+octocrab = "0.43"
+
+# `octocrab::body` is private — read response bodies via the
+# http-body-util `BodyExt::collect()` extension trait. octocrab
+# already pulls this transitively; we just need it as a direct
+# dep to import the trait in our code.
+http-body-util = "0.1"
+
+# Tarball unpack — public-repo archive downloads land as .tar.gz;
+# tar + flate2 unpack to the local cache dir without invoking a
+# shell or external `tar` binary (NO SHELL directive).
+tar = "0.4"
+flate2 = "1"
+
+# Atomic writes for the lockfile (write-temp + rename) so a
+# crash during emit doesn't leave a half-written shellpkg.lock.lisp.
+tempfile = "3"
+
+# XDG path discovery — cache + config dir resolution per spec.
+dirs = "5"
+
+# Tracing — structured logs through the standard pleme-io macros
+# (tracing::info!/error! are the typed emission surface; never
+# println!/eprintln!).
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Testing
+pretty_assertions = "1"
+
+[profile.release]
+codegen-units = 1
+lto = true
+opt-level = "z"
+strip = true
