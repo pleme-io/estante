@@ -41,7 +41,7 @@ pub use frost_lisp::{LoadSpec, LockedPkgSpec, PkgSpec, split_source_scheme};
 /// | Variant | Path shape | Mutability | Reproducibility | Use case |
 /// |---|---|---|---|---|
 /// | [`Placement::Cache`] | `$XDG_CACHE_HOME/estante/store/<name>-<rev>/` | mutable | local-only | dev, ad-hoc `estante run`, fast iteration |
-/// | [`Placement::Nix`] | `/nix/store/<hash>-<name>-<rev>/` | immutable | fleet-reproducible | home-manager, NixOS, substrate deploys |
+/// | [`Placement::Nix`] | `/nix/store/<hash>-<name>-<rev>/` | immutable | fleet-reproducible | home-manager, `NixOS`, substrate deploys |
 /// | [`Placement::Both`] | — | mixed | — | transition state during `estante place` migration |
 ///
 /// `estante place <pkg> --to nix` shifts a single entry; `estante
@@ -61,9 +61,11 @@ pub enum Placement {
 
 impl Placement {
     /// Parse from the lockfile string (lowercase). Empty / unknown
-    /// → `Cache` for backward compatibility.
+    /// → `Cache` for backward compatibility. Named `parse_lockfile`
+    /// (not `from_str`) so it doesn't shadow [`std::str::FromStr`]'s
+    /// `from_str` — this is total + infallible, not a `FromStr` impl.
     #[must_use]
-    pub fn from_str(s: &str) -> Self {
+    pub fn parse_lockfile(s: &str) -> Self {
         match s.trim().to_ascii_lowercase().as_str() {
             "nix" => Self::Nix,
             "both" => Self::Both,
@@ -151,9 +153,9 @@ impl Source {
         };
         match scheme {
             "github" => parse_github(rest, s),
-            "git+https" => parse_git_with_fragment(rest, s, true),
-            "git+ssh" => parse_git_with_fragment(rest, s, false),
-            "gist" => parse_gist(rest, s),
+            "git+https" => Ok(parse_git_with_fragment(rest, s, true)),
+            "git+ssh" => Ok(parse_git_with_fragment(rest, s, false)),
+            "gist" => Ok(parse_gist(rest, s)),
             "local" => Ok(Self::Local {
                 path: rest.to_owned(),
             }),
@@ -236,27 +238,27 @@ fn parse_github(rest: &str, original: &str) -> EstanteResult<Source> {
     })
 }
 
-fn parse_git_with_fragment(rest: &str, _original: &str, https: bool) -> EstanteResult<Source> {
+fn parse_git_with_fragment(rest: &str, _original: &str, https: bool) -> Source {
     let (url, reference) = rest.split_once('#').map_or((rest, "HEAD"), |(u, r)| (u, r));
     if https {
-        Ok(Source::GitHttps {
+        Source::GitHttps {
             url: url.to_owned(),
             reference: reference.to_owned(),
-        })
+        }
     } else {
-        Ok(Source::GitSsh {
+        Source::GitSsh {
             url: url.to_owned(),
             reference: reference.to_owned(),
-        })
+        }
     }
 }
 
-fn parse_gist(rest: &str, _original: &str) -> EstanteResult<Source> {
+fn parse_gist(rest: &str, _original: &str) -> Source {
     let (id, reference) = rest.split_once('@').map_or((rest, "HEAD"), |(i, r)| (i, r));
-    Ok(Source::Gist {
+    Source::Gist {
         id: id.to_owned(),
         reference: reference.to_owned(),
-    })
+    }
 }
 
 // ─── Manifest ─────────────────────────────────────────────────────────
@@ -365,7 +367,7 @@ impl Lockfile {
                 // defaults give empty string; canonical value is
                 // "cache".
                 if e.placement.is_empty() {
-                    e.placement = Placement::Cache.as_str().to_owned();
+                    Placement::Cache.as_str().clone_into(&mut e.placement);
                 }
                 e
             })
@@ -909,34 +911,34 @@ mod tests {
 
     #[test]
     fn placement_from_str_canonical() {
-        assert_eq!(Placement::from_str("cache"), Placement::Cache);
-        assert_eq!(Placement::from_str("nix"), Placement::Nix);
-        assert_eq!(Placement::from_str("both"), Placement::Both);
+        assert_eq!(Placement::parse_lockfile("cache"), Placement::Cache);
+        assert_eq!(Placement::parse_lockfile("nix"), Placement::Nix);
+        assert_eq!(Placement::parse_lockfile("both"), Placement::Both);
     }
 
     #[test]
     fn placement_from_str_empty_defaults_to_cache() {
-        assert_eq!(Placement::from_str(""), Placement::Cache);
-        assert_eq!(Placement::from_str("   "), Placement::Cache);
+        assert_eq!(Placement::parse_lockfile(""), Placement::Cache);
+        assert_eq!(Placement::parse_lockfile("   "), Placement::Cache);
     }
 
     #[test]
     fn placement_from_str_case_insensitive() {
-        assert_eq!(Placement::from_str("NIX"), Placement::Nix);
-        assert_eq!(Placement::from_str("Nix"), Placement::Nix);
-        assert_eq!(Placement::from_str("BOTH"), Placement::Both);
+        assert_eq!(Placement::parse_lockfile("NIX"), Placement::Nix);
+        assert_eq!(Placement::parse_lockfile("Nix"), Placement::Nix);
+        assert_eq!(Placement::parse_lockfile("BOTH"), Placement::Both);
     }
 
     #[test]
     fn placement_from_str_unknown_defaults_to_cache() {
-        assert_eq!(Placement::from_str("xyz"), Placement::Cache);
-        assert_eq!(Placement::from_str("local"), Placement::Cache);
+        assert_eq!(Placement::parse_lockfile("xyz"), Placement::Cache);
+        assert_eq!(Placement::parse_lockfile("local"), Placement::Cache);
     }
 
     #[test]
     fn placement_as_str_round_trips() {
         for p in [Placement::Cache, Placement::Nix, Placement::Both] {
-            assert_eq!(Placement::from_str(p.as_str()), p);
+            assert_eq!(Placement::parse_lockfile(p.as_str()), p);
         }
     }
 

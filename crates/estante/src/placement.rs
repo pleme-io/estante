@@ -21,7 +21,7 @@ use estante_types::{LockedPkgSpec, Placement};
 /// Promote a cache-placed package into the Nix store. Idempotent: if
 /// the package is already nix-placed (or both), this is a no-op.
 pub async fn place_in_nix(entry: &LockedPkgSpec) -> anyhow::Result<LockedPkgSpec> {
-    let current = Placement::from_str(&entry.placement);
+    let current = Placement::parse_lockfile(&entry.placement);
     if matches!(current, Placement::Nix) {
         return Ok(entry.clone());
     }

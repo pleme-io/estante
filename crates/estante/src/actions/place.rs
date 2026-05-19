@@ -66,7 +66,7 @@ pub async fn run(
 
     for idx in entries_to_shift {
         let entry = &lock.entries[idx];
-        let current = Placement::from_str(&entry.placement);
+        let current = Placement::parse_lockfile(&entry.placement);
         if current == target_placement {
             skipped += 1;
             tracing::info!(name = %entry.name, placement = %current, "already at target placement");

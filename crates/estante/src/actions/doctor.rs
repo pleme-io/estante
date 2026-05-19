@@ -97,7 +97,7 @@ pub fn collect_checks(
     if let Some(l) = &lock {
         let mut unknown = Vec::new();
         for e in &l.entries {
-            // Placement::from_str maps unknown to Cache, but we want
+            // Placement::parse_lockfile maps unknown to Cache, but we want
             // to detect genuinely-unrecognized strings that aren't
             // "cache" / "nix" / "both" / "".
             let raw = e.placement.trim().to_ascii_lowercase();
@@ -161,7 +161,7 @@ pub fn collect_checks(
     if let Some(l) = &lock {
         let mut inconsistent = Vec::new();
         for e in &l.entries {
-            if Placement::from_str(&e.placement) == Placement::Nix
+            if Placement::parse_lockfile(&e.placement) == Placement::Nix
                 && !e.materialized_path.starts_with("/nix/store/")
             {
                 inconsistent.push(format!("{}={}", e.name, e.materialized_path));
