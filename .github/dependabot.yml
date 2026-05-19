@@ -1,0 +1,47 @@
+# Dependabot — Cargo + GitHub Actions update PRs.
+#
+# Cadence is weekly to keep noise low; security advisories override
+# this and ship as soon as they land. Labels match the standard
+# pleme-io label set (dependencies + appropriate scope) so the PRs
+# triage cleanly alongside human-authored changes.
+
+version: 2
+updates:
+  - package-ecosystem: cargo
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "12:00"
+      timezone: "America/New_York"
+    labels:
+      - dependencies
+    commit-message:
+      prefix: "chore(cargo)"
+    open-pull-requests-limit: 5
+    groups:
+      tokio-stack:
+        patterns:
+          - "tokio"
+          - "tokio-*"
+      tracing-stack:
+        patterns:
+          - "tracing"
+          - "tracing-*"
+      serde-stack:
+        patterns:
+          - "serde"
+          - "serde_*"
+
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+      day: monday
+      time: "12:00"
+      timezone: "America/New_York"
+    labels:
+      - dependencies
+    commit-message:
+      prefix: "chore(actions)"
+    open-pull-requests-limit: 3

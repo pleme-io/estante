@@ -1,0 +1,18 @@
+# estante CODEOWNERS — pleme-io maintainers own every path by default.
+#
+# Lives at the repo root so GitHub's CODEOWNERS resolver picks it up
+# regardless of branch-protection profile. Used by GitHub to:
+#   1. Auto-assign reviewers on PR open.
+#   2. Enforce the "1 review from a CODEOWNER" rule under :standard
+#      branch protection (pangea-architectures OpenSourceRepo profile).
+#
+# Per-path overrides go beneath the global rule, last-match-wins.
+
+*                                  @pleme-io/maintainers
+
+# Substrate-touching changes need a substrate review on top of
+# whoever else touches the area.
+flake.nix                          @pleme-io/maintainers @pleme-io/substrate
+Cargo.toml                         @pleme-io/maintainers @pleme-io/substrate
+rust-toolchain.toml                @pleme-io/maintainers @pleme-io/substrate
+caixa.lisp                         @pleme-io/maintainers @pleme-io/substrate
