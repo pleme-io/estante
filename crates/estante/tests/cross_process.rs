@@ -387,6 +387,86 @@ fn attest_verify_round_trips_clean_then_fails_on_drift() {
     );
 }
 
+/// `estante lock --emit-receipt` writes both the lockfile and the
+/// sibling receipt in one shot. Composes the lock + attest
+/// primitives into a single operator step — and crucially, the
+/// receipt is deterministic across two invocations (proves the
+/// canonical_json + build_receipt pipeline is stable).
+#[test]
+fn lock_emit_receipt_writes_both_artifacts_deterministically() {
+    let sb = Sandbox::new("lock-emit-receipt");
+    let pkg = write_pkg(&sb, "pi", "echo pi-value");
+    let manifest = sb.join("shellpkg.lisp");
+    write_manifest(&manifest, "pi", &pkg);
+
+    let cache_a = sb.join("cache-a");
+    let lockfile = sb.join("shellpkg.lock.lisp");
+    let receipt = sb.join("shellpkg.receipt.json");
+
+    // First emit produces both artifacts.
+    let out_a = estante_cmd(&cache_a)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("lock")
+        .arg("--emit-receipt")
+        .output()
+        .expect("spawn lock --emit-receipt #1");
+    assert!(
+        out_a.status.success(),
+        "lock --emit-receipt #1 failed; stderr:\n{}",
+        String::from_utf8_lossy(&out_a.stderr),
+    );
+    assert!(lockfile.is_file(), "lockfile must exist after lock --emit-receipt");
+    assert!(receipt.is_file(), "receipt must exist after lock --emit-receipt");
+
+    let stdout = String::from_utf8_lossy(&out_a.stdout);
+    assert!(stdout.contains("Locked") && stdout.contains("receipt"));
+
+    // The receipt is consumable by attest --check immediately —
+    // the artifact emitted by `lock --emit-receipt` IS the same one
+    // attest --check would expect. Closes the loop.
+    let check = estante_cmd(&cache_a)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("attest")
+        .arg("--check")
+        .output()
+        .expect("attest --check after lock --emit-receipt");
+    assert!(
+        check.status.success(),
+        "attest --check must pass against the receipt lock --emit-receipt wrote; stderr:\n{}",
+        String::from_utf8_lossy(&check.stderr),
+    );
+
+    // Stash receipt bytes, re-run lock --emit-receipt in a fresh
+    // cache, confirm the new receipt is byte-identical.
+    let receipt_bytes_a = std::fs::read(&receipt).unwrap();
+
+    let cache_b = sb.join("cache-b");
+    let out_b = estante_cmd(&cache_b)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("lock")
+        .arg("--emit-receipt")
+        .output()
+        .expect("spawn lock --emit-receipt #2");
+    assert!(out_b.status.success());
+    let receipt_bytes_b = std::fs::read(&receipt).unwrap();
+    assert_eq!(
+        receipt_bytes_a, receipt_bytes_b,
+        "lock --emit-receipt must produce byte-identical receipt across processes",
+    );
+    let digest_a = blake3::hash(&receipt_bytes_a).to_hex().to_string();
+    let digest_b = blake3::hash(&receipt_bytes_b).to_hex().to_string();
+    assert_eq!(digest_a, digest_b);
+}
+
 /// `estante attest --check` is the ergonomic CI gate: looks for a
 /// sibling `shellpkg.receipt.json` next to the manifest, diffs the
 /// current state against it, and exits non-zero on drift. Composes

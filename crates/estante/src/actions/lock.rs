@@ -16,7 +16,7 @@ use crate::manifest_io;
 use crate::resolver::Resolver;
 
 pub async fn run(manifest_path: &Path, lockfile_path: &Path, cfg: &Config) -> anyhow::Result<()> {
-    run_with_opts(manifest_path, lockfile_path, cfg, false).await
+    run_with_opts(manifest_path, lockfile_path, cfg, false, false).await
 }
 
 pub async fn run_with_opts(
@@ -24,6 +24,7 @@ pub async fn run_with_opts(
     lockfile_path: &Path,
     cfg: &Config,
     check: bool,
+    emit_receipt: bool,
 ) -> anyhow::Result<()> {
     let manifest = manifest_io::read(manifest_path)?;
     if manifest.packages.is_empty() {
@@ -74,5 +75,18 @@ pub async fn run_with_opts(
         lock.entries.len(),
         lockfile_path.display()
     );
+
+    if emit_receipt {
+        let receipt_path = super::attest::sibling_receipt_for(manifest_path);
+        let receipt = super::attest::build_receipt(manifest_path, lockfile_path)?;
+        let json = super::attest::canonical_json(&receipt);
+        std::fs::write(&receipt_path, json.as_bytes())?;
+        println!(
+            "Wrote receipt → {} (blake3 = {})",
+            receipt_path.display(),
+            super::attest::receipt_blake3(&receipt),
+        );
+    }
+
     Ok(())
 }

@@ -69,10 +69,18 @@ enum Command {
     /// `--check` re-resolves in memory and exits non-zero if the
     /// committed lockfile would change — the CI gate enforcing
     /// "the lockfile reflects the manifest."
+    /// `--emit-receipt` additionally writes the sibling attestation
+    /// receipt (shellpkg.receipt.json) in one shot — operators don't
+    /// have to call `estante attest` separately.
     Lock {
         /// Compare against the existing lockfile without writing.
-        #[arg(long)]
+        #[arg(long, conflicts_with = "emit_receipt")]
         check: bool,
+        /// Also emit the sibling shellpkg.receipt.json after writing
+        /// the lockfile. Equivalent to running `estante lock` then
+        /// `estante attest --out <sibling>` in sequence.
+        #[arg(long)]
+        emit_receipt: bool,
     },
     /// Fetch + materialize every locked entry into the local cache.
     Install,
@@ -235,8 +243,15 @@ async fn main() -> anyhow::Result<()> {
             name,
             version,
         } => actions::add::run(&cli.manifest, &source, name, version).await,
-        Command::Lock { check } => {
-            actions::lock::run_with_opts(&cli.manifest, &cli.lockfile, &cfg, check).await
+        Command::Lock { check, emit_receipt } => {
+            actions::lock::run_with_opts(
+                &cli.manifest,
+                &cli.lockfile,
+                &cfg,
+                check,
+                emit_receipt,
+            )
+            .await
         }
         Command::Install => actions::install::run(&cli.lockfile, &cfg).await,
         Command::Search { query, limit } => actions::search::run(&query, limit, &cfg).await,
