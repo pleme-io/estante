@@ -155,6 +155,21 @@ enum Command {
     /// source-URL validity, placement consistency, materialized-path
     /// existence, BLAKE3 verification, and cache layout checks.
     Doctor,
+    /// Emit a deterministic JSON attestation receipt — the tameshi-
+    /// chain anchor. The receipt's own BLAKE3 is a one-line proof
+    /// that the manifest, lockfile, and every locked entry agree.
+    /// Use `--verify` to re-derive a receipt from the current state
+    /// and diff it against a claimed receipt; non-zero exit on any
+    /// mismatch.
+    Attest {
+        /// Write to this file instead of stdout.
+        #[arg(long, conflicts_with = "verify")]
+        out: Option<std::path::PathBuf>,
+        /// Verify a previously emitted receipt against current state.
+        /// Mutually exclusive with `--out`.
+        #[arg(long)]
+        verify: Option<std::path::PathBuf>,
+    },
 }
 
 #[derive(Subcommand, Debug)]
@@ -224,5 +239,14 @@ async fn main() -> anyhow::Result<()> {
             actions::verify::run(&cli.lockfile, actions::verify::Opts { strict, json }).await
         }
         Command::Doctor => actions::doctor::run(&cli.manifest, &cli.lockfile, &cfg).await,
+        Command::Attest { out, verify } => {
+            actions::attest::run(
+                &cli.manifest,
+                &cli.lockfile,
+                out.as_deref(),
+                verify.as_deref(),
+            )
+            .await
+        }
     }
 }

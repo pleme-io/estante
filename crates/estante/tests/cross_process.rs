@@ -247,3 +247,142 @@ fn verify_detects_drift_when_a_materialized_file_is_tampered() {
     assert!(entry.get("actual").is_some());
     assert!(entry.get("path").is_some());
 }
+
+/// `estante attest` produces byte-identical JSON across two
+/// independent processes — and therefore matching BLAKE3 receipts.
+/// This is the externally-visible attestation primitive: the digest
+/// of the receipt is a transferable proof of the manifest + lockfile
+/// + per-entry bytes.
+#[test]
+fn attest_receipt_is_byte_identical_across_two_separate_processes() {
+    let sb = Sandbox::new("attest-determinism");
+    let pkg = write_pkg(&sb, "delta", "echo delta-value");
+    let manifest = sb.join("shellpkg.lisp");
+    write_manifest(&manifest, "delta", &pkg);
+
+    // Lock once so both attestation runs see the same lockfile.
+    let cache = sb.join("cache");
+    let lockfile = sb.join("shellpkg.lock.lisp");
+    run_lock(&manifest, &lockfile, &cache);
+
+    let out_a = sb.join("receipt-a.json");
+    let out_b = sb.join("receipt-b.json");
+
+    let status_a = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("attest")
+        .arg("--out")
+        .arg(&out_a)
+        .status()
+        .expect("spawn estante attest #1");
+    assert!(status_a.success(), "attest #1 must succeed");
+
+    let status_b = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("attest")
+        .arg("--out")
+        .arg(&out_b)
+        .status()
+        .expect("spawn estante attest #2");
+    assert!(status_b.success(), "attest #2 must succeed");
+
+    let bytes_a = std::fs::read(&out_a).unwrap();
+    let bytes_b = std::fs::read(&out_b).unwrap();
+    assert_eq!(bytes_a, bytes_b, "receipt JSON must be byte-identical");
+
+    // The receipt is parseable JSON with the canonical shape.
+    let json: serde_json::Value = serde_json::from_slice(&bytes_a).unwrap();
+    assert_eq!(json["schemaVersion"], 1);
+    assert!(json["manifest"]["blake3"].as_str().unwrap().len() > 16);
+    assert!(json["lockfile"]["blake3"].as_str().unwrap().len() > 16);
+    let entries = json["entries"].as_array().unwrap();
+    assert_eq!(entries.len(), 1);
+    assert_eq!(entries[0]["name"], "delta");
+    assert_eq!(entries[0]["placement"], "cache");
+    assert_eq!(entries[0]["materializedExists"], true);
+
+    // BLAKE3 of the receipt — the externally-citable attestation
+    // digest. Two operators running attest against the same lock
+    // get the same digest, period.
+    let digest_a = blake3::hash(&bytes_a).to_hex().to_string();
+    let digest_b = blake3::hash(&bytes_b).to_hex().to_string();
+    assert_eq!(digest_a, digest_b);
+}
+
+/// `estante attest --verify` round-trip — emit a receipt, verify
+/// against the unchanged tree (zero exit), then mutate the manifest
+/// and confirm verify exits non-zero with manifest.blake3 in the
+/// reported drift. Closes the attestation loop end-to-end.
+#[test]
+fn attest_verify_round_trips_clean_then_fails_on_drift() {
+    let sb = Sandbox::new("attest-verify");
+    let pkg = write_pkg(&sb, "epsilon", "echo epsilon-value");
+    let manifest = sb.join("shellpkg.lisp");
+    write_manifest(&manifest, "epsilon", &pkg);
+
+    let cache = sb.join("cache");
+    let lockfile = sb.join("shellpkg.lock.lisp");
+    run_lock(&manifest, &lockfile, &cache);
+
+    let receipt = sb.join("receipt.json");
+    let status = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("attest")
+        .arg("--out")
+        .arg(&receipt)
+        .status()
+        .expect("spawn attest --out");
+    assert!(status.success());
+
+    // Clean verify — zero exit.
+    let clean = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("attest")
+        .arg("--verify")
+        .arg(&receipt)
+        .output()
+        .expect("spawn attest --verify clean");
+    assert!(
+        clean.status.success(),
+        "unmodified state must verify against its own receipt; stderr:\n{}",
+        String::from_utf8_lossy(&clean.stderr),
+    );
+
+    // Mutate manifest by appending a byte → manifest.blake3 changes
+    // → attest --verify must fail.
+    let mut body = std::fs::read(&manifest).unwrap();
+    body.push(b' ');
+    std::fs::write(&manifest, body).unwrap();
+
+    let drifted = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("attest")
+        .arg("--verify")
+        .arg(&receipt)
+        .output()
+        .expect("spawn attest --verify drifted");
+    assert!(
+        !drifted.status.success(),
+        "mutated manifest must fail receipt verification",
+    );
+    let stderr = String::from_utf8_lossy(&drifted.stderr);
+    assert!(
+        stderr.contains("manifest.blake3"),
+        "drift report must call out manifest.blake3; stderr:\n{stderr}",
+    );
+}

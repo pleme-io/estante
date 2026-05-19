@@ -5,6 +5,7 @@
 //! `fetch`.
 
 pub mod add;
+pub mod attest;
 pub mod doctor;
 pub mod expand;
 pub mod export;
