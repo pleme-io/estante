@@ -123,6 +123,21 @@ enum Command {
         #[arg(long)]
         filter: Option<String>,
     },
+    /// Shift a package's placement substrate — move bytes between
+    /// estante's user-local cache and the Nix store. `--to nix`
+    /// promotes via `nix store add-path` (requires nix on PATH);
+    /// `--to cache` flags the entry for re-resolution on next
+    /// `estante install`. Idempotent.
+    Place {
+        /// Package name to shift. Mutually exclusive with `--all`.
+        name: Option<String>,
+        /// Shift every entry in the lockfile.
+        #[arg(long)]
+        all: bool,
+        /// Target placement.
+        #[arg(long, value_enum)]
+        to: estante::actions::place::Target,
+    },
 }
 
 #[derive(Subcommand, Debug)]
@@ -185,5 +200,8 @@ async fn main() -> anyhow::Result<()> {
             ToolCommand::List => actions::tool::list(&cfg).await,
         },
         Command::Test { dir, filter } => actions::test::run(&dir, filter).await,
+        Command::Place { name, all, to } => {
+            actions::place::run(&cli.lockfile, name, all, to).await
+        }
     }
 }

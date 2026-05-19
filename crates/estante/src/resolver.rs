@@ -99,12 +99,16 @@ impl<'a> Resolver<'a> {
             name: pkg.name.clone(),
             source: source.to_source_string(),
             rev: rev.sha,
-            // narHash stays empty for v0.1 — the Nix integration pass
-            // fills it from a `builtins.fetchTarball` realization
-            // later. Frost-lisp does not require it to be populated.
+            // narHash stays empty for v0.1 cache placement. The
+            // `estante place ... --to nix` migration fills it via
+            // `nix-store --query --hash` at promotion time.
             nar_hash: String::new(),
             blake3,
             materialized_path: path_to_string(&dest),
+            // The resolver defaults to cache placement; explicit
+            // nix placement happens via `estante install
+            // --placement nix` or `estante place ... --to nix`.
+            placement: estante_types::Placement::Cache.as_str().to_owned(),
         })
     }
 }

@@ -33,6 +33,67 @@ pub mod nix_export;
 
 pub use frost_lisp::{LoadSpec, LockedPkgSpec, PkgSpec, split_source_scheme};
 
+// ─── Placement ────────────────────────────────────────────────────────
+
+/// Where the bytes of a locked package physically live. Carried in
+/// `LockedPkgSpec::placement` as a lowercase string.
+///
+/// | Variant | Path shape | Mutability | Reproducibility | Use case |
+/// |---|---|---|---|---|
+/// | [`Placement::Cache`] | `$XDG_CACHE_HOME/estante/store/<name>-<rev>/` | mutable | local-only | dev, ad-hoc `estante run`, fast iteration |
+/// | [`Placement::Nix`] | `/nix/store/<hash>-<name>-<rev>/` | immutable | fleet-reproducible | home-manager, NixOS, substrate deploys |
+/// | [`Placement::Both`] | — | mixed | — | transition state during `estante place` migration |
+///
+/// `estante place <pkg> --to nix` shifts a single entry; `estante
+/// install --placement nix` makes nix the default for new entries.
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+pub enum Placement {
+    /// User-local cache. Default for `estante install` / `estante run`.
+    #[default]
+    Cache,
+    /// `/nix/store/…`. Materialized via `nix store add-path` at
+    /// install time; consumers (home-manager modules, flakes) pin
+    /// to the resulting derivation hash.
+    Nix,
+    /// Both stores carry the bytes — typical mid-migration state.
+    Both,
+}
+
+impl Placement {
+    /// Parse from the lockfile string (lowercase). Empty / unknown
+    /// → `Cache` for backward compatibility.
+    #[must_use]
+    pub fn from_str(s: &str) -> Self {
+        match s.trim().to_ascii_lowercase().as_str() {
+            "nix" => Self::Nix,
+            "both" => Self::Both,
+            _ => Self::Cache,
+        }
+    }
+
+    /// Canonical lowercase string written to the lockfile.
+    #[must_use]
+    pub fn as_str(self) -> &'static str {
+        match self {
+            Self::Cache => "cache",
+            Self::Nix => "nix",
+            Self::Both => "both",
+        }
+    }
+
+    /// True if this placement requires nix tooling on PATH.
+    #[must_use]
+    pub fn needs_nix(self) -> bool {
+        matches!(self, Self::Nix | Self::Both)
+    }
+}
+
+impl fmt::Display for Placement {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        f.write_str(self.as_str())
+    }
+}
+
 // ─── Errors ───────────────────────────────────────────────────────────
 
 #[derive(Debug, thiserror::Error)]
@@ -292,12 +353,24 @@ pub struct Lockfile {
 
 impl Lockfile {
     pub fn parse(src: &str) -> EstanteResult<Self> {
-        let entries: Vec<LockedPkgSpec> = tatara_lisp::compile_typed(src).map_err(|e| {
+        let raw: Vec<LockedPkgSpec> = tatara_lisp::compile_typed(src).map_err(|e| {
             EstanteError::Parse {
                 context: "lockfile".to_owned(),
                 message: e.to_string(),
             }
         })?;
+        let entries = raw
+            .into_iter()
+            .map(|mut e| {
+                // Normalize placement — older lockfiles + serde
+                // defaults give empty string; canonical value is
+                // "cache".
+                if e.placement.is_empty() {
+                    e.placement = Placement::Cache.as_str().to_owned();
+                }
+                e
+            })
+            .collect();
         Ok(Self { entries })
     }
 
@@ -359,6 +432,10 @@ impl fmt::Display for LockedPkgSpecDisplay<'_> {
             "  :materialized-path {}",
             LispString(&l.materialized_path)
         )?;
+        // Placement always emitted (normalized to "cache" for empty
+        // serde defaults) — keeps Display/parse a pure round-trip.
+        let placement = if l.placement.is_empty() { "cache" } else { l.placement.as_str() };
+        writeln!(f, "  :placement         {}", LispString(placement))?;
         writeln!(f, "  )")
     }
 }
@@ -571,6 +648,7 @@ mod tests {
             nar_hash: "sha256-aa".into(),
             blake3: "blake3-bb".into(),
             materialized_path: String::new(),
+            placement: "cache".into(),
         });
         let err = l.validate_materialized().unwrap_err();
         assert!(matches!(err, EstanteError::MissingMaterializedPath(_)));
@@ -668,6 +746,7 @@ mod tests {
             nar_hash: "sha256-a".into(),
             blake3: "blake3-a".into(),
             materialized_path: "/p/a".into(),
+            placement: "cache".into(),
         });
         l.upsert(LockedPkgSpec {
             name: "foo".into(),
@@ -676,6 +755,7 @@ mod tests {
             nar_hash: "sha256-b".into(),
             blake3: "blake3-b".into(),
             materialized_path: "/p/b".into(),
+            placement: "cache".into(),
         });
         assert_eq!(l.entries.len(), 1);
         assert_eq!(l.get("foo").unwrap().rev, "def");

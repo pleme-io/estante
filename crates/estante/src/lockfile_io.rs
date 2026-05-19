@@ -54,6 +54,7 @@ mod tests {
             nar_hash: "sha256-x".into(),
             blake3: "blake3-y".into(),
             materialized_path: String::new(), // ← empty — write should reject
+            placement: "cache".into(),
         });
         let err = write(&path, &l).unwrap_err();
         assert!(err.to_string().contains("materialized-path"));

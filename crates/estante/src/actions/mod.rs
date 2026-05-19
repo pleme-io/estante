@@ -11,6 +11,7 @@ pub mod info;
 pub mod init;
 pub mod install;
 pub mod lock;
+pub mod place;
 pub mod run;
 pub mod search;
 pub mod test;

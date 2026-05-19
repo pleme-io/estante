@@ -62,6 +62,8 @@ impl fmt::Display for NixLockfileFormatter<'_> {
             writeln!(f, "      blake3 = {};", NixString(&entry.blake3))?;
             writeln!(f, "      materializedPath = {};", NixString(&entry.materialized_path))?;
             writeln!(f, "      entrypoint = \"rc.lisp\";")?;
+            let placement = if entry.placement.is_empty() { "cache" } else { entry.placement.as_str() };
+            writeln!(f, "      placement = {};", NixString(placement))?;
             writeln!(f, "    }}")?;
         }
         writeln!(f, "  ];")?;
@@ -124,6 +126,7 @@ mod tests {
             nar_hash: "sha256-zzz".into(),
             blake3: "blake3-yyy".into(),
             materialized_path: "/nix/store/abc-foo/".into(),
+            placement: "nix".into(),
         });
         let rendered = lockfile_to_nix(&l);
         assert!(rendered.contains(r#"name = "foo""#));
@@ -132,6 +135,7 @@ mod tests {
         assert!(rendered.contains(r#"narHash = "sha256-zzz""#));
         assert!(rendered.contains(r#"blake3 = "blake3-yyy""#));
         assert!(rendered.contains(r#"materializedPath = "/nix/store/abc-foo/""#));
+        assert!(rendered.contains(r#"placement = "nix""#));
     }
 
     #[test]
@@ -142,6 +146,7 @@ mod tests {
             source: "github:org/foo".into(),
             rev: "abc".into(),
             nar_hash: String::new(),
+            placement: "cache".into(),
             blake3: "blake3-yyy".into(),
             materialized_path: "/nix/store/abc-foo/".into(),
         });
