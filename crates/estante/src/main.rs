@@ -111,6 +111,18 @@ enum Command {
     /// installs via `nix profile install path:<cache>/tools/<name>`.
     #[command(subcommand)]
     Tool(ToolCommand),
+    /// Run the package's test suite. Discovers `*_test.{bash,zsh,sh,lisp}`
+    /// files under `--dir` (default: `./tests`) and executes each in a
+    /// fresh shell. The test battery shipped with `estante-stdlib`
+    /// provides describe/it/expect_* matchers and the summary line.
+    Test {
+        /// Directory containing test files. Default: ./tests.
+        #[arg(long, default_value = "tests")]
+        dir: std::path::PathBuf,
+        /// Substring filter applied to file names.
+        #[arg(long)]
+        filter: Option<String>,
+    },
 }
 
 #[derive(Subcommand, Debug)]
@@ -172,5 +184,6 @@ async fn main() -> anyhow::Result<()> {
             ToolCommand::Uninstall { name } => actions::tool::uninstall(&name, &cfg).await,
             ToolCommand::List => actions::tool::list(&cfg).await,
         },
+        Command::Test { dir, filter } => actions::test::run(&dir, filter).await,
     }
 }
