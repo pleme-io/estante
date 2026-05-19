@@ -30,8 +30,13 @@ use std::fmt;
 use std::fmt::Write as _;
 
 pub mod nix_export;
+pub mod receipt;
 
 pub use frost_lisp::{LoadSpec, LockedPkgSpec, PkgSpec, split_source_scheme};
+pub use receipt::{
+    EntryDigest, EstanteInfo, FileDigest, Receipt, ReceiptMismatch, SCHEMA_VERSION,
+    canonical_json as receipt_canonical_json, diff_receipts, receipt_blake3,
+};
 
 // ─── Placement ────────────────────────────────────────────────────────
 

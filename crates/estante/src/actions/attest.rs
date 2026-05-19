@@ -33,41 +33,18 @@
 use std::path::{Path, PathBuf};
 
 use anyhow::Context;
-use serde::{Deserialize, Serialize};
+// Typed receipt primitives now live in estante-types so other Rust
+// tooling (caixa-frost renderer, frostmourne migrator, CI helpers)
+// can consume + verify receipts without depending on the bin crate.
+// This module owns only the I/O wrapper (`build_receipt`) and the
+// CLI surface — the typed shape is upstream of us.
+use estante_types::receipt::SCHEMA_VERSION;
+pub use estante_types::receipt::{
+    EntryDigest, EstanteInfo, FileDigest, Receipt, ReceiptMismatch, canonical_json, diff_receipts,
+    receipt_blake3,
+};
 
 use crate::lockfile_io;
-
-const SCHEMA_VERSION: u32 = 1;
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-pub struct Receipt {
-    #[serde(rename = "schemaVersion")]
-    pub schema_version: u32,
-    pub estante: EstanteInfo,
-    pub manifest: FileDigest,
-    pub lockfile: FileDigest,
-    pub entries: Vec<EntryDigest>,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-pub struct EstanteInfo {
-    pub version: String,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-pub struct FileDigest {
-    pub path: String,
-    pub blake3: String,
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq)]
-pub struct EntryDigest {
-    pub name: String,
-    pub blake3: String,
-    pub placement: String,
-    #[serde(rename = "materializedExists")]
-    pub materialized_exists: bool,
-}
 
 /// Compute a [`Receipt`] from a manifest + lockfile on disk.
 ///
@@ -118,107 +95,6 @@ pub fn build_receipt(manifest_path: &Path, lockfile_path: &Path) -> anyhow::Resu
         },
         entries,
     })
-}
-
-/// Serialize a receipt to its canonical wire bytes. The JSON is
-/// pretty-printed with `serde_json::to_string_pretty` (2-space
-/// indent, fields in struct-definition order — both are stable
-/// across serde_json versions for derive-generated impls).
-#[must_use]
-pub fn canonical_json(receipt: &Receipt) -> String {
-    let mut s = serde_json::to_string_pretty(receipt).expect("Receipt is serializable");
-    s.push('\n');
-    s
-}
-
-/// BLAKE3 over the canonical JSON bytes — the one-line attestation
-/// digest a downstream verifier can compare against.
-#[must_use]
-pub fn receipt_blake3(receipt: &Receipt) -> String {
-    blake3::hash(canonical_json(receipt).as_bytes())
-        .to_hex()
-        .to_string()
-}
-
-/// Difference between two receipts. `None` means they're identical.
-#[derive(Debug, Clone)]
-pub struct ReceiptMismatch {
-    pub field: String,
-    pub claimed: String,
-    pub actual: String,
-}
-
-/// Compare a claimed receipt against one re-derived from the current
-/// manifest + lockfile + materialized state. Returns the full list
-/// of mismatches in deterministic order (manifest → lockfile →
-/// per-entry).
-pub fn diff_receipts(claimed: &Receipt, actual: &Receipt) -> Vec<ReceiptMismatch> {
-    let mut diffs: Vec<ReceiptMismatch> = Vec::new();
-    if claimed.schema_version != actual.schema_version {
-        diffs.push(ReceiptMismatch {
-            field: "schemaVersion".into(),
-            claimed: claimed.schema_version.to_string(),
-            actual: actual.schema_version.to_string(),
-        });
-    }
-    if claimed.manifest.blake3 != actual.manifest.blake3 {
-        diffs.push(ReceiptMismatch {
-            field: "manifest.blake3".into(),
-            claimed: claimed.manifest.blake3.clone(),
-            actual: actual.manifest.blake3.clone(),
-        });
-    }
-    if claimed.lockfile.blake3 != actual.lockfile.blake3 {
-        diffs.push(ReceiptMismatch {
-            field: "lockfile.blake3".into(),
-            claimed: claimed.lockfile.blake3.clone(),
-            actual: actual.lockfile.blake3.clone(),
-        });
-    }
-    // Pair entries by name; entries claimed but missing in actual count too.
-    let actual_by_name: std::collections::HashMap<&str, &EntryDigest> = actual
-        .entries
-        .iter()
-        .map(|e| (e.name.as_str(), e))
-        .collect();
-    for c in &claimed.entries {
-        match actual_by_name.get(c.name.as_str()) {
-            Some(a) => {
-                if c.blake3 != a.blake3 {
-                    diffs.push(ReceiptMismatch {
-                        field: ["entries[", &c.name, "].blake3"].concat(),
-                        claimed: c.blake3.clone(),
-                        actual: a.blake3.clone(),
-                    });
-                }
-                if c.placement != a.placement {
-                    diffs.push(ReceiptMismatch {
-                        field: ["entries[", &c.name, "].placement"].concat(),
-                        claimed: c.placement.clone(),
-                        actual: a.placement.clone(),
-                    });
-                }
-            }
-            None => diffs.push(ReceiptMismatch {
-                field: ["entries[", &c.name, "]"].concat(),
-                claimed: "present".into(),
-                actual: "missing".into(),
-            }),
-        }
-    }
-    // Entries new in actual but not claimed.
-    let claimed_names: std::collections::HashSet<&str> =
-        claimed.entries.iter().map(|e| e.name.as_str()).collect();
-    for a in &actual.entries {
-        if !claimed_names.contains(a.name.as_str()) {
-            diffs.push(ReceiptMismatch {
-                field: ["entries[", &a.name, "]"].concat(),
-                claimed: "missing".into(),
-                actual: "present".into(),
-            });
-        }
-    }
-    diffs
 }
 
 /// Canonical sibling-receipt path for a given manifest. The CI
