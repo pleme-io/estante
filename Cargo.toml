@@ -82,6 +82,13 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
 # Testing
 pretty_assertions = "1"
+# Property-based testing — generates thousands of random inputs to
+# verify invariants like "parse(render(x)) == x for any x".
+# Determinism + correctness guard beyond what example tests catch.
+proptest = "1"
+# Snapshot tests — wire-format stability for typed renderers.
+# Catches accidental format drift in Manifest/Lockfile/Nix output.
+insta = { version = "1", features = ["yaml"] }
 
 [profile.release]
 codegen-units = 1

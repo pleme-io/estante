@@ -5,6 +5,7 @@
 //! `fetch`.
 
 pub mod add;
+pub mod doctor;
 pub mod expand;
 pub mod export;
 pub mod info;
@@ -17,3 +18,4 @@ pub mod search;
 pub mod test;
 pub mod tool;
 pub mod validate;
+pub mod verify;

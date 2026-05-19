@@ -138,6 +138,23 @@ enum Command {
         #[arg(long, value_enum)]
         to: estante::actions::place::Target,
     },
+    /// Re-hash every materialized package and verify the digest
+    /// against the lockfile's recorded BLAKE3. The verifiability
+    /// primitive — anyone with the lockfile + the materialized tree
+    /// can re-derive the receipt and prove the bytes haven't drifted.
+    Verify {
+        /// Treat empty BLAKE3 entries (cache-placement, pre-hash) as
+        /// failures rather than skipping. Default: skipped.
+        #[arg(long)]
+        strict: bool,
+        /// Emit a JSON report on stdout for CI consumption.
+        #[arg(long)]
+        json: bool,
+    },
+    /// Full health audit — composes manifest+lockfile parse,
+    /// source-URL validity, placement consistency, materialized-path
+    /// existence, BLAKE3 verification, and cache layout checks.
+    Doctor,
 }
 
 #[derive(Subcommand, Debug)]
@@ -203,5 +220,9 @@ async fn main() -> anyhow::Result<()> {
         Command::Place { name, all, to } => {
             actions::place::run(&cli.lockfile, name, all, to).await
         }
+        Command::Verify { strict, json } => {
+            actions::verify::run(&cli.lockfile, actions::verify::Opts { strict, json }).await
+        }
+        Command::Doctor => actions::doctor::run(&cli.manifest, &cli.lockfile, &cfg).await,
     }
 }

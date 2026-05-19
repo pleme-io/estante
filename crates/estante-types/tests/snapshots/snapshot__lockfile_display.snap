@@ -1,0 +1,38 @@
+---
+source: crates/estante-types/tests/snapshot.rs
+assertion_line: 77
+expression: fixed_lockfile().to_string()
+---
+;; shellpkg.lock.lisp — machine-emitted by `estante install`.
+;; DO NOT EDIT BY HAND. Re-run `estante lock` instead.
+;; Content-addressed by (rev, nar-hash, blake3).
+
+(deflockedpkg
+  :name              "alpha"
+  :source            "github:org/alpha"
+  :rev               "abcdef0123456789abcdef0123456789abcdef01"
+  :nar-hash          "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA="
+  :blake3            "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef"
+  :materialized-path "/nix/store/abc-alpha-1.0.0/"
+  :placement         "nix"
+  )
+
+(deflockedpkg
+  :name              "beta"
+  :source            "local:/abs/path/to/beta"
+  :rev               "deadbeefcafef00d"
+  :nar-hash          ""
+  :blake3            "fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210"
+  :materialized-path "/Users/op/.cache/estante/store/beta-deadbeefcafef00d/"
+  :placement         "cache"
+  )
+
+(deflockedpkg
+  :name              "gamma"
+  :source            "github:org/gamma@v3.0"
+  :rev               "abcdef0123456789abcdef0123456789abcdef02"
+  :nar-hash          "sha256-BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB="
+  :blake3            "1111111111111111111111111111111111111111111111111111111111111111"
+  :materialized-path "/nix/store/def-gamma-3.0/"
+  :placement         "both"
+  )

@@ -1,0 +1,8 @@
+---
+source: crates/estante-types/tests/snapshot.rs
+assertion_line: 95
+expression: "Manifest::default().to_string()"
+---
+;; shellpkg.lisp — estante manifest.
+;; Authored by hand or via `estante add`.
+;; Lockfile: shellpkg.lock.lisp (emitted by `estante lock`).

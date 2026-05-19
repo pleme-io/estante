@@ -1,0 +1,8 @@
+---
+source: crates/estante-types/tests/snapshot.rs
+assertion_line: 90
+expression: "Lockfile::default().to_string()"
+---
+;; shellpkg.lock.lisp — machine-emitted by `estante install`.
+;; DO NOT EDIT BY HAND. Re-run `estante lock` instead.
+;; Content-addressed by (rev, nar-hash, blake3).

@@ -1,0 +1,43 @@
+---
+source: crates/estante-types/tests/snapshot.rs
+assertion_line: 82
+expression: "nix_export::lockfile_to_nix(&fixed_lockfile())"
+---
+# shellpkg.lock.nix — machine-emitted by `estante export --format nix`.
+# DO NOT EDIT BY HAND. Re-run `estante lock` then `estante export`.
+# Consumed by `substrate/lib/build/estante/` via `import ./shellpkg.lock.nix`.
+
+{
+  schemaVersion = 1;
+  packages = [
+    {
+      name = "alpha";
+      source = "github:org/alpha";
+      rev = "abcdef0123456789abcdef0123456789abcdef01";
+      narHash = "sha256-AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA=";
+      blake3 = "0123456789abcdef0123456789abcdef0123456789abcdef0123456789abcdef";
+      materializedPath = "/nix/store/abc-alpha-1.0.0/";
+      entrypoint = "rc.lisp";
+      placement = "nix";
+    }
+    {
+      name = "beta";
+      source = "local:/abs/path/to/beta";
+      rev = "deadbeefcafef00d";
+      blake3 = "fedcba9876543210fedcba9876543210fedcba9876543210fedcba9876543210";
+      materializedPath = "/Users/op/.cache/estante/store/beta-deadbeefcafef00d/";
+      entrypoint = "rc.lisp";
+      placement = "cache";
+    }
+    {
+      name = "gamma";
+      source = "github:org/gamma@v3.0";
+      rev = "abcdef0123456789abcdef0123456789abcdef02";
+      narHash = "sha256-BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB=";
+      blake3 = "1111111111111111111111111111111111111111111111111111111111111111";
+      materializedPath = "/nix/store/def-gamma-3.0/";
+      entrypoint = "rc.lisp";
+      placement = "both";
+    }
+  ];
+}

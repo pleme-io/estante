@@ -1,0 +1,23 @@
+---
+source: crates/estante-types/tests/snapshot.rs
+assertion_line: 72
+expression: fixed_manifest().to_string()
+---
+;; shellpkg.lisp — estante manifest.
+;; Authored by hand or via `estante add`.
+;; Lockfile: shellpkg.lock.lisp (emitted by `estante lock`).
+
+(defshellpkg
+  :name    "alpha"
+  :version "1.0.0"
+  :source  "github:org/alpha@v1.0.0"
+  )
+
+(defshellpkg
+  :name    "beta"
+  :version "0.2.0"
+  :source  "github:org/beta@v0.2.0"
+  :exports ("alias" "hook")
+  :deps    ("alpha@^1.0")
+  :lazy    #t
+  )
