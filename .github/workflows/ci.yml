@@ -19,8 +19,12 @@ defaults:
 
 jobs:
   test:
-    name: cargo test + clippy + fmt
-    runs-on: macos-15
+    name: cargo test + clippy + fmt (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout estante
         uses: actions/checkout@v4
@@ -51,8 +55,12 @@ jobs:
         run: cargo test --workspace -- --test-threads=1
 
   dogfood:
-    name: dogfood — lock/attest/verify/doctor against examples/
-    runs-on: macos-15
+    name: dogfood — lock/attest/verify/doctor against examples/ (${{ matrix.os }})
+    strategy:
+      fail-fast: false
+      matrix:
+        os: [macos-15, ubuntu-latest]
+    runs-on: ${{ matrix.os }}
     needs: test
     steps:
       - name: Checkout estante
