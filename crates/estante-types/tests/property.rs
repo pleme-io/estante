@@ -7,12 +7,12 @@
 //! The properties chosen are the load-bearing determinism +
 //! verifiability claims of the typescape:
 //!
-//! 1. Manifest::parse(M.to_string()) == M               — author-side round-trip
-//! 2. Lockfile::parse(L.to_string()) == L                — lockfile round-trip
-//! 3. Source::parse(s.to_source_string()) == Ok(s)       — Source ADT round-trip
-//! 4. nix_export(L).contains every required field for every entry
-//! 5. LispString escapes are reversible (no information loss)
-//! 6. Lockfile::upsert is idempotent — upsert(x); upsert(x) yields the same shape
+//! 1. `Manifest::parse(M.to_string()) == M`               — author-side round-trip
+//! 2. `Lockfile::parse(L.to_string()) == L`                — lockfile round-trip
+//! 3. `Source::parse(s.to_source_string()) == Ok(s)`       — `Source` ADT round-trip
+//! 4. `nix_export(L)` contains every required field for every entry
+//! 5. `LispString` escapes are reversible (no information loss)
+//! 6. `Lockfile::upsert` is idempotent — `upsert(x); upsert(x)` yields the same shape
 
 #![cfg(test)]
 

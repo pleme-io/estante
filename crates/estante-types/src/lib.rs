@@ -857,8 +857,8 @@ mod tests {
             let mut m = Manifest::default();
             m.upsert(PkgSpec {
                 name: r#"has-"quote""#.to_owned(),
-                version: r#"v\back"#.to_owned(),
-                source: r#"github:org/repo with spaces"#.to_owned(),
+                version: "v\\back".to_owned(),
+                source: "github:org/repo with spaces".to_owned(),
                 exports: vec![r#"alias-with-"inner"-quote"#.to_owned()],
                 deps: vec![],
                 lazy: false,
