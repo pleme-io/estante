@@ -37,7 +37,7 @@ use crate::Lockfile;
 /// deterministic + reparsable by Nix's `import`.
 #[must_use]
 pub fn lockfile_to_nix(lockfile: &Lockfile) -> String {
-    format!("{}", NixLockfileFormatter(lockfile))
+    NixLockfileFormatter(lockfile).to_string()
 }
 
 struct NixLockfileFormatter<'a>(&'a Lockfile);
