@@ -9,13 +9,29 @@ on:
       - main
   workflow_dispatch:
 
+defaults:
+  run:
+    # estante's workspace.dependencies points at `../frost/crates/frost-lisp`
+    # via a local path dep, so the CI runner needs `estante/` and
+    # `frost/` as sibling directories. All step commands run from
+    # estante/ so the workspace Cargo.toml resolves frost-lisp correctly.
+    working-directory: estante
+
 jobs:
   test:
     name: cargo test + clippy + fmt
     runs-on: macos-15
     steps:
-      - name: Checkout
+      - name: Checkout estante
         uses: actions/checkout@v4
+        with:
+          path: estante
+
+      - name: Checkout frost (sibling for local path dep)
+        uses: actions/checkout@v4
+        with:
+          repository: pleme-io/frost
+          path: frost
 
       - name: cargo fmt --check
         run: cargo fmt --all -- --check
@@ -31,28 +47,36 @@ jobs:
     runs-on: macos-15
     needs: test
     steps:
-      - name: Checkout
+      - name: Checkout estante
         uses: actions/checkout@v4
+        with:
+          path: estante
+
+      - name: Checkout frost (sibling for local path dep)
+        uses: actions/checkout@v4
+        with:
+          repository: pleme-io/frost
+          path: frost
 
       - name: cargo build --release
         run: cargo build --release -p estante
 
       - name: estante lock --emit-receipt (against examples/)
-        working-directory: examples/frostmourne-style/consumer
+        working-directory: estante/examples/frostmourne-style/consumer
         run: ../../../target/release/estante lock --emit-receipt
 
       - name: estante attest --check (matches the receipt we just wrote)
-        working-directory: examples/frostmourne-style/consumer
+        working-directory: estante/examples/frostmourne-style/consumer
         run: ../../../target/release/estante attest --check --json
 
       - name: estante lock --check (lockfile reflects manifest)
-        working-directory: examples/frostmourne-style/consumer
+        working-directory: estante/examples/frostmourne-style/consumer
         run: ../../../target/release/estante lock --check
 
       - name: estante verify --strict (BLAKE3 tree matches lockfile)
-        working-directory: examples/frostmourne-style/consumer
+        working-directory: estante/examples/frostmourne-style/consumer
         run: ../../../target/release/estante verify --strict --json
 
       - name: estante doctor (full health audit)
-        working-directory: examples/frostmourne-style/consumer
+        working-directory: estante/examples/frostmourne-style/consumer
         run: ../../../target/release/estante doctor --json

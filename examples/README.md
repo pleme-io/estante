@@ -20,31 +20,40 @@ frostmourne-style/
 
 ### Driving the demo
 
-From the repo root:
+From the repo root (or use `working-directory: examples/frostmourne-style/consumer` to match the CI layout):
 
 ```bash
-# 1. Manifest + lockfile resolution.
-cargo run --bin estante -- \
-  --manifest examples/frostmourne-style/consumer/shellpkg.lisp \
-  --lockfile examples/frostmourne-style/consumer/shellpkg.lock.lisp \
-  lock
+cd examples/frostmourne-style/consumer
 
-# 2. Materialize into the local cache.
-cargo run --bin estante -- \
-  --manifest examples/frostmourne-style/consumer/shellpkg.lisp \
-  --lockfile examples/frostmourne-style/consumer/shellpkg.lock.lisp \
-  install
+# 1. Resolve + emit lockfile + sibling attestation receipt in one shot.
+estante lock --emit-receipt
+
+# 2. Materialize into the local cache (no-op after step 1 if cached).
+estante install
 
 # 3. Inspect what frost-lisp will see.
-cargo run --bin estante -- \
-  --lockfile examples/frostmourne-style/consumer/shellpkg.lock.lisp \
-  expand
+estante expand
 ```
 
 Step 3 prints the rc.lisp of every locked package. If you point
-`$FROSTRC` at `examples/frostmourne-style/consumer/frostrc.lisp` and
-launch `frost`, the `(defalias :name "example" …)` from the package
-lands in `env.aliases` and you can run `example` interactively.
+`$FROSTRC` at `frostrc.lisp` and launch `frost`, the
+`(defalias :name "example" …)` from the package lands in
+`env.aliases` and you can run `example` interactively.
+
+### Verifiability gates
+
+The four CI gates this repo's own `.github/workflows/ci.yml` runs
+against this example also work locally — they are the framework's
+verifiability primitives in operator-facing form:
+
+```bash
+estante attest --check    # receipt matches current state
+estante lock --check      # lockfile reflects manifest
+estante verify --strict   # materialized tree BLAKE3 matches lockfile
+estante doctor            # 9-check health audit composing the above
+```
+
+All four accept `--json` for machine-readable output.
 
 ### Migrating frostmourne itself
 
