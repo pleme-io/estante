@@ -221,14 +221,48 @@ pub fn diff_receipts(claimed: &Receipt, actual: &Receipt) -> Vec<ReceiptMismatch
     diffs
 }
 
+/// Canonical sibling-receipt path for a given manifest. The CI
+/// gate convention is `<manifest_dir>/shellpkg.receipt.json` — this
+/// helper computes it without committing to a path inside the
+/// action surface.
+#[must_use]
+pub fn sibling_receipt_for(manifest_path: &Path) -> PathBuf {
+    manifest_path
+        .parent()
+        .unwrap_or_else(|| Path::new("."))
+        .join("shellpkg.receipt.json")
+}
+
 pub async fn run(
     manifest_path: &Path,
     lockfile_path: &Path,
     out: Option<&Path>,
     verify: Option<&Path>,
     json_out: bool,
+    check: bool,
 ) -> anyhow::Result<()> {
-    if let Some(receipt_path) = verify {
+    // `--check` is the ergonomic shorthand for `--verify <sibling
+    // receipt>`. Single flag, no path argument — assumes the
+    // receipt sits next to the manifest at shellpkg.receipt.json.
+    // Errors out if no sibling exists.
+    let verify_resolved: Option<PathBuf> = if check {
+        if verify.is_some() {
+            anyhow::bail!("--check and --verify are mutually exclusive");
+        }
+        let sibling = sibling_receipt_for(manifest_path);
+        if !sibling.exists() {
+            anyhow::bail!(
+                "--check: no sibling receipt at {} — run `estante attest --out {}` first",
+                sibling.display(),
+                sibling.display(),
+            );
+        }
+        Some(sibling)
+    } else {
+        verify.map(Path::to_path_buf)
+    };
+
+    if let Some(receipt_path) = verify_resolved.as_deref() {
         let claimed_bytes = std::fs::read(receipt_path)
             .with_context(|| ["reading receipt ", &receipt_path.display().to_string()].concat())?;
         let claimed: Receipt = serde_json::from_slice(&claimed_bytes)
@@ -477,6 +511,27 @@ mod tests {
         let d = diff_receipts(&claimed, &actual);
         assert_eq!(d.len(), 1);
         assert_eq!(d[0].field, "entries[alpha].placement");
+    }
+
+    #[test]
+    fn sibling_receipt_for_finds_shellpkg_receipt_next_to_manifest() {
+        let m = Path::new("/some/dir/shellpkg.lisp");
+        assert_eq!(
+            sibling_receipt_for(m),
+            Path::new("/some/dir/shellpkg.receipt.json"),
+        );
+    }
+
+    #[test]
+    fn sibling_receipt_for_handles_rootless_manifest() {
+        // Manifest with no parent (e.g., "shellpkg.lisp" alone) gets
+        // a sibling in the same (empty) directory — the function
+        // doesn't panic on a path without a parent component.
+        let m = Path::new("shellpkg.lisp");
+        assert_eq!(
+            sibling_receipt_for(m),
+            Path::new("shellpkg.receipt.json"),
+        );
     }
 
     #[test]

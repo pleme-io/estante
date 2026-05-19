@@ -387,6 +387,134 @@ fn attest_verify_round_trips_clean_then_fails_on_drift() {
     );
 }
 
+/// `estante attest --check` is the ergonomic CI gate: looks for a
+/// sibling `shellpkg.receipt.json` next to the manifest, diffs the
+/// current state against it, and exits non-zero on drift. Composes
+/// with the existing --verify path but with zero path arguments.
+#[test]
+fn attest_check_passes_for_fresh_sibling_receipt() {
+    let sb = Sandbox::new("attest-check-clean");
+    let pkg = write_pkg(&sb, "nu", "echo nu-value");
+    let manifest = sb.join("shellpkg.lisp");
+    write_manifest(&manifest, "nu", &pkg);
+
+    let cache = sb.join("cache");
+    let lockfile = sb.join("shellpkg.lock.lisp");
+    run_lock(&manifest, &lockfile, &cache);
+
+    // Emit receipt at the canonical sibling path.
+    let receipt = sb.join("shellpkg.receipt.json");
+    let st = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("attest")
+        .arg("--out")
+        .arg(&receipt)
+        .status()
+        .expect("attest --out");
+    assert!(st.success());
+
+    // --check finds the sibling automatically and exits zero.
+    let out = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("attest")
+        .arg("--check")
+        .output()
+        .expect("attest --check");
+    assert!(
+        out.status.success(),
+        "fresh sibling receipt must pass --check; stderr:\n{}",
+        String::from_utf8_lossy(&out.stderr),
+    );
+    let stdout = String::from_utf8_lossy(&out.stdout);
+    assert!(stdout.contains("receipt matches"));
+}
+
+#[test]
+fn attest_check_fails_with_clear_message_when_no_sibling_exists() {
+    let sb = Sandbox::new("attest-check-missing");
+    let pkg = write_pkg(&sb, "xi", "echo xi-value");
+    let manifest = sb.join("shellpkg.lisp");
+    write_manifest(&manifest, "xi", &pkg);
+
+    let cache = sb.join("cache");
+    let lockfile = sb.join("shellpkg.lock.lisp");
+    run_lock(&manifest, &lockfile, &cache);
+
+    // No receipt emitted → --check should fail with an actionable
+    // error pointing at the expected path + the command to fix it.
+    let out = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("attest")
+        .arg("--check")
+        .output()
+        .expect("attest --check (no sibling)");
+    assert!(!out.status.success(), "missing sibling must fail --check");
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(
+        stderr.contains("no sibling receipt") && stderr.contains("estante attest"),
+        "error message must be actionable; stderr:\n{stderr}",
+    );
+}
+
+#[test]
+fn attest_check_detects_drift_against_sibling_receipt() {
+    let sb = Sandbox::new("attest-check-drift");
+    let pkg = write_pkg(&sb, "omicron", "echo omicron-value");
+    let manifest = sb.join("shellpkg.lisp");
+    write_manifest(&manifest, "omicron", &pkg);
+
+    let cache = sb.join("cache");
+    let lockfile = sb.join("shellpkg.lock.lisp");
+    run_lock(&manifest, &lockfile, &cache);
+    let receipt = sb.join("shellpkg.receipt.json");
+    let st = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("attest")
+        .arg("--out")
+        .arg(&receipt)
+        .status()
+        .expect("attest --out");
+    assert!(st.success());
+
+    // Mutate manifest → receipt manifest.blake3 no longer matches.
+    let mut body = std::fs::read(&manifest).unwrap();
+    body.push(b' ');
+    std::fs::write(&manifest, body).unwrap();
+
+    let out = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("attest")
+        .arg("--check")
+        .arg("--json")
+        .output()
+        .expect("attest --check --json");
+    assert!(!out.status.success(), "drift must fail --check");
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    assert_eq!(v["matched"], serde_json::Value::Bool(false));
+    let fields: Vec<&str> = v["diffs"]
+        .as_array()
+        .unwrap()
+        .iter()
+        .map(|d| d["field"].as_str().unwrap())
+        .collect();
+    assert!(fields.contains(&"manifest.blake3"));
+}
+
 /// `estante lock --check` is the CI gate enforcing "the committed
 /// lockfile reflects the committed manifest." Exits zero when the
 /// lockfile would not change, non-zero when it would. Mutating the

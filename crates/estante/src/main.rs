@@ -175,14 +175,19 @@ enum Command {
     /// mismatch.
     Attest {
         /// Write to this file instead of stdout.
-        #[arg(long, conflicts_with = "verify")]
+        #[arg(long, conflicts_with_all = ["verify", "check"])]
         out: Option<std::path::PathBuf>,
         /// Verify a previously emitted receipt against current state.
-        /// Mutually exclusive with `--out`.
-        #[arg(long)]
+        /// Mutually exclusive with `--out` and `--check`.
+        #[arg(long, conflicts_with = "check")]
         verify: Option<std::path::PathBuf>,
-        /// Emit machine-readable JSON on stdout (combines with --verify
-        /// to produce structured diff output for CI).
+        /// Verify against the sibling `shellpkg.receipt.json` next to
+        /// the manifest — the CI gate ergonomic shorthand. Single
+        /// flag, no path argument.
+        #[arg(long)]
+        check: bool,
+        /// Emit machine-readable JSON on stdout (combines with
+        /// --verify / --check to produce structured diff output for CI).
         #[arg(long)]
         json: bool,
     },
@@ -259,13 +264,14 @@ async fn main() -> anyhow::Result<()> {
         Command::Doctor { json } => {
             actions::doctor::run_with_opts(&cli.manifest, &cli.lockfile, &cfg, json).await
         }
-        Command::Attest { out, verify, json } => {
+        Command::Attest { out, verify, check, json } => {
             actions::attest::run(
                 &cli.manifest,
                 &cli.lockfile,
                 out.as_deref(),
                 verify.as_deref(),
                 json,
+                check,
             )
             .await
         }
