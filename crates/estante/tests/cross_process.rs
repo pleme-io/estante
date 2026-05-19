@@ -387,6 +387,84 @@ fn attest_verify_round_trips_clean_then_fails_on_drift() {
     );
 }
 
+/// `estante lock --check` is the CI gate enforcing "the committed
+/// lockfile reflects the committed manifest." Exits zero when the
+/// lockfile would not change, non-zero when it would. Mutating the
+/// rc.lisp body changes the BLAKE3 → check must fail.
+#[test]
+fn lock_check_exits_clean_when_lockfile_is_up_to_date() {
+    let sb = Sandbox::new("lock-check-clean");
+    let pkg = write_pkg(&sb, "kappa", "echo kappa-value");
+    let manifest = sb.join("shellpkg.lisp");
+    write_manifest(&manifest, "kappa", &pkg);
+
+    let cache = sb.join("cache");
+    let lockfile = sb.join("shellpkg.lock.lisp");
+    run_lock(&manifest, &lockfile, &cache);
+
+    let out = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("lock")
+        .arg("--check")
+        .output()
+        .expect("spawn lock --check");
+    assert!(
+        out.status.success(),
+        "freshly locked workspace must pass lock --check; stderr:\n{}",
+        String::from_utf8_lossy(&out.stderr),
+    );
+    assert!(String::from_utf8_lossy(&out.stdout).contains("up to date"));
+}
+
+#[test]
+fn lock_check_exits_dirty_when_manifest_adds_a_package() {
+    let sb = Sandbox::new("lock-check-drift");
+    let pkg = write_pkg(&sb, "lambda", "echo lambda-value");
+    let manifest = sb.join("shellpkg.lisp");
+    write_manifest(&manifest, "lambda", &pkg);
+
+    let cache = sb.join("cache");
+    let lockfile = sb.join("shellpkg.lock.lisp");
+    run_lock(&manifest, &lockfile, &cache);
+
+    // Add a second package to the manifest without rerunning lock —
+    // this is the exact "manifest edit got merged without an
+    // updated lockfile" failure mode `lock --check` exists to catch.
+    let pkg2 = write_pkg(&sb, "mu", "echo mu-value");
+    let pkg2_uri = ["local:", &pkg2.display().to_string()].concat();
+    let extra = [
+        "\n(defshellpkg\n  :name \"mu\"\n  :version \"0.1.0\"\n  :source \"",
+        &pkg2_uri,
+        "\"\n)\n",
+    ]
+    .concat();
+    let mut body = std::fs::read(&manifest).unwrap();
+    body.extend_from_slice(extra.as_bytes());
+    std::fs::write(&manifest, body).unwrap();
+
+    let out = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("lock")
+        .arg("--check")
+        .output()
+        .expect("spawn lock --check drift");
+    assert!(
+        !out.status.success(),
+        "drifted manifest must fail lock --check",
+    );
+    let stderr = String::from_utf8_lossy(&out.stderr);
+    assert!(
+        stderr.contains("out of date") && stderr.contains("blake3"),
+        "drift report must explain the mismatch; stderr:\n{stderr}",
+    );
+}
+
 /// `estante doctor --json` emits a structured report whose schema
 /// is the CI contract: { checks: [...], passed, failed, total }.
 /// Pinned here so accidental shape drift breaks the test before it

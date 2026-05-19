@@ -66,7 +66,14 @@ enum Command {
         version: Option<String>,
     },
     /// Resolve the manifest's deps + emit a deterministic lockfile.
-    Lock,
+    /// `--check` re-resolves in memory and exits non-zero if the
+    /// committed lockfile would change — the CI gate enforcing
+    /// "the lockfile reflects the manifest."
+    Lock {
+        /// Compare against the existing lockfile without writing.
+        #[arg(long)]
+        check: bool,
+    },
     /// Fetch + materialize every locked entry into the local cache.
     Install,
     /// Search for shell packages by `topic:estante-pkg` + query.
@@ -223,7 +230,9 @@ async fn main() -> anyhow::Result<()> {
             name,
             version,
         } => actions::add::run(&cli.manifest, &source, name, version).await,
-        Command::Lock => actions::lock::run(&cli.manifest, &cli.lockfile, &cfg).await,
+        Command::Lock { check } => {
+            actions::lock::run_with_opts(&cli.manifest, &cli.lockfile, &cfg, check).await
+        }
         Command::Install => actions::install::run(&cli.lockfile, &cfg).await,
         Command::Search { query, limit } => actions::search::run(&query, limit, &cfg).await,
         Command::Expand => actions::expand::run(&cli.lockfile).await,
