@@ -6,9 +6,12 @@
 
 pub mod add;
 pub mod expand;
+pub mod export;
 pub mod info;
 pub mod init;
 pub mod install;
 pub mod lock;
+pub mod run;
 pub mod search;
+pub mod tool;
 pub mod validate;

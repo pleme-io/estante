@@ -29,6 +29,8 @@
 use std::fmt;
 use std::fmt::Write as _;
 
+pub mod nix_export;
+
 pub use frost_lisp::{LoadSpec, LockedPkgSpec, PkgSpec, split_source_scheme};
 
 // ─── Errors ───────────────────────────────────────────────────────────

@@ -13,6 +13,7 @@ pub mod cache;
 pub mod config;
 pub mod fetch;
 pub mod hash;
+pub mod inline_metadata;
 pub mod lockfile_io;
 pub mod manifest_io;
 pub mod resolver;

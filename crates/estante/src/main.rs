@@ -42,6 +42,16 @@ enum Command {
         /// Package name. Defaults to the basename of cwd.
         #[arg(long)]
         name: Option<String>,
+        /// Package kind. `library` (default) is the standard set of
+        /// behavior forms. `binary` scaffolds a one-shot tool. `daemon`
+        /// scaffolds a long-running service.
+        #[arg(long, value_enum, default_value_t = estante::actions::init::Kind::Library)]
+        kind: estante::actions::init::Kind,
+        /// Compat target. `frost` (default) emits a tatara-lisp
+        /// rc.lisp entrypoint. `vanilla` emits POSIX shell
+        /// init.{bash,zsh} entrypoints — frost-free. `both` does both.
+        #[arg(long, value_enum, default_value_t = estante::actions::init::Compat::Frost)]
+        compat: estante::actions::init::Compat,
     },
     /// Add a `(defshellpkg …)` entry to the manifest.
     Add {
@@ -73,6 +83,54 @@ enum Command {
     Validate,
     /// Print the cache directory + auth status.
     Info,
+    /// Emit the lockfile in an alternate format (lisp / nix / json).
+    /// `--format nix` produces a `shellpkg.lock.nix` consumed by
+    /// `substrate/lib/build/estante/`.
+    Export {
+        /// Output format.
+        #[arg(long, value_enum, default_value_t = estante::actions::export::Format::Lisp)]
+        format: estante::actions::export::Format,
+        /// Write to this file instead of stdout.
+        #[arg(long)]
+        output: Option<std::path::PathBuf>,
+    },
+    /// uv-like ad-hoc run: parse the script's inline metadata,
+    /// materialize its declared deps via the resolver, launch a shell
+    /// that loads the deps + the script. Supports `.lisp` (frost),
+    /// `.bash`/`.sh` (bash), `.zsh` (zsh).
+    Run {
+        /// Path to the script source.
+        script: std::path::PathBuf,
+        /// Override the shell to exec. Default: derived from the
+        /// script's extension.
+        #[arg(long)]
+        shell: Option<String>,
+    },
+    /// uv-like persistent install: wrap a script (and its deps) as a
+    /// installable binary via a generated Nix derivation. Operator
+    /// installs via `nix profile install path:<cache>/tools/<name>`.
+    #[command(subcommand)]
+    Tool(ToolCommand),
+}
+
+#[derive(Subcommand, Debug)]
+enum ToolCommand {
+    /// Install a script as a persistent binary.
+    Install {
+        /// Path to the script source.
+        script: std::path::PathBuf,
+        /// Override the installed binary name (default: script's
+        /// `provides:` metadata or its file stem).
+        #[arg(long)]
+        name: Option<String>,
+    },
+    /// Remove a previously installed tool from the cache.
+    Uninstall {
+        /// Tool name.
+        name: String,
+    },
+    /// List installed tools.
+    List,
 }
 
 #[tokio::main]
@@ -89,7 +147,9 @@ async fn main() -> anyhow::Result<()> {
     let cfg = config::Config::resolve(cli.github_token.clone())?;
 
     match cli.command {
-        Command::Init { name } => actions::init::run(&cli.manifest, name).await,
+        Command::Init { name, kind, compat } => {
+            actions::init::run(&cli.manifest, name, kind, compat).await
+        }
         Command::Add {
             source,
             name,
@@ -101,5 +161,16 @@ async fn main() -> anyhow::Result<()> {
         Command::Expand => actions::expand::run(&cli.lockfile).await,
         Command::Validate => actions::validate::run(&cli.manifest, &cli.lockfile).await,
         Command::Info => actions::info::run(&cfg).await,
+        Command::Export { format, output } => {
+            actions::export::run(&cli.lockfile, format, output.as_deref()).await
+        }
+        Command::Run { script, shell } => actions::run::run(&script, &cfg, shell).await,
+        Command::Tool(sub) => match sub {
+            ToolCommand::Install { script, name } => {
+                actions::tool::install(&script, &cfg, name).await
+            }
+            ToolCommand::Uninstall { name } => actions::tool::uninstall(&name, &cfg).await,
+            ToolCommand::List => actions::tool::list(&cfg).await,
+        },
     }
 }
