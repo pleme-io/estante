@@ -487,3 +487,147 @@ mod tests {
         std::fs::remove_dir_all(&tmp).ok();
     }
 }
+
+// Property-based tests for the receipt-diff primitive. Each property
+// asserts an invariant of `diff_receipts` that example-tests don't
+// cover exhaustively: identical receipts always diff-empty; any
+// mutation must surface in diffs; diff is symmetric in coverage.
+#[cfg(test)]
+mod prop_tests {
+    use super::*;
+    use proptest::prelude::*;
+
+    fn entry_strategy() -> impl Strategy<Value = EntryDigest> {
+        (
+            "[a-z][a-z0-9-]{0,15}",
+            "[a-f0-9]{32,64}",
+            prop_oneof![
+                Just("cache".to_owned()),
+                Just("nix".to_owned()),
+                Just("both".to_owned()),
+            ],
+            any::<bool>(),
+        )
+            .prop_map(|(name, blake3, placement, materialized_exists)| EntryDigest {
+                name,
+                blake3,
+                placement,
+                materialized_exists,
+            })
+    }
+
+    fn receipt_strategy() -> impl Strategy<Value = Receipt> {
+        (
+            "[a-f0-9]{32,64}",
+            "[a-f0-9]{32,64}",
+            proptest::collection::vec(entry_strategy(), 0..5),
+        )
+            .prop_map(|(m_blake, l_blake, entries)| {
+                // Dedupe by name so the diff_receipts pair-by-name
+                // pass behaves deterministically.
+                let mut by_name = std::collections::BTreeMap::new();
+                for e in entries {
+                    by_name.insert(e.name.clone(), e);
+                }
+                Receipt {
+                    schema_version: 1,
+                    estante: EstanteInfo {
+                        version: "0.1.0".into(),
+                    },
+                    manifest: FileDigest {
+                        path: "shellpkg.lisp".into(),
+                        blake3: m_blake,
+                    },
+                    lockfile: FileDigest {
+                        path: "shellpkg.lock.lisp".into(),
+                        blake3: l_blake,
+                    },
+                    entries: by_name.into_values().collect(),
+                }
+            })
+    }
+
+    proptest! {
+        /// A receipt always diffs-empty against itself, regardless of
+        /// its shape.
+        #[test]
+        fn self_diff_is_always_empty(r in receipt_strategy()) {
+            prop_assert!(diff_receipts(&r, &r).is_empty());
+        }
+
+        /// The canonical JSON survives serde round-trip for any receipt
+        /// in the strategy space.
+        #[test]
+        fn canonical_json_serde_round_trip(r in receipt_strategy()) {
+            let json = canonical_json(&r);
+            let parsed: Receipt = serde_json::from_str(&json).unwrap();
+            prop_assert_eq!(parsed, r);
+        }
+
+        /// BLAKE3 of the canonical JSON is deterministic and stable
+        /// across repeated calls on the same Receipt.
+        #[test]
+        fn receipt_blake3_is_deterministic(r in receipt_strategy()) {
+            let h1 = receipt_blake3(&r);
+            let h2 = receipt_blake3(&r);
+            prop_assert_eq!(h1, h2);
+        }
+
+        /// Mutating manifest.blake3 must always surface as the
+        /// `manifest.blake3` field in diff_receipts.
+        #[test]
+        fn manifest_blake3_mutation_is_always_detected(
+            r in receipt_strategy(),
+            noise in "[a-f0-9]{32,64}",
+        ) {
+            prop_assume!(r.manifest.blake3 != noise);
+            let mut mutated = r.clone();
+            mutated.manifest.blake3 = noise;
+            let diffs = diff_receipts(&r, &mutated);
+            prop_assert!(diffs.iter().any(|d| d.field == "manifest.blake3"));
+        }
+
+        /// Mutating lockfile.blake3 always surfaces.
+        #[test]
+        fn lockfile_blake3_mutation_is_always_detected(
+            r in receipt_strategy(),
+            noise in "[a-f0-9]{32,64}",
+        ) {
+            prop_assume!(r.lockfile.blake3 != noise);
+            let mut mutated = r.clone();
+            mutated.lockfile.blake3 = noise;
+            let diffs = diff_receipts(&r, &mutated);
+            prop_assert!(diffs.iter().any(|d| d.field == "lockfile.blake3"));
+        }
+
+        /// Removing every entry from the actual side surfaces every
+        /// claimed entry as missing, in deterministic order.
+        #[test]
+        fn dropping_all_entries_reports_each_as_missing(r in receipt_strategy()) {
+            prop_assume!(!r.entries.is_empty());
+            let mut empty = r.clone();
+            empty.entries.clear();
+            let diffs = diff_receipts(&r, &empty);
+            prop_assert_eq!(diffs.len(), r.entries.len());
+            for d in &diffs {
+                prop_assert_eq!(&d.actual, "missing");
+            }
+        }
+
+        /// diff_receipts is symmetric in *coverage* — every field a
+        /// b-then-a diff reports must also be reported by a-then-b
+        /// (claimed/actual may swap). No mutation can hide from one
+        /// direction but appear in the other.
+        #[test]
+        fn diff_is_symmetric_in_field_coverage(
+            a in receipt_strategy(),
+            b in receipt_strategy(),
+        ) {
+            let fwd: std::collections::BTreeSet<String> =
+                diff_receipts(&a, &b).into_iter().map(|d| d.field).collect();
+            let rev: std::collections::BTreeSet<String> =
+                diff_receipts(&b, &a).into_iter().map(|d| d.field).collect();
+            prop_assert_eq!(fwd, rev);
+        }
+    }
+}
