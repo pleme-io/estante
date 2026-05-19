@@ -33,8 +33,12 @@ jobs:
           repository: pleme-io/frost
           path: frost
 
+      # `cargo fmt --all` walks local path-based deps (including the
+      # sibling frost checkout), so scope explicitly to our two
+      # crates. `cargo clippy --workspace` is fine — it respects the
+      # workspace boundary defined in our Cargo.toml.
       - name: cargo fmt --check
-        run: cargo fmt --all -- --check
+        run: cargo fmt -p estante -p estante-types -- --check
 
       - name: cargo clippy
         run: cargo clippy --workspace --all-targets -- -D warnings

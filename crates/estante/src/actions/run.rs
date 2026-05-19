@@ -16,7 +16,7 @@ use anyhow::Context;
 use estante_types::{Manifest, PkgSpec, Source};
 
 use crate::config::Config;
-use crate::inline_metadata::{self, CommentStyle};
+use crate::inline_metadata;
 use crate::lockfile_io;
 use crate::manifest_io;
 use crate::resolver::Resolver;
