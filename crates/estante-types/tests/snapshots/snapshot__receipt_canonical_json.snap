@@ -1,0 +1,33 @@
+---
+source: crates/estante-types/tests/snapshot.rs
+assertion_line: 134
+expression: receipt_canonical_json(&fixed_receipt())
+---
+{
+  "schemaVersion": 1,
+  "estante": {
+    "version": "0.1.0"
+  },
+  "manifest": {
+    "path": "shellpkg.lisp",
+    "blake3": "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+  },
+  "lockfile": {
+    "path": "shellpkg.lock.lisp",
+    "blake3": "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+  },
+  "entries": [
+    {
+      "name": "alpha",
+      "blake3": "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+      "placement": "cache",
+      "materializedExists": true
+    },
+    {
+      "name": "beta",
+      "blake3": "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+      "placement": "nix",
+      "materializedExists": false
+    }
+  ]
+}

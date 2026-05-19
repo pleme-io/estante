@@ -12,6 +12,9 @@
 
 #![cfg(test)]
 
+use estante_types::receipt::{
+    EntryDigest, EstanteInfo, FileDigest, Receipt, canonical_json as receipt_canonical_json,
+};
 use estante_types::{LockedPkgSpec, Lockfile, Manifest, PkgSpec, nix_export};
 
 fn fixed_manifest() -> Manifest {
@@ -93,4 +96,43 @@ fn snapshot_empty_lockfile_display() {
 #[test]
 fn snapshot_empty_manifest_display() {
     insta::assert_snapshot!("empty_manifest_display", Manifest::default().to_string());
+}
+
+fn fixed_receipt() -> Receipt {
+    Receipt {
+        schema_version: 1,
+        estante: EstanteInfo {
+            version: "0.1.0".into(),
+        },
+        manifest: FileDigest {
+            path: "shellpkg.lisp".into(),
+            blake3: "aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa".into(),
+        },
+        lockfile: FileDigest {
+            path: "shellpkg.lock.lisp".into(),
+            blake3: "bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb".into(),
+        },
+        entries: vec![
+            EntryDigest {
+                name: "alpha".into(),
+                blake3: "cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc".into(),
+                placement: "cache".into(),
+                materialized_exists: true,
+            },
+            EntryDigest {
+                name: "beta".into(),
+                blake3: "dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd".into(),
+                placement: "nix".into(),
+                materialized_exists: false,
+            },
+        ],
+    }
+}
+
+#[test]
+fn snapshot_receipt_canonical_json() {
+    insta::assert_snapshot!(
+        "receipt_canonical_json",
+        receipt_canonical_json(&fixed_receipt())
+    );
 }
