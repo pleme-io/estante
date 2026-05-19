@@ -12,6 +12,7 @@ use crate::config::Config;
 use crate::lockfile_io;
 use crate::manifest_io;
 
+use super::attest;
 use super::verify;
 
 #[derive(Debug, Clone)]
@@ -168,6 +169,53 @@ pub async fn run(manifest_path: &Path, lockfile_path: &Path, cfg: &Config) -> an
         passed: cfg.cache_dir.exists(),
         detail: cfg.cache_dir.display().to_string(),
     });
+
+    // 9. Receipt sidecar matches. The receipt is a published
+    // attestation receipt that some external party (CI, signer,
+    // operator) emitted. If a `shellpkg.receipt.json` sits next to
+    // the manifest, doctor confirms the current state still agrees
+    // with that receipt — otherwise published attestations have
+    // gone stale silently.
+    let receipt_path = manifest_path
+        .parent()
+        .unwrap_or_else(|| Path::new("."))
+        .join("shellpkg.receipt.json");
+    if receipt_path.exists() {
+        let check_result = match std::fs::read(&receipt_path)
+            .map_err(anyhow::Error::from)
+            .and_then(|bytes| {
+                serde_json::from_slice::<attest::Receipt>(&bytes).map_err(anyhow::Error::from)
+            })
+            .and_then(|claimed| {
+                let actual = attest::build_receipt(manifest_path, lockfile_path)?;
+                Ok(attest::diff_receipts(&claimed, &actual))
+            }) {
+            Ok(diffs) if diffs.is_empty() => CheckResult {
+                name: "receipt:matches",
+                passed: true,
+                detail: format!("{} matches", receipt_path.display()),
+            },
+            Ok(diffs) => CheckResult {
+                name: "receipt:matches",
+                passed: false,
+                detail: format!(
+                    "{} mismatch(es): {}",
+                    diffs.len(),
+                    diffs
+                        .iter()
+                        .map(|d| d.field.as_str())
+                        .collect::<Vec<_>>()
+                        .join(", "),
+                ),
+            },
+            Err(e) => CheckResult {
+                name: "receipt:matches",
+                passed: false,
+                detail: e.to_string(),
+            },
+        };
+        results.push(check_result);
+    }
 
     // ─── Render + exit. ──────────────────────────────────────────────
 

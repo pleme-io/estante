@@ -386,3 +386,77 @@ fn attest_verify_round_trips_clean_then_fails_on_drift() {
         "drift report must call out manifest.blake3; stderr:\n{stderr}",
     );
 }
+
+/// `estante doctor` finds a sibling `shellpkg.receipt.json` and
+/// fails the `receipt:matches` check when the manifest is mutated
+/// after the receipt was emitted. Closes the "did a published
+/// attestation go stale?" loop at the operator-facing entry point.
+#[test]
+fn doctor_fails_when_sibling_receipt_does_not_match_current_state() {
+    let sb = Sandbox::new("doctor-receipt");
+    let pkg = write_pkg(&sb, "zeta", "echo zeta-value");
+    let manifest = sb.join("shellpkg.lisp");
+    write_manifest(&manifest, "zeta", &pkg);
+
+    let cache = sb.join("cache");
+    let lockfile = sb.join("shellpkg.lock.lisp");
+    run_lock(&manifest, &lockfile, &cache);
+
+    let receipt = sb.join("shellpkg.receipt.json");
+    let st = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("attest")
+        .arg("--out")
+        .arg(&receipt)
+        .status()
+        .expect("attest --out");
+    assert!(st.success());
+
+    // Doctor on the unmodified tree passes.
+    let clean = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("doctor")
+        .output()
+        .expect("spawn doctor clean");
+    assert!(
+        clean.status.success(),
+        "clean doctor must pass; stderr:\n{}\nstdout:\n{}",
+        String::from_utf8_lossy(&clean.stderr),
+        String::from_utf8_lossy(&clean.stdout),
+    );
+    let stdout = String::from_utf8_lossy(&clean.stdout);
+    assert!(
+        stdout.contains("receipt:matches"),
+        "doctor output must include receipt:matches check; stdout:\n{stdout}",
+    );
+
+    // Mutate the manifest → receipt should no longer match → doctor
+    // exits non-zero with receipt:matches in the failing checks.
+    let mut body = std::fs::read(&manifest).unwrap();
+    body.push(b' ');
+    std::fs::write(&manifest, body).unwrap();
+
+    let drifted = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("doctor")
+        .output()
+        .expect("spawn doctor drifted");
+    let stdout = String::from_utf8_lossy(&drifted.stdout);
+    assert!(
+        !drifted.status.success(),
+        "mutated manifest must fail doctor; stdout:\n{stdout}",
+    );
+    assert!(
+        stdout.contains("receipt:matches"),
+        "drift report must call out receipt:matches; stdout:\n{stdout}",
+    );
+}
