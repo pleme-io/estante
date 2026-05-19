@@ -243,15 +243,12 @@ async fn main() -> anyhow::Result<()> {
             name,
             version,
         } => actions::add::run(&cli.manifest, &source, name, version).await,
-        Command::Lock { check, emit_receipt } => {
-            actions::lock::run_with_opts(
-                &cli.manifest,
-                &cli.lockfile,
-                &cfg,
-                check,
-                emit_receipt,
-            )
-            .await
+        Command::Lock {
+            check,
+            emit_receipt,
+        } => {
+            actions::lock::run_with_opts(&cli.manifest, &cli.lockfile, &cfg, check, emit_receipt)
+                .await
         }
         Command::Install => actions::install::run(&cli.lockfile, &cfg).await,
         Command::Search { query, limit } => actions::search::run(&query, limit, &cfg).await,
@@ -270,16 +267,19 @@ async fn main() -> anyhow::Result<()> {
             ToolCommand::List => actions::tool::list(&cfg).await,
         },
         Command::Test { dir, filter } => actions::test::run(&dir, filter).await,
-        Command::Place { name, all, to } => {
-            actions::place::run(&cli.lockfile, name, all, to).await
-        }
+        Command::Place { name, all, to } => actions::place::run(&cli.lockfile, name, all, to).await,
         Command::Verify { strict, json } => {
             actions::verify::run(&cli.lockfile, actions::verify::Opts { strict, json }).await
         }
         Command::Doctor { json } => {
             actions::doctor::run_with_opts(&cli.manifest, &cli.lockfile, &cfg, json).await
         }
-        Command::Attest { out, verify, check, json } => {
+        Command::Attest {
+            out,
+            verify,
+            check,
+            json,
+        } => {
             actions::attest::run(
                 &cli.manifest,
                 &cli.lockfile,

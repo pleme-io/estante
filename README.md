@@ -8,7 +8,7 @@ a git repo and consumed via `(defload …)` from `frost`'s tatara-lisp
 rc files. No central registry. Git refs are the version surface;
 GitHub topic search (`topic:estante-pkg`) is the discovery surface.
 
-## Status: M1 (scaffold + types). Subcommand impls land incrementally — see CLAUDE.md.
+## Status: framework-ready. Resolver / lockfile / receipt / verify / doctor / Nix integration all shipped. M2 (caixa-frost renderer) next — see CLAUDE.md.
 
 ## Quick start
 
@@ -16,12 +16,27 @@ GitHub topic search (`topic:estante-pkg`) is the discovery surface.
 # In a directory you want to consume packages from:
 estante init                                       # write shellpkg.lisp
 estante add github:MichaelAquilina/zsh-you-should-use@v1.7.4
-estante lock                                       # resolve + emit shellpkg.lock.lisp
+estante lock --emit-receipt                        # resolve + emit lockfile + attestation receipt
 estante install                                    # fetch + materialize
 # Then in ~/.frostrc.lisp:
 #   (defsource :path "./shellpkg.lock.lisp")
 #   (defload   :pkg "zsh-you-should-use")
 ```
+
+## CI gates
+
+estante ships three CI-grade verifiability primitives:
+
+```bash
+estante lock --check        # "the committed lockfile reflects the manifest"
+estante attest --check      # "the committed receipt matches current state"
+estante verify --strict     # "materialized trees still hash to the locked BLAKE3"
+estante doctor              # 9-check health audit composing the above + more
+```
+
+All four accept `--json` for machine-readable output. Substrate also ships
+`mkReceiptVerifier` — a Nix derivation that runs `attest --check` at build
+time, so `nix flake check` gates on receipt freshness.
 
 ## The three forms
 
@@ -58,6 +73,7 @@ estante install                                    # fetch + materialize
 | Rate-limit budget | `samba` typed broker (M1d) |
 | Caixa kind | `Biblioteca` with a new `caixa-frost` renderer (M2) |
 | Lockfile attestation | BLAKE3 + Nix narHash dual hash |
+| Nix-side loader | `substrate/lib/build/estante` — `loadLockfile` / `loadReceipt` / `mkShellPackage` / `mkShellEnv` / `mkScriptBinary` / `mkReceiptVerifier` |
 
 ## Architecture
 

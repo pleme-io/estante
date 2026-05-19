@@ -185,12 +185,13 @@ fn parse_for_style(
         //   - `key: value` — top-level scalar
         //   - `  - item`   — list item under current_key
         if let Some(rest) = payload.strip_prefix("- ") {
-            let key = current_key.as_deref().ok_or_else(|| {
-                InlineMetadataError::MalformedListEntry {
-                    line: line_number,
-                    raw: payload.to_owned(),
-                }
-            })?;
+            let key =
+                current_key
+                    .as_deref()
+                    .ok_or_else(|| InlineMetadataError::MalformedListEntry {
+                        line: line_number,
+                        raw: payload.to_owned(),
+                    })?;
             if key == "dependencies" {
                 metadata.dependencies.push(rest.trim().to_owned());
             } else {
@@ -209,7 +210,7 @@ fn parse_for_style(
                 return Err(InlineMetadataError::MalformedListEntry {
                     line: line_number,
                     raw: payload.to_owned(),
-                })
+                });
             }
         };
 
@@ -253,7 +254,9 @@ fn parse_for_style(
 
 fn is_open(style: CommentStyle, line: &str) -> bool {
     let trimmed = line.trim_end();
-    trimmed.to_ascii_lowercase().contains(&style.open_marker().to_ascii_lowercase())
+    trimmed
+        .to_ascii_lowercase()
+        .contains(&style.open_marker().to_ascii_lowercase())
 }
 
 fn is_close(style: CommentStyle, line: &str) -> bool {
@@ -354,7 +357,10 @@ mod tests {
 ;;; ---
 "#;
         let err = parse(src).unwrap_err();
-        assert!(matches!(err, InlineMetadataError::MalformedListEntry { .. }));
+        assert!(matches!(
+            err,
+            InlineMetadataError::MalformedListEntry { .. }
+        ));
     }
 
     #[test]

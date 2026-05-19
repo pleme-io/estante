@@ -332,11 +332,19 @@ mod tests {
     fn write_fixture(root: &Path) -> (PathBuf, PathBuf) {
         std::fs::create_dir_all(root).unwrap();
         let manifest = root.join("shellpkg.lisp");
-        std::fs::write(&manifest, b"(defshellpkg :name \"a\" :version \"1\" :source \"local:./pkg\")\n").unwrap();
+        std::fs::write(
+            &manifest,
+            b"(defshellpkg :name \"a\" :version \"1\" :source \"local:./pkg\")\n",
+        )
+        .unwrap();
 
         let pkg_dir = root.join("pkg");
         std::fs::create_dir_all(&pkg_dir).unwrap();
-        std::fs::write(pkg_dir.join("rc.lisp"), "(defalias :name \"a\" :value \"b\")").unwrap();
+        std::fs::write(
+            pkg_dir.join("rc.lisp"),
+            "(defalias :name \"a\" :value \"b\")",
+        )
+        .unwrap();
 
         let mut lock = Lockfile::default();
         lock.upsert(LockedPkgSpec {
@@ -356,7 +364,8 @@ mod tests {
 
     #[test]
     fn receipt_includes_manifest_and_lockfile_digests() {
-        let tmp = std::env::temp_dir().join(["estante-attest-shape-", &std::process::id().to_string()].concat());
+        let tmp = std::env::temp_dir()
+            .join(["estante-attest-shape-", &std::process::id().to_string()].concat());
         let _ = std::fs::remove_dir_all(&tmp);
         let (m, l) = write_fixture(&tmp);
         let receipt = build_receipt(&m, &l).unwrap();
@@ -378,7 +387,8 @@ mod tests {
 
     #[test]
     fn receipt_is_deterministic_across_calls() {
-        let tmp = std::env::temp_dir().join(["estante-attest-det-", &std::process::id().to_string()].concat());
+        let tmp = std::env::temp_dir()
+            .join(["estante-attest-det-", &std::process::id().to_string()].concat());
         let _ = std::fs::remove_dir_all(&tmp);
         let (m, l) = write_fixture(&tmp);
         let r1 = build_receipt(&m, &l).unwrap();
@@ -391,7 +401,8 @@ mod tests {
 
     #[test]
     fn receipt_blake3_changes_when_manifest_byte_changes() {
-        let tmp = std::env::temp_dir().join(["estante-attest-drift-", &std::process::id().to_string()].concat());
+        let tmp = std::env::temp_dir()
+            .join(["estante-attest-drift-", &std::process::id().to_string()].concat());
         let _ = std::fs::remove_dir_all(&tmp);
         let (m, l) = write_fixture(&tmp);
         let r1 = build_receipt(&m, &l).unwrap();
@@ -407,7 +418,8 @@ mod tests {
 
     #[test]
     fn canonical_json_round_trips_through_serde() {
-        let tmp = std::env::temp_dir().join(["estante-attest-rt-", &std::process::id().to_string()].concat());
+        let tmp = std::env::temp_dir()
+            .join(["estante-attest-rt-", &std::process::id().to_string()].concat());
         let _ = std::fs::remove_dir_all(&tmp);
         let (m, l) = write_fixture(&tmp);
         let r1 = build_receipt(&m, &l).unwrap();
@@ -528,15 +540,13 @@ mod tests {
         // a sibling in the same (empty) directory — the function
         // doesn't panic on a path without a parent component.
         let m = Path::new("shellpkg.lisp");
-        assert_eq!(
-            sibling_receipt_for(m),
-            Path::new("shellpkg.receipt.json"),
-        );
+        assert_eq!(sibling_receipt_for(m), Path::new("shellpkg.receipt.json"),);
     }
 
     #[test]
     fn empty_placement_normalizes_to_cache() {
-        let tmp = std::env::temp_dir().join(["estante-attest-empty-", &std::process::id().to_string()].concat());
+        let tmp = std::env::temp_dir()
+            .join(["estante-attest-empty-", &std::process::id().to_string()].concat());
         let _ = std::fs::remove_dir_all(&tmp);
         std::fs::create_dir_all(&tmp).unwrap();
         let manifest = tmp.join("shellpkg.lisp");
@@ -582,12 +592,14 @@ mod prop_tests {
             ],
             any::<bool>(),
         )
-            .prop_map(|(name, blake3, placement, materialized_exists)| EntryDigest {
-                name,
-                blake3,
-                placement,
-                materialized_exists,
-            })
+            .prop_map(
+                |(name, blake3, placement, materialized_exists)| EntryDigest {
+                    name,
+                    blake3,
+                    placement,
+                    materialized_exists,
+                },
+            )
     }
 
     fn receipt_strategy() -> impl Strategy<Value = Receipt> {

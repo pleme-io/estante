@@ -63,7 +63,11 @@ fn derive_version(s: &Source) -> String {
         | Source::GitSsh { reference, .. } => reference.as_str(),
         Source::Local { .. } => "local",
     };
-    if r == "HEAD" { "0.1.0".to_owned() } else { r.to_owned() }
+    if r == "HEAD" {
+        "0.1.0".to_owned()
+    } else {
+        r.to_owned()
+    }
 }
 
 #[cfg(test)]

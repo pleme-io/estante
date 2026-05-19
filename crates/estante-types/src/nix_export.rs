@@ -44,9 +44,18 @@ struct NixLockfileFormatter<'a>(&'a Lockfile);
 
 impl fmt::Display for NixLockfileFormatter<'_> {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        writeln!(f, "# shellpkg.lock.nix — machine-emitted by `estante export --format nix`.")?;
-        writeln!(f, "# DO NOT EDIT BY HAND. Re-run `estante lock` then `estante export`.")?;
-        writeln!(f, "# Consumed by `substrate/lib/build/estante/` via `import ./shellpkg.lock.nix`.")?;
+        writeln!(
+            f,
+            "# shellpkg.lock.nix — machine-emitted by `estante export --format nix`."
+        )?;
+        writeln!(
+            f,
+            "# DO NOT EDIT BY HAND. Re-run `estante lock` then `estante export`."
+        )?;
+        writeln!(
+            f,
+            "# Consumed by `substrate/lib/build/estante/` via `import ./shellpkg.lock.nix`."
+        )?;
         writeln!(f)?;
         writeln!(f, "{{")?;
         writeln!(f, "  schemaVersion = 1;")?;
@@ -60,9 +69,17 @@ impl fmt::Display for NixLockfileFormatter<'_> {
                 writeln!(f, "      narHash = {};", NixString(&entry.nar_hash))?;
             }
             writeln!(f, "      blake3 = {};", NixString(&entry.blake3))?;
-            writeln!(f, "      materializedPath = {};", NixString(&entry.materialized_path))?;
+            writeln!(
+                f,
+                "      materializedPath = {};",
+                NixString(&entry.materialized_path)
+            )?;
             writeln!(f, "      entrypoint = \"rc.lisp\";")?;
-            let placement = if entry.placement.is_empty() { "cache" } else { entry.placement.as_str() };
+            let placement = if entry.placement.is_empty() {
+                "cache"
+            } else {
+                entry.placement.as_str()
+            };
             writeln!(f, "      placement = {};", NixString(placement))?;
             writeln!(f, "    }}")?;
         }

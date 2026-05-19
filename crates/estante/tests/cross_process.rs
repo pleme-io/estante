@@ -63,14 +63,7 @@ impl Drop for Sandbox {
 fn write_pkg(sandbox: &Sandbox, name: &str, value: &str) -> PathBuf {
     let pkg = sandbox.join(&["pkg-", name].concat());
     std::fs::create_dir_all(&pkg).unwrap();
-    let body = [
-        "(defalias :name \"",
-        name,
-        "\" :value \"",
-        value,
-        "\")",
-    ]
-    .concat();
+    let body = ["(defalias :name \"", name, "\" :value \"", value, "\")"].concat();
     std::fs::write(pkg.join("rc.lisp"), body).unwrap();
     pkg
 }
@@ -141,12 +134,13 @@ fn run_verify_json(
         cmd.arg("--strict");
     }
     let out = cmd.output().expect("spawn estante verify");
-    let json: serde_json::Value = serde_json::from_slice(&out.stdout)
-        .unwrap_or_else(|e| panic!(
+    let json: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap_or_else(|e| {
+        panic!(
             "verify --json stdout is not parseable JSON ({e}); stdout:\n{}\nstderr:\n{}",
             String::from_utf8_lossy(&out.stdout),
             String::from_utf8_lossy(&out.stderr),
-        ));
+        )
+    });
     (json, out.status.success())
 }
 
@@ -418,8 +412,14 @@ fn lock_emit_receipt_writes_both_artifacts_deterministically() {
         "lock --emit-receipt #1 failed; stderr:\n{}",
         String::from_utf8_lossy(&out_a.stderr),
     );
-    assert!(lockfile.is_file(), "lockfile must exist after lock --emit-receipt");
-    assert!(receipt.is_file(), "receipt must exist after lock --emit-receipt");
+    assert!(
+        lockfile.is_file(),
+        "lockfile must exist after lock --emit-receipt"
+    );
+    assert!(
+        receipt.is_file(),
+        "receipt must exist after lock --emit-receipt"
+    );
 
     let stdout = String::from_utf8_lossy(&out_a.stdout);
     assert!(stdout.contains("Locked") && stdout.contains("receipt"));
@@ -697,10 +697,18 @@ fn doctor_json_output_is_parseable_and_schema_stable() {
         .arg("--json")
         .output()
         .expect("spawn doctor --json");
-    assert!(out.status.success(), "doctor --json failed; stderr:\n{}", String::from_utf8_lossy(&out.stderr));
+    assert!(
+        out.status.success(),
+        "doctor --json failed; stderr:\n{}",
+        String::from_utf8_lossy(&out.stderr)
+    );
 
-    let v: serde_json::Value = serde_json::from_slice(&out.stdout)
-        .unwrap_or_else(|e| panic!("doctor --json stdout not parseable JSON ({e})\nstdout:\n{}", String::from_utf8_lossy(&out.stdout)));
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap_or_else(|e| {
+        panic!(
+            "doctor --json stdout not parseable JSON ({e})\nstdout:\n{}",
+            String::from_utf8_lossy(&out.stdout)
+        )
+    });
     assert!(v.get("checks").is_some(), "missing checks array");
     assert!(v.get("passed").and_then(|x| x.as_u64()).is_some());
     assert!(v.get("failed").and_then(|x| x.as_u64()).is_some());

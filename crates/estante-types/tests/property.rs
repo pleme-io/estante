@@ -16,9 +16,7 @@
 
 #![cfg(test)]
 
-use estante_types::{
-    nix_export, LispString, LockedPkgSpec, Lockfile, Manifest, PkgSpec, Source,
-};
+use estante_types::{LispString, LockedPkgSpec, Lockfile, Manifest, PkgSpec, Source, nix_export};
 use proptest::prelude::*;
 
 // ─── Generators ─────────────────────────────────────────────────────
@@ -31,7 +29,11 @@ fn slug_strategy() -> impl Strategy<Value = String> {
 }
 
 fn github_source_strategy() -> impl Strategy<Value = String> {
-    (slug_strategy(), slug_strategy(), prop::option::of(slug_strategy()))
+    (
+        slug_strategy(),
+        slug_strategy(),
+        prop::option::of(slug_strategy()),
+    )
         .prop_map(|(owner, repo, reference)| match reference {
             Some(r) => format!("github:{owner}/{repo}@{r}"),
             None => format!("github:{owner}/{repo}"),
@@ -43,9 +45,8 @@ fn source_strategy() -> impl Strategy<Value = String> {
         github_source_strategy(),
         slug_strategy().prop_map(|id| format!("gist:{id}")),
         slug_strategy().prop_map(|p| format!("local:/abs/path/{p}")),
-        (slug_strategy(), slug_strategy()).prop_map(|(host, path)| {
-            format!("git+https://{host}/{path}.git")
-        }),
+        (slug_strategy(), slug_strategy())
+            .prop_map(|(host, path)| { format!("git+https://{host}/{path}.git") }),
     ]
 }
 
@@ -76,7 +77,11 @@ fn locked_pkg_spec_strategy() -> impl Strategy<Value = LockedPkgSpec> {
         prop::option::of("sha256-[A-Za-z0-9]{20,40}"),
         "[a-f0-9]{16,64}",
         slug_strategy().prop_map(|p| format!("/nix/store/{p}-pkg/")),
-        prop_oneof![Just("cache".to_owned()), Just("nix".to_owned()), Just("both".to_owned())],
+        prop_oneof![
+            Just("cache".to_owned()),
+            Just("nix".to_owned()),
+            Just("both".to_owned())
+        ],
     )
         .prop_map(
             |(name, source, rev, nar_hash_opt, blake3, materialized_path, placement)| {

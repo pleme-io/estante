@@ -17,9 +17,9 @@ pub fn read(path: &Path) -> anyhow::Result<Manifest> {
 /// during emit leaves either the old file intact or the new one
 /// fully-formed — never a half-written truncation.
 pub fn write(path: &Path, m: &Manifest) -> anyhow::Result<()> {
-    let parent = path
-        .parent()
-        .ok_or_else(|| anyhow::anyhow!("manifest path has no parent directory: {}", path.display()))?;
+    let parent = path.parent().ok_or_else(|| {
+        anyhow::anyhow!("manifest path has no parent directory: {}", path.display())
+    })?;
     let mut tmp = tempfile::NamedTempFile::new_in(parent)?;
     // Manifest's Display impl is the typed-emission surface for the
     // shellpkg.lisp grammar — write through the Display block, never
@@ -48,7 +48,8 @@ mod tests {
         // Pre-populate the path with one manifest; then write a
         // different manifest. The result is the SECOND manifest's
         // contents (atomic replacement), never a half-merged blob.
-        let tmp = std::env::temp_dir().join(format!("estante-manifest-atomic-{}", std::process::id()));
+        let tmp =
+            std::env::temp_dir().join(format!("estante-manifest-atomic-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&tmp);
         std::fs::create_dir_all(&tmp).unwrap();
         let path = tmp.join("shellpkg.lisp");

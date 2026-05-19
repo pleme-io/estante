@@ -56,9 +56,11 @@ pub async fn run(
         (0..lock.entries.len()).collect()
     } else {
         let n = name.as_deref().unwrap();
-        let idx = lock.entries.iter().position(|e| e.name == n).ok_or_else(|| {
-            anyhow::anyhow!("no lockfile entry for `{n}`")
-        })?;
+        let idx = lock
+            .entries
+            .iter()
+            .position(|e| e.name == n)
+            .ok_or_else(|| anyhow::anyhow!("no lockfile entry for `{n}`"))?;
         vec![idx]
     };
 

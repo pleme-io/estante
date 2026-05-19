@@ -270,7 +270,9 @@ pub async fn run_with_opts(
 
     let mut failed = 0_usize;
     for r in &results {
-        let mark = if r.passed { "\x1b[32m✓\x1b[0m" } else {
+        let mark = if r.passed {
+            "\x1b[32m✓\x1b[0m"
+        } else {
             failed += 1;
             "\x1b[31m✗\x1b[0m"
         };

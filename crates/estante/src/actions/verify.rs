@@ -108,7 +108,8 @@ pub fn verify_at(lockfile_path: &Path, opts: Opts) -> anyhow::Result<Report> {
             } else {
                 report.skipped.push(SkippedEntry {
                     name: entry.name.clone(),
-                    reason: "lockfile entry has no BLAKE3 (pre-hash). Re-run `estante install`.".to_owned(),
+                    reason: "lockfile entry has no BLAKE3 (pre-hash). Re-run `estante install`."
+                        .to_owned(),
                 });
             }
             continue;
@@ -146,10 +147,15 @@ pub async fn run(lockfile_path: &Path, opts: Opts) -> anyhow::Result<()> {
             );
         }
         for name in &report.missing {
-            eprintln!("\x1b[33m?\x1b[0m {name} — materialized path missing (run `estante install`)");
+            eprintln!(
+                "\x1b[33m?\x1b[0m {name} — materialized path missing (run `estante install`)"
+            );
         }
         for entry in &report.skipped {
-            eprintln!("\x1b[2m·\x1b[0m {} — skipped ({})", entry.name, entry.reason);
+            eprintln!(
+                "\x1b[2m·\x1b[0m {} — skipped ({})",
+                entry.name, entry.reason
+            );
         }
         println!(
             "\n{} verified, {} drifted, {} missing, {} skipped",
@@ -173,7 +179,7 @@ pub async fn run(lockfile_path: &Path, opts: Opts) -> anyhow::Result<()> {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use estante_types::{Lockfile, LockedPkgSpec};
+    use estante_types::{LockedPkgSpec, Lockfile};
 
     #[test]
     fn report_is_ok_when_only_skipped() {
@@ -241,12 +247,15 @@ mod tests {
 
     #[test]
     fn verify_at_matching_blake3_lands_in_verified() {
-        let tmp =
-            std::env::temp_dir().join(format!("estante-verify-match-{}", std::process::id()));
+        let tmp = std::env::temp_dir().join(format!("estante-verify-match-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&tmp);
         let pkg_dir = tmp.join("pkg");
         std::fs::create_dir_all(&pkg_dir).unwrap();
-        std::fs::write(pkg_dir.join("rc.lisp"), "(defalias :name \"x\" :value \"y\")").unwrap();
+        std::fs::write(
+            pkg_dir.join("rc.lisp"),
+            "(defalias :name \"x\" :value \"y\")",
+        )
+        .unwrap();
         // Compute the real BLAKE3 first.
         let expected = hash::blake3_tree(&pkg_dir).unwrap();
 
@@ -270,8 +279,7 @@ mod tests {
 
     #[test]
     fn verify_at_drifted_blake3_lands_in_drifted() {
-        let tmp =
-            std::env::temp_dir().join(format!("estante-verify-drift-{}", std::process::id()));
+        let tmp = std::env::temp_dir().join(format!("estante-verify-drift-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&tmp);
         let pkg_dir = tmp.join("pkg");
         std::fs::create_dir_all(&pkg_dir).unwrap();
@@ -291,15 +299,17 @@ mod tests {
         let report = verify_at(&lock_path, Opts::default()).unwrap();
         assert_eq!(report.drifted.len(), 1);
         assert_eq!(report.drifted[0].name, "drifted");
-        assert_eq!(report.drifted[0].expected_blake3, "wrong-recorded-blake3-value");
+        assert_eq!(
+            report.drifted[0].expected_blake3,
+            "wrong-recorded-blake3-value"
+        );
         assert!(!report.is_ok());
         std::fs::remove_dir_all(&tmp).ok();
     }
 
     #[test]
     fn verify_at_skips_empty_blake3_in_non_strict_mode() {
-        let tmp =
-            std::env::temp_dir().join(format!("estante-verify-skip-{}", std::process::id()));
+        let tmp = std::env::temp_dir().join(format!("estante-verify-skip-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&tmp);
         let pkg_dir = tmp.join("pkg");
         std::fs::create_dir_all(&pkg_dir).unwrap();
@@ -318,7 +328,10 @@ mod tests {
         std::fs::write(&lock_path, l.to_string()).unwrap();
         let report = verify_at(&lock_path, Opts::default()).unwrap();
         assert_eq!(report.skipped.len(), 1);
-        assert!(report.is_ok(), "empty BLAKE3 is not a failure in non-strict mode");
+        assert!(
+            report.is_ok(),
+            "empty BLAKE3 is not a failure in non-strict mode"
+        );
         std::fs::remove_dir_all(&tmp).ok();
     }
 
@@ -342,7 +355,14 @@ mod tests {
             placement: "cache".into(),
         });
         std::fs::write(&lock_path, l.to_string()).unwrap();
-        let report = verify_at(&lock_path, Opts { strict: true, json: false }).unwrap();
+        let report = verify_at(
+            &lock_path,
+            Opts {
+                strict: true,
+                json: false,
+            },
+        )
+        .unwrap();
         assert_eq!(report.drifted.len(), 1);
         assert!(!report.is_ok());
         std::fs::remove_dir_all(&tmp).ok();

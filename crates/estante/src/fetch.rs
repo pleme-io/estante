@@ -11,7 +11,7 @@
 
 use std::path::Path;
 
-use anyhow::{anyhow, Context};
+use anyhow::{Context, anyhow};
 use estante_types::Source;
 use http_body_util::BodyExt;
 use octocrab::Octocrab;
@@ -62,7 +62,9 @@ pub async fn resolve_rev(client: &Octocrab, source: &Source) -> anyhow::Result<R
                 .per_page(1)
                 .send()
                 .await
-                .with_context(|| format!("github API: list commits for {owner}/{repo}@{reference}"))?;
+                .with_context(|| {
+                    format!("github API: list commits for {owner}/{repo}@{reference}")
+                })?;
             let commit = commits
                 .items
                 .into_iter()
@@ -93,9 +95,9 @@ pub async fn resolve_rev(client: &Octocrab, source: &Source) -> anyhow::Result<R
             let short = digest.as_str()[..16].to_owned();
             Ok(ResolvedRev { sha: short })
         }
-        Source::GitHttps { .. } | Source::GitSsh { .. } => {
-            Err(anyhow!("git+https / git+ssh sources are v0.2 (gix integration); use github: for v0.1"))
-        }
+        Source::GitHttps { .. } | Source::GitSsh { .. } => Err(anyhow!(
+            "git+https / git+ssh sources are v0.2 (gix integration); use github: for v0.1"
+        )),
     }
 }
 
@@ -157,9 +159,9 @@ pub async fn download_and_unpack(
             let report = copy_dir_recursive(src, dest_dir)?;
             Ok(report)
         }
-        Source::GitHttps { .. } | Source::GitSsh { .. } => {
-            Err(anyhow!("git+https / git+ssh fetch is v0.2 (gix integration)"))
-        }
+        Source::GitHttps { .. } | Source::GitSsh { .. } => Err(anyhow!(
+            "git+https / git+ssh fetch is v0.2 (gix integration)"
+        )),
     }
 }
 

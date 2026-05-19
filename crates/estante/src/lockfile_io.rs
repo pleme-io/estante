@@ -17,9 +17,9 @@ pub fn read(path: &Path) -> anyhow::Result<Lockfile> {
 /// lands on disk.
 pub fn write(path: &Path, l: &Lockfile) -> anyhow::Result<()> {
     l.validate_materialized()?;
-    let parent = path
-        .parent()
-        .ok_or_else(|| anyhow::anyhow!("lockfile path has no parent directory: {}", path.display()))?;
+    let parent = path.parent().ok_or_else(|| {
+        anyhow::anyhow!("lockfile path has no parent directory: {}", path.display())
+    })?;
     let mut tmp = tempfile::NamedTempFile::new_in(parent)?;
     use std::io::Write;
     write!(tmp, "{l}")?;

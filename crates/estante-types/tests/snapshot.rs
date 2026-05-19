@@ -12,7 +12,7 @@
 
 #![cfg(test)]
 
-use estante_types::{nix_export, LockedPkgSpec, Lockfile, Manifest, PkgSpec};
+use estante_types::{LockedPkgSpec, Lockfile, Manifest, PkgSpec, nix_export};
 
 fn fixed_manifest() -> Manifest {
     let mut m = Manifest::default();

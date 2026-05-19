@@ -29,8 +29,8 @@
 
 use std::path::PathBuf;
 
-use estante::resolver::Resolver;
 use estante::config::Config;
+use estante::resolver::Resolver;
 use estante_types::{Lockfile, Manifest, PkgSpec};
 use frost_exec::ShellEnv;
 use frost_lisp::load_rc;
@@ -42,10 +42,8 @@ struct Fixture {
 
 impl Fixture {
     fn new(test_name: &str) -> Self {
-        let root = std::env::temp_dir().join(format!(
-            "estante-e2e-{test_name}-{}",
-            std::process::id()
-        ));
+        let root =
+            std::env::temp_dir().join(format!("estante-e2e-{test_name}-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&root);
         std::fs::create_dir_all(&root).unwrap();
         Self { root }
@@ -181,7 +179,10 @@ async fn resolver_output_is_deterministic_across_runs() {
     // Rendered byte-equality (the wire form).
     let rendered1 = lock1.to_string();
     let rendered2 = lock2.to_string();
-    assert_eq!(rendered1, rendered2, "rendered lockfile must be byte-identical");
+    assert_eq!(
+        rendered1, rendered2,
+        "rendered lockfile must be byte-identical"
+    );
 
     // Content-addressing — BLAKE3 of the rendered lockfile is itself
     // stable. This is the verifiability anchor: anyone who fetches the

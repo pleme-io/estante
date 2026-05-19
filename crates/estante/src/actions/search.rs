@@ -17,13 +17,12 @@ pub async fn run(query: &str, limit: u32, cfg: &Config) -> anyhow::Result<()> {
         println!("No estante-pkg repositories match {query:?}.");
         return Ok(());
     }
-    println!("{} result(s) for `topic:estante-pkg {query}`:", page.items.len());
+    println!(
+        "{} result(s) for `topic:estante-pkg {query}`:",
+        page.items.len()
+    );
     for repo in page.items {
-        let owner = repo
-            .owner
-            .as_ref()
-            .map(|o| o.login.as_str())
-            .unwrap_or("?");
+        let owner = repo.owner.as_ref().map(|o| o.login.as_str()).unwrap_or("?");
         let desc = repo.description.as_deref().unwrap_or("");
         println!("  github:{owner}/{}   {desc}", repo.name);
     }

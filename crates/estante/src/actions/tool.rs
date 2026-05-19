@@ -14,7 +14,7 @@
 use std::path::Path;
 
 use anyhow::Context;
-use estante_types::{nix_export, Manifest, PkgSpec, Source};
+use estante_types::{Manifest, PkgSpec, Source, nix_export};
 
 use crate::config::Config;
 use crate::inline_metadata;
@@ -22,7 +22,11 @@ use crate::lockfile_io;
 use crate::manifest_io;
 use crate::resolver::Resolver;
 
-pub async fn install(script_path: &Path, cfg: &Config, name_override: Option<String>) -> anyhow::Result<()> {
+pub async fn install(
+    script_path: &Path,
+    cfg: &Config,
+    name_override: Option<String>,
+) -> anyhow::Result<()> {
     let src = std::fs::read_to_string(script_path)
         .with_context(|| format!("reading script {}", script_path.display()))?;
     let (metadata, _) = inline_metadata::parse(&src)?;
@@ -86,7 +90,10 @@ pub async fn install(script_path: &Path, cfg: &Config, name_override: Option<Str
     println!("  nix profile install path:{}", tool_dir.display());
     println!();
     println!("To consume via home-manager:");
-    println!("  imports = [ {{ home.packages = [ (import {}/default.nix {{ pkgs = pkgs; substrate = inputs.substrate; }}) ]; }} ];", tool_dir.display());
+    println!(
+        "  imports = [ {{ home.packages = [ (import {}/default.nix {{ pkgs = pkgs; substrate = inputs.substrate; }}) ]; }} ];",
+        tool_dir.display()
+    );
     Ok(())
 }
 

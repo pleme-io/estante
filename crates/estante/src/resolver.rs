@@ -154,10 +154,7 @@ mod tests {
 
     #[tokio::test]
     async fn normalize_source_promotes_relative_local_against_base_dir() {
-        let tmp = std::env::temp_dir().join(format!(
-            "estante-normalize-{}",
-            std::process::id()
-        ));
+        let tmp = std::env::temp_dir().join(format!("estante-normalize-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&tmp);
         let pkg_dir = tmp.join("packages").join("foo");
         std::fs::create_dir_all(&pkg_dir).unwrap();
@@ -202,7 +199,9 @@ mod tests {
             cache_dir: PathBuf::from("/tmp"),
             github_token: None,
         };
-        let resolver = Resolver::new(&cfg).unwrap().with_base_dir(PathBuf::from("/wherever"));
+        let resolver = Resolver::new(&cfg)
+            .unwrap()
+            .with_base_dir(PathBuf::from("/wherever"));
         let source = Source::Github {
             owner: "o".into(),
             repo: "r".into(),
@@ -217,7 +216,9 @@ mod tests {
             cache_dir: PathBuf::from("/tmp"),
             github_token: None,
         };
-        let resolver = Resolver::new(&cfg).unwrap().with_base_dir(PathBuf::from("/wherever"));
+        let resolver = Resolver::new(&cfg)
+            .unwrap()
+            .with_base_dir(PathBuf::from("/wherever"));
         let source = Source::Gist {
             id: "abc".into(),
             reference: "HEAD".into(),
@@ -231,7 +232,9 @@ mod tests {
             cache_dir: PathBuf::from("/tmp"),
             github_token: None,
         };
-        let resolver = Resolver::new(&cfg).unwrap().with_base_dir(PathBuf::from("/wherever"));
+        let resolver = Resolver::new(&cfg)
+            .unwrap()
+            .with_base_dir(PathBuf::from("/wherever"));
         let source = Source::GitHttps {
             url: "example.org/x.git".into(),
             reference: "HEAD".into(),

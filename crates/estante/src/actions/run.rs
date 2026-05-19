@@ -125,7 +125,9 @@ pub async fn run(
 
     let shell_bin = shell_override.unwrap_or_else(|| runtime.binary_name().to_owned());
     match runtime {
-        Runtime::Frost => exec_frost(&tmp, &lockfile_path, &manifest, script_path, &shell_bin).await,
+        Runtime::Frost => {
+            exec_frost(&tmp, &lockfile_path, &manifest, script_path, &shell_bin).await
+        }
         Runtime::Bash | Runtime::Zsh | Runtime::Fish => {
             exec_vanilla(&tmp, &lock, script_path, &shell_bin, runtime).await
         }

@@ -76,20 +76,15 @@ mod tests {
 
     #[test]
     fn unpacked_predicate_false_for_nonexistent_path() {
-        let p = std::env::temp_dir().join(format!(
-            "estante-unpacked-noexist-{}",
-            std::process::id()
-        ));
+        let p =
+            std::env::temp_dir().join(format!("estante-unpacked-noexist-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&p);
         assert!(!is_unpacked_pkg(&p));
     }
 
     #[test]
     fn ensure_layout_idempotent() {
-        let tmp = std::env::temp_dir().join(format!(
-            "estante-cache-idem-{}",
-            std::process::id()
-        ));
+        let tmp = std::env::temp_dir().join(format!("estante-cache-idem-{}", std::process::id()));
         let _ = std::fs::remove_dir_all(&tmp);
         let cfg = Config {
             cache_dir: tmp.clone(),

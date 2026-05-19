@@ -15,7 +15,7 @@
 
 use std::path::{Path, PathBuf};
 
-use anyhow::{anyhow, bail, Context};
+use anyhow::{Context, anyhow, bail};
 use estante_types::{LockedPkgSpec, Placement};
 
 /// Promote a cache-placed package into the Nix store. Idempotent: if
@@ -72,7 +72,9 @@ pub fn mark_as_both(entry: &LockedPkgSpec) -> LockedPkgSpec {
 /// nar_hash)`. Requires `nix` on PATH.
 async fn nix_add_path(dir: &Path) -> anyhow::Result<(String, String)> {
     if !nix_available().await {
-        bail!("nix not on PATH — cannot promote to nix placement. Install nix or use --placement cache");
+        bail!(
+            "nix not on PATH — cannot promote to nix placement. Install nix or use --placement cache"
+        );
     }
 
     let add_output = tokio::process::Command::new("nix")

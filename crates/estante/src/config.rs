@@ -39,7 +39,9 @@ impl Config {
     #[must_use]
     pub fn store_path(&self, name: &str, rev: &str) -> PathBuf {
         let short_rev = if rev.len() > 16 { &rev[..16] } else { rev };
-        self.cache_dir.join("store").join(format!("{name}-{short_rev}"))
+        self.cache_dir
+            .join("store")
+            .join(format!("{name}-{short_rev}"))
     }
 
     /// True if the config has a usable GitHub PAT. Used by the

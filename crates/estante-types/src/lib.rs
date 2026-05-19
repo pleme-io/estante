@@ -154,7 +154,9 @@ impl Source {
             "git+https" => parse_git_with_fragment(rest, s, true),
             "git+ssh" => parse_git_with_fragment(rest, s, false),
             "gist" => parse_gist(rest, s),
-            "local" => Ok(Self::Local { path: rest.to_owned() }),
+            "local" => Ok(Self::Local {
+                path: rest.to_owned(),
+            }),
             // `RECOGNIZED_SCHEMES` is the closed enumeration; any
             // unknown scheme is caught at the `split_source_scheme`
             // step above. Reaching this branch means we added a new
@@ -214,13 +216,13 @@ impl fmt::Display for Source {
 }
 
 fn parse_github(rest: &str, original: &str) -> EstanteResult<Source> {
-    let (slug, reference) = rest
-        .split_once('@')
-        .map_or((rest, "HEAD"), |(s, r)| (s, r));
-    let (owner, repo) = slug.split_once('/').ok_or_else(|| EstanteError::MalformedSource {
-        raw: original.to_owned(),
-        message: "expected `owner/repo` after `github:`".to_owned(),
-    })?;
+    let (slug, reference) = rest.split_once('@').map_or((rest, "HEAD"), |(s, r)| (s, r));
+    let (owner, repo) = slug
+        .split_once('/')
+        .ok_or_else(|| EstanteError::MalformedSource {
+            raw: original.to_owned(),
+            message: "expected `owner/repo` after `github:`".to_owned(),
+        })?;
     if owner.is_empty() || repo.is_empty() {
         return Err(EstanteError::MalformedSource {
             raw: original.to_owned(),
@@ -235,9 +237,7 @@ fn parse_github(rest: &str, original: &str) -> EstanteResult<Source> {
 }
 
 fn parse_git_with_fragment(rest: &str, _original: &str, https: bool) -> EstanteResult<Source> {
-    let (url, reference) = rest
-        .split_once('#')
-        .map_or((rest, "HEAD"), |(u, r)| (u, r));
+    let (url, reference) = rest.split_once('#').map_or((rest, "HEAD"), |(u, r)| (u, r));
     if https {
         Ok(Source::GitHttps {
             url: url.to_owned(),
@@ -252,9 +252,7 @@ fn parse_git_with_fragment(rest: &str, _original: &str, https: bool) -> EstanteR
 }
 
 fn parse_gist(rest: &str, _original: &str) -> EstanteResult<Source> {
-    let (id, reference) = rest
-        .split_once('@')
-        .map_or((rest, "HEAD"), |(i, r)| (i, r));
+    let (id, reference) = rest.split_once('@').map_or((rest, "HEAD"), |(i, r)| (i, r));
     Ok(Source::Gist {
         id: id.to_owned(),
         reference: reference.to_owned(),
@@ -273,12 +271,11 @@ pub struct Manifest {
 impl Manifest {
     /// Parse a manifest from raw Lisp source.
     pub fn parse(src: &str) -> EstanteResult<Self> {
-        let packages: Vec<PkgSpec> = tatara_lisp::compile_typed(src).map_err(|e| {
-            EstanteError::Parse {
+        let packages: Vec<PkgSpec> =
+            tatara_lisp::compile_typed(src).map_err(|e| EstanteError::Parse {
                 context: "manifest".to_owned(),
                 message: e.to_string(),
-            }
-        })?;
+            })?;
         let mut seen = std::collections::HashSet::new();
         for p in &packages {
             if !seen.insert(&p.name) {
@@ -308,7 +305,10 @@ impl fmt::Display for Manifest {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
         writeln!(f, ";; shellpkg.lisp — estante manifest.")?;
         writeln!(f, ";; Authored by hand or via `estante add`.")?;
-        writeln!(f, ";; Lockfile: shellpkg.lock.lisp (emitted by `estante lock`).")?;
+        writeln!(
+            f,
+            ";; Lockfile: shellpkg.lock.lisp (emitted by `estante lock`)."
+        )?;
         writeln!(f)?;
         for pkg in &self.packages {
             write!(f, "{}", PkgSpecDisplay(pkg))?;
@@ -353,12 +353,11 @@ pub struct Lockfile {
 
 impl Lockfile {
     pub fn parse(src: &str) -> EstanteResult<Self> {
-        let raw: Vec<LockedPkgSpec> = tatara_lisp::compile_typed(src).map_err(|e| {
-            EstanteError::Parse {
+        let raw: Vec<LockedPkgSpec> =
+            tatara_lisp::compile_typed(src).map_err(|e| EstanteError::Parse {
                 context: "lockfile".to_owned(),
                 message: e.to_string(),
-            }
-        })?;
+            })?;
         let entries = raw
             .into_iter()
             .map(|mut e| {
@@ -404,7 +403,10 @@ impl Lockfile {
 
 impl fmt::Display for Lockfile {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        writeln!(f, ";; shellpkg.lock.lisp — machine-emitted by `estante install`.")?;
+        writeln!(
+            f,
+            ";; shellpkg.lock.lisp — machine-emitted by `estante install`."
+        )?;
         writeln!(f, ";; DO NOT EDIT BY HAND. Re-run `estante lock` instead.")?;
         writeln!(f, ";; Content-addressed by (rev, nar-hash, blake3).")?;
         writeln!(f)?;
@@ -434,7 +436,11 @@ impl fmt::Display for LockedPkgSpecDisplay<'_> {
         )?;
         // Placement always emitted (normalized to "cache" for empty
         // serde defaults) — keeps Display/parse a pure round-trip.
-        let placement = if l.placement.is_empty() { "cache" } else { l.placement.as_str() };
+        let placement = if l.placement.is_empty() {
+            "cache"
+        } else {
+            l.placement.as_str()
+        };
         writeln!(f, "  :placement         {}", LispString(placement))?;
         writeln!(f, "  )")
     }
@@ -486,8 +492,8 @@ impl fmt::Display for LispStringList<'_> {
 /// `manifest.to_string()` but takes a `Write` so callers can stream to
 /// a file without allocating the full source.
 pub mod render {
-    use super::Manifest;
     use super::Lockfile;
+    use super::Manifest;
     use std::fmt::Write;
 
     /// Render a manifest into an existing buffer.
@@ -830,7 +836,11 @@ mod tests {
         assert!(Source::parse("github:o/r").unwrap().is_github());
         assert!(Source::parse("gist:abc").unwrap().is_github());
         assert!(!Source::parse("git+https:x.org/y.git").unwrap().is_github());
-        assert!(!Source::parse("git+ssh:git@x.org:y.git").unwrap().is_github());
+        assert!(
+            !Source::parse("git+ssh:git@x.org:y.git")
+                .unwrap()
+                .is_github()
+        );
         assert!(!Source::parse("local:./foo").unwrap().is_github());
     }
 
@@ -887,7 +897,10 @@ mod tests {
             m
         };
         let rendered = m.to_string();
-        assert!(!rendered.contains(":lazy"), "lazy=false must not emit the slot: {rendered}");
+        assert!(
+            !rendered.contains(":lazy"),
+            "lazy=false must not emit the slot: {rendered}"
+        );
         let re = Manifest::parse(&rendered).unwrap();
         assert_eq!(re, m);
     }
@@ -1066,7 +1079,10 @@ mod tests {
             m
         };
         let rendered = m.to_string();
-        assert!(rendered.contains(":lazy    #t"), "lazy=true must emit slot: {rendered}");
+        assert!(
+            rendered.contains(":lazy    #t"),
+            "lazy=true must emit slot: {rendered}"
+        );
         let re = Manifest::parse(&rendered).unwrap();
         assert!(re.get("x").unwrap().lazy);
     }
