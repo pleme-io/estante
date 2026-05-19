@@ -892,6 +892,165 @@ mod tests {
         assert_eq!(re, m);
     }
 
+    // ─── Placement ─────────────────────────────────────────────────
+
+    #[test]
+    fn placement_from_str_canonical() {
+        assert_eq!(Placement::from_str("cache"), Placement::Cache);
+        assert_eq!(Placement::from_str("nix"), Placement::Nix);
+        assert_eq!(Placement::from_str("both"), Placement::Both);
+    }
+
+    #[test]
+    fn placement_from_str_empty_defaults_to_cache() {
+        assert_eq!(Placement::from_str(""), Placement::Cache);
+        assert_eq!(Placement::from_str("   "), Placement::Cache);
+    }
+
+    #[test]
+    fn placement_from_str_case_insensitive() {
+        assert_eq!(Placement::from_str("NIX"), Placement::Nix);
+        assert_eq!(Placement::from_str("Nix"), Placement::Nix);
+        assert_eq!(Placement::from_str("BOTH"), Placement::Both);
+    }
+
+    #[test]
+    fn placement_from_str_unknown_defaults_to_cache() {
+        assert_eq!(Placement::from_str("xyz"), Placement::Cache);
+        assert_eq!(Placement::from_str("local"), Placement::Cache);
+    }
+
+    #[test]
+    fn placement_as_str_round_trips() {
+        for p in [Placement::Cache, Placement::Nix, Placement::Both] {
+            assert_eq!(Placement::from_str(p.as_str()), p);
+        }
+    }
+
+    #[test]
+    fn placement_needs_nix() {
+        assert!(!Placement::Cache.needs_nix());
+        assert!(Placement::Nix.needs_nix());
+        assert!(Placement::Both.needs_nix());
+    }
+
+    #[test]
+    fn placement_default_is_cache() {
+        assert_eq!(Placement::default(), Placement::Cache);
+    }
+
+    #[test]
+    fn placement_display_matches_as_str() {
+        assert_eq!(format!("{}", Placement::Cache), "cache");
+        assert_eq!(format!("{}", Placement::Nix), "nix");
+        assert_eq!(format!("{}", Placement::Both), "both");
+    }
+
+    #[test]
+    fn lockfile_emits_placement_unconditionally() {
+        // Cache placement (default) STILL emits — keeps Display/parse
+        // a round-trip invariant.
+        let mut l = Lockfile::default();
+        l.upsert(LockedPkgSpec {
+            name: "foo".into(),
+            source: "github:o/r".into(),
+            rev: "abc".into(),
+            nar_hash: String::new(),
+            blake3: "b3".into(),
+            materialized_path: "/p".into(),
+            placement: "cache".into(),
+        });
+        let rendered = l.to_string();
+        assert!(
+            rendered.contains(":placement         \"cache\""),
+            "placement must always emit: {rendered}"
+        );
+    }
+
+    #[test]
+    fn lockfile_empty_placement_canonicalizes_to_cache() {
+        // An older-format entry with empty placement gets normalized
+        // on parse — the Lockfile in memory has "cache".
+        let src = r#"
+            (deflockedpkg :name "foo" :source "github:o/r" :rev "abc"
+                          :nar-hash "" :blake3 "b3"
+                          :materialized-path "/p"
+                          :placement "")
+        "#;
+        let l = Lockfile::parse(src).unwrap();
+        assert_eq!(l.entries[0].placement, "cache");
+    }
+
+    #[test]
+    fn lockfile_missing_placement_field_canonicalizes_to_cache() {
+        // No `:placement` slot at all — older lockfiles. Same normalization.
+        let src = r#"
+            (deflockedpkg :name "foo" :source "github:o/r" :rev "abc"
+                          :nar-hash "" :blake3 "b3"
+                          :materialized-path "/p")
+        "#;
+        let l = Lockfile::parse(src).unwrap();
+        assert_eq!(l.entries[0].placement, "cache");
+    }
+
+    #[test]
+    fn lockfile_nix_placement_round_trips() {
+        let mut l = Lockfile::default();
+        l.upsert(LockedPkgSpec {
+            name: "foo".into(),
+            source: "github:o/r".into(),
+            rev: "abc".into(),
+            nar_hash: "sha256-x".into(),
+            blake3: "b3".into(),
+            materialized_path: "/nix/store/abc-foo/".into(),
+            placement: "nix".into(),
+        });
+        let rendered = l.to_string();
+        assert!(rendered.contains(":placement         \"nix\""));
+        let re = Lockfile::parse(&rendered).unwrap();
+        assert_eq!(re, l);
+    }
+
+    #[test]
+    fn lockfile_both_placement_round_trips() {
+        let mut l = Lockfile::default();
+        l.upsert(LockedPkgSpec {
+            name: "foo".into(),
+            source: "github:o/r".into(),
+            rev: "abc".into(),
+            nar_hash: "sha256-x".into(),
+            blake3: "b3".into(),
+            materialized_path: "/p".into(),
+            placement: "both".into(),
+        });
+        let rendered = l.to_string();
+        assert!(rendered.contains(":placement         \"both\""));
+        let re = Lockfile::parse(&rendered).unwrap();
+        assert_eq!(re, l);
+    }
+
+    #[test]
+    fn lockfile_with_mixed_placements_round_trips() {
+        let mut l = Lockfile::default();
+        for (name, p) in [("cached", "cache"), ("nixed", "nix"), ("dual", "both")] {
+            l.upsert(LockedPkgSpec {
+                name: name.into(),
+                source: format!("github:o/{name}"),
+                rev: "abc".into(),
+                nar_hash: "sha256-x".into(),
+                blake3: "b3".into(),
+                materialized_path: format!("/p/{name}"),
+                placement: p.into(),
+            });
+        }
+        let rendered = l.to_string();
+        let re = Lockfile::parse(&rendered).unwrap();
+        assert_eq!(re, l);
+        assert_eq!(re.get("cached").unwrap().placement, "cache");
+        assert_eq!(re.get("nixed").unwrap().placement, "nix");
+        assert_eq!(re.get("dual").unwrap().placement, "both");
+    }
+
     #[test]
     fn pkg_spec_lazy_true_round_trips() {
         let m = {

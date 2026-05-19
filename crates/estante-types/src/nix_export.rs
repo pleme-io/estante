@@ -175,4 +175,83 @@ mod tests {
         write!(buf, "{}", NixString("$5 a pound")).unwrap();
         assert_eq!(buf, r#""$5 a pound""#);
     }
+
+    #[test]
+    fn placement_emitted_as_cache_for_empty() {
+        let mut l = Lockfile::default();
+        l.upsert(LockedPkgSpec {
+            name: "foo".into(),
+            source: "github:o/r".into(),
+            rev: "abc".into(),
+            nar_hash: "sha256-x".into(),
+            blake3: "b3".into(),
+            materialized_path: "/p".into(),
+            placement: String::new(),
+        });
+        let rendered = lockfile_to_nix(&l);
+        assert!(
+            rendered.contains(r#"placement = "cache""#),
+            "empty placement must normalize to cache: {rendered}"
+        );
+    }
+
+    #[test]
+    fn placement_emitted_verbatim_for_nix() {
+        let mut l = Lockfile::default();
+        l.upsert(LockedPkgSpec {
+            name: "foo".into(),
+            source: "github:o/r".into(),
+            rev: "abc".into(),
+            nar_hash: "sha256-x".into(),
+            blake3: "b3".into(),
+            materialized_path: "/nix/store/abc-foo".into(),
+            placement: "nix".into(),
+        });
+        let rendered = lockfile_to_nix(&l);
+        assert!(rendered.contains(r#"placement = "nix""#));
+    }
+
+    #[test]
+    fn placement_emitted_verbatim_for_both() {
+        let mut l = Lockfile::default();
+        l.upsert(LockedPkgSpec {
+            name: "foo".into(),
+            source: "github:o/r".into(),
+            rev: "abc".into(),
+            nar_hash: "sha256-x".into(),
+            blake3: "b3".into(),
+            materialized_path: "/p".into(),
+            placement: "both".into(),
+        });
+        let rendered = lockfile_to_nix(&l);
+        assert!(rendered.contains(r#"placement = "both""#));
+    }
+
+    #[test]
+    fn multi_pkg_lockfile_each_emits_own_placement() {
+        let mut l = Lockfile::default();
+        l.upsert(LockedPkgSpec {
+            name: "cached".into(),
+            source: "github:o/cached".into(),
+            rev: "1".into(),
+            nar_hash: String::new(),
+            blake3: "a".into(),
+            materialized_path: "/p/cached".into(),
+            placement: "cache".into(),
+        });
+        l.upsert(LockedPkgSpec {
+            name: "nixed".into(),
+            source: "github:o/nixed".into(),
+            rev: "2".into(),
+            nar_hash: "sha256-x".into(),
+            blake3: "b".into(),
+            materialized_path: "/nix/store/abc-nixed".into(),
+            placement: "nix".into(),
+        });
+        let rendered = lockfile_to_nix(&l);
+        let cache_count = rendered.matches(r#"placement = "cache""#).count();
+        let nix_count = rendered.matches(r#"placement = "nix""#).count();
+        assert_eq!(cache_count, 1);
+        assert_eq!(nix_count, 1);
+    }
 }

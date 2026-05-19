@@ -161,4 +161,57 @@ mod tests {
         assert_eq!(both.materialized_path, entry.materialized_path);
         assert_eq!(both.nar_hash, entry.nar_hash);
     }
+
+    #[test]
+    fn mark_as_cache_preserves_metadata() {
+        let entry = LockedPkgSpec {
+            name: "alpha".into(),
+            source: "github:x/alpha@v1".into(),
+            rev: "abc123".into(),
+            nar_hash: "sha256-original".into(),
+            blake3: "blake3-content".into(),
+            materialized_path: "/nix/store/old".into(),
+            placement: "nix".into(),
+        };
+        let cached = mark_as_cache(&entry, std::path::Path::new("/new/path"));
+        assert_eq!(cached.name, entry.name);
+        assert_eq!(cached.source, entry.source);
+        assert_eq!(cached.rev, entry.rev);
+        assert_eq!(cached.blake3, entry.blake3);
+    }
+
+    #[tokio::test]
+    async fn place_in_nix_no_op_when_already_nix() {
+        let entry = LockedPkgSpec {
+            name: "foo".into(),
+            source: "github:x/foo".into(),
+            rev: "abc".into(),
+            nar_hash: "sha256-x".into(),
+            blake3: "b3".into(),
+            materialized_path: "/nix/store/abc-foo".into(),
+            placement: "nix".into(),
+        };
+        // No-op path: must not invoke nix.
+        let result = place_in_nix(&entry).await.unwrap();
+        assert_eq!(result, entry);
+    }
+
+    #[tokio::test]
+    async fn place_in_nix_errors_when_source_path_missing() {
+        let entry = LockedPkgSpec {
+            name: "foo".into(),
+            source: "github:x/foo".into(),
+            rev: "abc".into(),
+            nar_hash: String::new(),
+            blake3: "b3".into(),
+            materialized_path: "/this/path/does/not/exist".into(),
+            placement: "cache".into(),
+        };
+        let err = place_in_nix(&entry).await.unwrap_err();
+        let msg = err.to_string();
+        assert!(
+            msg.contains("source path missing") || msg.contains("run `estante install`"),
+            "unexpected error: {msg}"
+        );
+    }
 }
