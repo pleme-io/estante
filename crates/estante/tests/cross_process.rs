@@ -673,6 +673,93 @@ fn lock_check_exits_dirty_when_manifest_adds_a_package() {
     );
 }
 
+/// The framework's happy-path proof. After `lock --emit-receipt`
+/// against a fresh fixture, every one of doctor's 9 named checks
+/// must be present in the JSON report AND must report passed=true.
+/// If a check is ever silently dropped or fails for any reason on
+/// the canonical zero-drift path, this test catches it.
+///
+/// The check name list pinned here is the framework's surface
+/// contract — adding a 10th check requires updating this set,
+/// which signals to downstream CI authors that the schema grew.
+#[test]
+fn doctor_all_9_named_checks_pass_on_the_canonical_happy_path() {
+    let sb = Sandbox::new("doctor-happy-path");
+    let pkg = write_pkg(&sb, "happy", "echo happy-value");
+    let manifest = sb.join("shellpkg.lisp");
+    write_manifest(&manifest, "happy", &pkg);
+
+    let cache = sb.join("cache");
+    let lockfile = sb.join("shellpkg.lock.lisp");
+
+    // One-shot emit: lockfile + sibling receipt in a single command.
+    let st = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("lock")
+        .arg("--emit-receipt")
+        .status()
+        .expect("lock --emit-receipt");
+    assert!(
+        st.success(),
+        "lock --emit-receipt must succeed on happy path"
+    );
+
+    let out = estante_cmd(&cache)
+        .arg("--manifest")
+        .arg(&manifest)
+        .arg("--lockfile")
+        .arg(&lockfile)
+        .arg("doctor")
+        .arg("--json")
+        .output()
+        .expect("spawn doctor --json");
+    assert!(
+        out.status.success(),
+        "doctor must exit zero on the happy path; stderr:\n{}",
+        String::from_utf8_lossy(&out.stderr),
+    );
+
+    let v: serde_json::Value = serde_json::from_slice(&out.stdout).unwrap();
+    let checks = v["checks"].as_array().unwrap();
+
+    let expected_names = [
+        "manifest:parse",
+        "lockfile:parse",
+        "manifest:sources-parse",
+        "lockfile:placement-known",
+        "lockfile:materialized-paths-exist",
+        "lockfile:blake3-verify",
+        "placement:nix-paths-in-store",
+        "cache:exists",
+        "receipt:matches",
+    ];
+
+    let actual_names: std::collections::BTreeSet<&str> =
+        checks.iter().filter_map(|c| c["name"].as_str()).collect();
+    let expected_set: std::collections::BTreeSet<&str> = expected_names.iter().copied().collect();
+    assert_eq!(
+        actual_names, expected_set,
+        "doctor check name surface must match the pinned set — add/remove changes are framework surface drift",
+    );
+
+    for c in checks {
+        let name = c["name"].as_str().unwrap();
+        let passed = c["passed"].as_bool().unwrap();
+        assert!(
+            passed,
+            "check `{name}` failed on the happy path; detail: {}",
+            c["detail"].as_str().unwrap_or("<no detail>"),
+        );
+    }
+
+    assert_eq!(v["passed"].as_u64().unwrap(), 9);
+    assert_eq!(v["failed"].as_u64().unwrap(), 0);
+    assert_eq!(v["total"].as_u64().unwrap(), 9);
+}
+
 /// `estante doctor --json` emits a structured report whose schema
 /// is the CI contract: { checks: [...], passed, failed, total }.
 /// Pinned here so accidental shape drift breaks the test before it
