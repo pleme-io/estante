@@ -27,12 +27,12 @@ jobs:
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout estante
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           path: estante
 
       - name: Checkout frost (sibling for local path dep)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: pleme-io/frost
           path: frost
@@ -64,12 +64,12 @@ jobs:
     needs: test
     steps:
       - name: Checkout estante
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           path: estante
 
       - name: Checkout frost (sibling for local path dep)
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
         with:
           repository: pleme-io/frost
           path: frost
