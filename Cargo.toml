@@ -33,7 +33,12 @@ estante-types = { path = "crates/estante-types" }
 # pleme-io sibling crates — the typed forms (PkgSpec, LoadSpec,
 # LockedPkgSpec) live in frost-lisp::pkg; estante is a consumer, not
 # a duplicate source of truth (Pillar 12: solve once).
-frost-lisp = { path = "../frost/crates/frost-lisp" }
+#
+# Git dep keeps Dependabot happy (it can't follow `../` path deps);
+# `branch = "main"` so consumers always get the tip. Local
+# development: add a [patch.'https://github.com/pleme-io/frost']
+# section in `.cargo/config.toml` pointing at the local checkout.
+frost-lisp = { git = "https://github.com/pleme-io/frost", branch = "main" }
 
 # tatara-lisp pinned to the same rev frost uses so a single copy
 # resolves in the dep graph (no duplicate DeriveTataraDomain impls).

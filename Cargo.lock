@@ -431,7 +431,7 @@ dependencies = [
  "dirs",
  "estante-types",
  "flate2",
- "frost-exec",
+ "frost-exec 0.1.0",
  "frost-lisp",
  "http-body-util",
  "octocrab",
@@ -536,17 +536,46 @@ dependencies = [
 ]
 
 [[package]]
+name = "frost-builtins"
+version = "0.1.0"
+source = "git+https://github.com/pleme-io/frost?branch=main#efd11842c2ecc6851922f8687bd89cccd556fb42"
+dependencies = [
+ "libc",
+ "thiserror 2.0.18",
+]
+
+[[package]]
 name = "frost-exec"
 version = "0.1.0"
 dependencies = [
  "compact_str",
  "fancy-regex",
- "frost-builtins",
- "frost-expand",
- "frost-glob",
- "frost-lexer",
- "frost-options",
- "frost-parser",
+ "frost-builtins 0.1.0",
+ "frost-expand 0.1.0",
+ "frost-glob 0.1.0",
+ "frost-lexer 0.1.0",
+ "frost-options 0.1.0",
+ "frost-parser 0.1.0",
+ "indexmap",
+ "libc",
+ "nix",
+ "thiserror 2.0.18",
+ "tracing",
+]
+
+[[package]]
+name = "frost-exec"
+version = "0.1.0"
+source = "git+https://github.com/pleme-io/frost?branch=main#efd11842c2ecc6851922f8687bd89cccd556fb42"
+dependencies = [
+ "compact_str",
+ "fancy-regex",
+ "frost-builtins 0.1.0 (git+https://github.com/pleme-io/frost?branch=main)",
+ "frost-expand 0.1.0 (git+https://github.com/pleme-io/frost?branch=main)",
+ "frost-glob 0.1.0 (git+https://github.com/pleme-io/frost?branch=main)",
+ "frost-lexer 0.1.0 (git+https://github.com/pleme-io/frost?branch=main)",
+ "frost-options 0.1.0 (git+https://github.com/pleme-io/frost?branch=main)",
+ "frost-parser 0.1.0 (git+https://github.com/pleme-io/frost?branch=main)",
  "indexmap",
  "libc",
  "nix",
@@ -559,8 +588,20 @@ name = "frost-expand"
 version = "0.1.0"
 dependencies = [
  "compact_str",
- "frost-lexer",
- "frost-parser",
+ "frost-lexer 0.1.0",
+ "frost-parser 0.1.0",
+ "indexmap",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "frost-expand"
+version = "0.1.0"
+source = "git+https://github.com/pleme-io/frost?branch=main#efd11842c2ecc6851922f8687bd89cccd556fb42"
+dependencies = [
+ "compact_str",
+ "frost-lexer 0.1.0 (git+https://github.com/pleme-io/frost?branch=main)",
+ "frost-parser 0.1.0 (git+https://github.com/pleme-io/frost?branch=main)",
  "indexmap",
  "thiserror 2.0.18",
 ]
@@ -568,6 +609,14 @@ dependencies = [
 [[package]]
 name = "frost-glob"
 version = "0.1.0"
+dependencies = [
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "frost-glob"
+version = "0.1.0"
+source = "git+https://github.com/pleme-io/frost?branch=main#efd11842c2ecc6851922f8687bd89cccd556fb42"
 dependencies = [
  "thiserror 2.0.18",
 ]
@@ -582,14 +631,25 @@ dependencies = [
 ]
 
 [[package]]
+name = "frost-lexer"
+version = "0.1.0"
+source = "git+https://github.com/pleme-io/frost?branch=main#efd11842c2ecc6851922f8687bd89cccd556fb42"
+dependencies = [
+ "bstr",
+ "compact_str",
+ "thiserror 2.0.18",
+]
+
+[[package]]
 name = "frost-lisp"
 version = "0.1.0"
+source = "git+https://github.com/pleme-io/frost?branch=main#efd11842c2ecc6851922f8687bd89cccd556fb42"
 dependencies = [
  "compact_str",
- "frost-exec",
- "frost-lexer",
- "frost-options",
- "frost-parser",
+ "frost-exec 0.1.0 (git+https://github.com/pleme-io/frost?branch=main)",
+ "frost-lexer 0.1.0 (git+https://github.com/pleme-io/frost?branch=main)",
+ "frost-options 0.1.0 (git+https://github.com/pleme-io/frost?branch=main)",
+ "frost-parser 0.1.0 (git+https://github.com/pleme-io/frost?branch=main)",
  "ishou-tokens",
  "serde",
  "serde_json",
@@ -605,11 +665,29 @@ dependencies = [
 ]
 
 [[package]]
+name = "frost-options"
+version = "0.1.0"
+source = "git+https://github.com/pleme-io/frost?branch=main#efd11842c2ecc6851922f8687bd89cccd556fb42"
+dependencies = [
+ "thiserror 2.0.18",
+]
+
+[[package]]
 name = "frost-parser"
 version = "0.1.0"
 dependencies = [
  "compact_str",
- "frost-lexer",
+ "frost-lexer 0.1.0",
+ "thiserror 2.0.18",
+]
+
+[[package]]
+name = "frost-parser"
+version = "0.1.0"
+source = "git+https://github.com/pleme-io/frost?branch=main#efd11842c2ecc6851922f8687bd89cccd556fb42"
+dependencies = [
+ "compact_str",
+ "frost-lexer 0.1.0 (git+https://github.com/pleme-io/frost?branch=main)",
  "thiserror 2.0.18",
 ]
 
