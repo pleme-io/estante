@@ -41,7 +41,7 @@ tracing-subscriber = { workspace = true }
 pretty_assertions = { workspace = true }
 # Integration tests drive frost-lisp's full apply pipeline through a
 # real ShellEnv to prove the lockfile estante emits is consumable.
-frost-exec = { path = "../../../frost/crates/frost-exec" }
+frost-exec = { git = "https://github.com/pleme-io/frost", branch = "main" }
 blake3 = { workspace = true }
 # Property-based tests for the receipt-diff primitive: any mutation
 # of a Receipt must surface in diff_receipts; the diff between a
