@@ -30,6 +30,11 @@ doc_markdown = "allow"
 # Workspace crates
 estante-types = { path = "crates/estante-types" }
 
+# Typed-dispatcher catalog integration
+# (theory/UNIFIED-COMPUTING-MODEL.md §VI).
+gen-platform = { path = "../gen/crates/gen-platform" }
+gen-types = { path = "../gen/crates/gen-types" }
+
 # pleme-io sibling crates — the typed forms (PkgSpec, LoadSpec,
 # LockedPkgSpec) live in frost-lisp::pkg; estante is a consumer, not
 # a duplicate source of truth (Pillar 12: solve once).

@@ -51,7 +51,11 @@ pub use receipt::{
 ///
 /// `estante place <pkg> --to nix` shifts a single entry; `estante
 /// install --placement nix` makes nix the default for new entries.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Default)]
+#[derive(Debug, Clone, Copy, PartialEq, Eq, Default,
+         gen_platform::TypedDispatcher,
+         gen_platform::Discriminant,
+         gen_platform::IsVariant,
+         gen_platform::FromStrKind)]
 pub enum Placement {
     /// User-local cache. Default for `estante install` / `estante run`.
     #[default]
@@ -63,6 +67,13 @@ pub enum Placement {
     /// Both stores carry the bytes — typical mid-migration state.
     Both,
 }
+
+// Fleet-wide dispatcher-catalog registration. THIRTEENTH consumer
+// class adopting gen-platform's typed-dispatcher catamorphism
+// (after gen / caixa / wasm-platform / cofre / shigoto / engenho /
+// magma / kura / pangea / tatara / hanshi / shikumi). See
+// theory/UNIFIED-COMPUTING-MODEL.md §VI.
+gen_platform::register_dispatcher!("estante.placement", Placement);
 
 impl Placement {
     /// Parse from the lockfile string (lowercase). Empty / unknown
@@ -132,7 +143,10 @@ pub type EstanteResult<T> = Result<T, EstanteError>;
 /// let s = Source::parse("github:org/repo@v1.0").unwrap();
 /// assert!(matches!(s, Source::Github { .. }));
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq)]
+#[derive(Debug, Clone, PartialEq, Eq,
+         gen_platform::TypedDispatcher,
+         gen_platform::Discriminant,
+         gen_platform::IsVariant)]
 pub enum Source {
     /// `github:owner/repo[@ref]`. Ref defaults to `"HEAD"` if absent.
     Github {
@@ -149,6 +163,10 @@ pub enum Source {
     /// `local:./relative/path`. Used in tests + monorepo demos.
     Local { path: String },
 }
+
+// Fleet-wide dispatcher-catalog registration for the estante
+// source-kind typed surface. Companion to estante.placement.
+gen_platform::register_dispatcher!("estante.source", Source);
 
 impl Source {
     /// Parse a `source:` string into its ADT form.
@@ -188,8 +206,14 @@ impl Source {
     /// True if this source is resolvable via the GitHub REST API
     /// (search + tarball download). The resolver uses this to pick
     /// between octocrab and the plain git transport.
+    ///
+    /// Renamed from `is_github()` to disambiguate from the
+    /// structural `is_github()` predicate auto-derived by
+    /// `#[derive(IsVariant)]` (which returns true ONLY for the
+    /// `Github` variant). This method is a SEMANTIC classifier
+    /// (Github + Gist both resolve via the GitHub API).
     #[must_use]
-    pub fn is_github(&self) -> bool {
+    pub fn is_github_platform(&self) -> bool {
         matches!(self, Self::Github { .. } | Self::Gist { .. })
     }
 }
@@ -529,7 +553,7 @@ mod tests {
                 reference: "v1.7.4".into(),
             }
         );
-        assert!(s.is_github());
+        assert!(s.is_github_platform());
     }
 
     #[test]
@@ -550,7 +574,7 @@ mod tests {
                 path: "./pkgs/foo".into()
             }
         );
-        assert!(!s.is_github());
+        assert!(!s.is_github_platform());
     }
 
     #[test]
@@ -791,7 +815,7 @@ mod tests {
             }
             _ => panic!("expected GitHttps"),
         }
-        assert!(!s.is_github());
+        assert!(!s.is_github_platform());
     }
 
     #[test]
@@ -817,7 +841,7 @@ mod tests {
             }
             _ => panic!("expected Gist"),
         }
-        assert!(s.is_github(), "gists count as github-resolvable");
+        assert!(s.is_github_platform(), "gists count as github-resolvable");
     }
 
     #[test]
@@ -840,15 +864,15 @@ mod tests {
 
     #[test]
     fn source_is_github_classifies_all_variants() {
-        assert!(Source::parse("github:o/r").unwrap().is_github());
-        assert!(Source::parse("gist:abc").unwrap().is_github());
-        assert!(!Source::parse("git+https:x.org/y.git").unwrap().is_github());
+        assert!(Source::parse("github:o/r").unwrap().is_github_platform());
+        assert!(Source::parse("gist:abc").unwrap().is_github_platform());
+        assert!(!Source::parse("git+https:x.org/y.git").unwrap().is_github_platform());
         assert!(
             !Source::parse("git+ssh:git@x.org:y.git")
                 .unwrap()
-                .is_github()
+                .is_github_platform()
         );
-        assert!(!Source::parse("local:./foo").unwrap().is_github());
+        assert!(!Source::parse("local:./foo").unwrap().is_github_platform());
     }
 
     #[test]
