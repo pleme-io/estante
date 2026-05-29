@@ -283,9 +283,9 @@ checksum = "1d07550c9036bf2ae0c684c4297d503f838287c83c53686d05370d0e139ae570"
 
 [[package]]
 name = "compact_str"
-version = "0.8.1"
+version = "0.8.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3b79c4069c6cad78e2e0cdfcbd26275770669fb39fd308a752dc110e83b9af32"
+checksum = "7fd622ebbb56a5b2ccb651b32b911cdeb2a9b4b11776b2473bf26a26a286244e"
 dependencies = [
  "castaway",
  "cfg-if",
@@ -384,9 +384,9 @@ dependencies = [
 
 [[package]]
 name = "displaydoc"
-version = "0.2.5"
+version = "0.2.6"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "97369cbbc041bc366949bc74d34658d6cda5621039731c6310521892a3a20ae0"
+checksum = "1ac70aa55017e108007fbaf5aa0f54b021c98f92ff8af59d42eda9da96e3dd4f"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -532,7 +532,7 @@ dependencies = [
 [[package]]
 name = "frost-builtins"
 version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#efd11842c2ecc6851922f8687bd89cccd556fb42"
+source = "git+https://github.com/pleme-io/frost?branch=main#4da03cc6dcf738d2182ad9f163f178b9174524c2"
 dependencies = [
  "libc",
  "thiserror 2.0.18",
@@ -541,7 +541,7 @@ dependencies = [
 [[package]]
 name = "frost-exec"
 version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#efd11842c2ecc6851922f8687bd89cccd556fb42"
+source = "git+https://github.com/pleme-io/frost?branch=main#4da03cc6dcf738d2182ad9f163f178b9174524c2"
 dependencies = [
  "compact_str",
  "fancy-regex",
@@ -561,7 +561,7 @@ dependencies = [
 [[package]]
 name = "frost-expand"
 version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#efd11842c2ecc6851922f8687bd89cccd556fb42"
+source = "git+https://github.com/pleme-io/frost?branch=main#4da03cc6dcf738d2182ad9f163f178b9174524c2"
 dependencies = [
  "compact_str",
  "frost-lexer",
@@ -573,7 +573,7 @@ dependencies = [
 [[package]]
 name = "frost-glob"
 version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#efd11842c2ecc6851922f8687bd89cccd556fb42"
+source = "git+https://github.com/pleme-io/frost?branch=main#4da03cc6dcf738d2182ad9f163f178b9174524c2"
 dependencies = [
  "thiserror 2.0.18",
 ]
@@ -581,7 +581,7 @@ dependencies = [
 [[package]]
 name = "frost-lexer"
 version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#efd11842c2ecc6851922f8687bd89cccd556fb42"
+source = "git+https://github.com/pleme-io/frost?branch=main#4da03cc6dcf738d2182ad9f163f178b9174524c2"
 dependencies = [
  "bstr",
  "compact_str",
@@ -591,7 +591,7 @@ dependencies = [
 [[package]]
 name = "frost-lisp"
 version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#efd11842c2ecc6851922f8687bd89cccd556fb42"
+source = "git+https://github.com/pleme-io/frost?branch=main#4da03cc6dcf738d2182ad9f163f178b9174524c2"
 dependencies = [
  "compact_str",
  "frost-exec",
@@ -608,7 +608,7 @@ dependencies = [
 [[package]]
 name = "frost-options"
 version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#efd11842c2ecc6851922f8687bd89cccd556fb42"
+source = "git+https://github.com/pleme-io/frost?branch=main#4da03cc6dcf738d2182ad9f163f178b9174524c2"
 dependencies = [
  "thiserror 2.0.18",
 ]
@@ -616,7 +616,7 @@ dependencies = [
 [[package]]
 name = "frost-parser"
 version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#efd11842c2ecc6851922f8687bd89cccd556fb42"
+source = "git+https://github.com/pleme-io/frost?branch=main#4da03cc6dcf738d2182ad9f163f178b9174524c2"
 dependencies = [
  "compact_str",
  "frost-lexer",
@@ -714,6 +714,7 @@ dependencies = [
 [[package]]
 name = "gen-macros"
 version = "0.1.0"
+source = "git+https://github.com/pleme-io/gen#0d9df5087f3b9c1a30988b9dfe08e280f72df83f"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -723,6 +724,7 @@ dependencies = [
 [[package]]
 name = "gen-platform"
 version = "0.1.0"
+source = "git+https://github.com/pleme-io/gen#0d9df5087f3b9c1a30988b9dfe08e280f72df83f"
 dependencies = [
  "gen-macros",
  "gen-types",
@@ -735,6 +737,7 @@ dependencies = [
 [[package]]
 name = "gen-types"
 version = "0.1.0"
+source = "git+https://github.com/pleme-io/gen#0d9df5087f3b9c1a30988b9dfe08e280f72df83f"
 dependencies = [
  "blake3",
  "chrono",
@@ -806,9 +809,9 @@ checksum = "2304e00983f87ffb38b55b444b5e3b60a884b5d30c0fca7d82fe33449bbe55ea"
 
 [[package]]
 name = "http"
-version = "1.4.0"
+version = "1.4.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e3ba2a386d7f85a81f119ad7498ebe444d2e22c2af0b86b069416ace48b3311a"
+checksum = "8be7462df143984c4598a256ef469b251d7d7f9e271135073e78fc535414f3d0"
 dependencies = [
  "bytes",
  "itoa",
@@ -845,9 +848,9 @@ checksum = "6dbf3de79e51f3d586ab4cb9d5c3e2c14aa28ed23d180cf89b4df0454a69cc87"
 
 [[package]]
 name = "hyper"
-version = "1.9.0"
+version = "1.10.0"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "6299f016b246a94207e63da54dbe807655bf9e00044f73ded42c3ac5305fbcca"
+checksum = "eb92f162bf56536459fc83c79b974bb12837acfed43d6bc370a7916d0ae15ecc"
 dependencies = [
  "atomic-waker",
  "bytes",
@@ -1082,11 +1085,12 @@ dependencies = [
 
 [[package]]
 name = "irodori"
-version = "0.1.0"
+version = "0.1.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "0dc14b88cf12196c0f37995676c3cd75c34511436be9c41f7877edb8b1cfcb1e"
+checksum = "7c1e6ec2a36084626fdbd4dcfb8beb53d0b5f6125b4cd54a4d45abddf6ffbbb9"
 dependencies = [
  "serde",
+ "thiserror 2.0.18",
 ]
 
 [[package]]
@@ -1158,9 +1162,9 @@ checksum = "68ab91017fe16c622486840e4c83c9a37afeff978bd239b5293d61ece587de66"
 
 [[package]]
 name = "libredox"
-version = "0.1.16"
+version = "0.1.17"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "e02f3bb43d335493c96bf3fd3a321600bf6bd07ed34bc64118e9293bdffea46c"
+checksum = "f02ab6bace2054fb888a3c16f990117b579d14a3088e472d63c6011fa185c9d3"
 dependencies = [
  "libc",
 ]
@@ -1179,9 +1183,9 @@ checksum = "92daf443525c4cce67b150400bc2316076100ce0b3686209eb8cf3c31612e6f0"
 
 [[package]]
 name = "log"
-version = "0.4.29"
+version = "0.4.30"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "5e5032e24019045c762d3c0f28f5b6b8bbf38563a65908389bf7978758920897"
+checksum = "616ec5685824bcc94416c6d4a7a446eea774a31efd7062c8480ba6fd06d7a6e5"
 
 [[package]]
 name = "matchers"
@@ -1194,9 +1198,9 @@ dependencies = [
 
 [[package]]
 name = "memchr"
-version = "2.8.0"
+version = "2.8.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "f8ca58f447f06ed17d5fc4043ce1b10dd205e060fb3ce5b979b8ed8e59ff3f79"
+checksum = "6b947ae49db0d222b1dbc6b113ce7248a3fc3a6ca21b696717bfc000ba4484d8"
 
 [[package]]
 name = "miniz_oxide"
@@ -1210,9 +1214,9 @@ dependencies = [
 
 [[package]]
 name = "mio"
-version = "1.2.0"
+version = "1.2.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "50b7e5b27aa02a74bac8c3f23f448f8d87ff11f92d3aac1a6ed369ee08cc56c1"
+checksum = "02bd0af71c67b473010cbbc60715ee815645a4dc942899111f494b4b737d6fda"
 dependencies = [
  "libc",
  "wasi",
@@ -1840,9 +1844,9 @@ dependencies = [
 
 [[package]]
 name = "socket2"
-version = "0.6.3"
+version = "0.6.4"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "3a766e1110788c36f4fa1c2b71b387a7815aa65f88ce0229841826633d93723e"
+checksum = "52d1cfed4120b4d927bf7c0f86d2087a4a7d6027c906d9f9d525a80573b9be51"
 dependencies = [
  "libc",
  "windows-sys 0.61.2",
@@ -2737,18 +2741,18 @@ dependencies = [
 
 [[package]]
 name = "zerocopy"
-version = "0.8.48"
+version = "0.8.49"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "eed437bf9d6692032087e337407a86f04cd8d6a16a37199ed57949d415bd68e9"
+checksum = "bce33a6288fa3f072a8c2c7d0f2fdbb90e28298f0135c1f99b96c3db2efcc60b"
 dependencies = [
  "zerocopy-derive",
 ]
 
 [[package]]
 name = "zerocopy-derive"
-version = "0.8.48"
+version = "0.8.49"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "70e3cd084b1788766f53af483dd21f93881ff30d7320490ec3ef7526d203bad4"
+checksum = "8fd425244944f4ab65ccff928e7323354c5a018c75838362fdce749dfad2ee1e"
 dependencies = [
  "proc-macro2",
  "quote",
