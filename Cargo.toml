@@ -32,8 +32,8 @@ estante-types = { path = "crates/estante-types" }
 
 # Typed-dispatcher catalog integration
 # (theory/UNIFIED-COMPUTING-MODEL.md §VI).
-gen-platform = { path = "../gen/crates/gen-platform" }
-gen-types = { path = "../gen/crates/gen-types" }
+gen-platform = { git = "https://github.com/pleme-io/gen" }
+gen-types = { git = "https://github.com/pleme-io/gen" }
 
 # pleme-io sibling crates — the typed forms (PkgSpec, LoadSpec,
 # LockedPkgSpec) live in frost-lisp::pkg; estante is a consumer, not
