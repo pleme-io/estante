@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "cargo_lock_sha256": "38dd84b2d3e4dd457726d5146531e031af0846e81cde776cd706c77c0d3924cd",
+  "cargo_lock_sha256": "aa32d46f85736f32d831090586aae05877f2da5d8e65bd1aadc6f714d46fec2e",
   "target_resolves": {
     "base": {
       "adler2-2.0.1": {
@@ -1091,7 +1091,7 @@
           },
           {
             "name": "gen_platform",
-            "package_key": "gen-platform-0.1.4",
+            "package_key": "gen-platform-0.1.8",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1101,7 +1101,7 @@
           },
           {
             "name": "gen_types",
-            "package_key": "gen-types-0.1.4",
+            "package_key": "gen-types-0.1.8",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -2091,7 +2091,7 @@
           "std"
         ]
       },
-      "gen-macros-0.1.4": {
+      "gen-macros-0.1.8": {
         "runtime_dependencies": [
           {
             "name": "proc_macro2",
@@ -2130,11 +2130,11 @@
         "build_dependencies": [],
         "features": []
       },
-      "gen-platform-0.1.4": {
+      "gen-platform-0.1.8": {
         "runtime_dependencies": [
           {
             "name": "gen_macros",
-            "package_key": "gen-macros-0.1.4",
+            "package_key": "gen-macros-0.1.8",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -2144,7 +2144,7 @@
           },
           {
             "name": "gen_types",
-            "package_key": "gen-types-0.1.4",
+            "package_key": "gen-types-0.1.8",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -2198,7 +2198,7 @@
         "build_dependencies": [],
         "features": []
       },
-      "gen-types-0.1.4": {
+      "gen-types-0.1.8": {
         "runtime_dependencies": [
           {
             "name": "blake3",
@@ -9423,14 +9423,14 @@
     "futures-util-0.3.32": {
       "edition": "2018"
     },
-    "gen-macros-0.1.4": {
+    "gen-macros-0.1.8": {
       "edition": "2024",
       "proc_macro": true
     },
-    "gen-platform-0.1.4": {
+    "gen-platform-0.1.8": {
       "edition": "2024"
     },
-    "gen-types-0.1.4": {
+    "gen-types-0.1.8": {
       "edition": "2024"
     },
     "getrandom-0.2.17": {
@@ -9945,18 +9945,18 @@
     }
   },
   "git_nar_sha256": {
-    "awase-0.1.0": "sha256-LXxbkkpFv6HS0aqfJvAAMcVTO4vanHwtK8OTEwOcV2k=",
-    "frost-builtins-0.1.0": "sha256-U/lSG5cBRj1W0KI+oTc00JRiGiq+8bZc4lPQdnKkic0=",
-    "frost-exec-0.1.0": "sha256-U/lSG5cBRj1W0KI+oTc00JRiGiq+8bZc4lPQdnKkic0=",
-    "frost-expand-0.1.0": "sha256-U/lSG5cBRj1W0KI+oTc00JRiGiq+8bZc4lPQdnKkic0=",
-    "frost-glob-0.1.0": "sha256-U/lSG5cBRj1W0KI+oTc00JRiGiq+8bZc4lPQdnKkic0=",
-    "frost-lexer-0.1.0": "sha256-U/lSG5cBRj1W0KI+oTc00JRiGiq+8bZc4lPQdnKkic0=",
-    "frost-lisp-0.1.0": "sha256-U/lSG5cBRj1W0KI+oTc00JRiGiq+8bZc4lPQdnKkic0=",
-    "frost-options-0.1.0": "sha256-U/lSG5cBRj1W0KI+oTc00JRiGiq+8bZc4lPQdnKkic0=",
-    "frost-parser-0.1.0": "sha256-U/lSG5cBRj1W0KI+oTc00JRiGiq+8bZc4lPQdnKkic0=",
-    "gen-macros-0.1.4": "sha256-bGme6/leyfrg/PYL69idPfBpYaU8eCLdThMiyPNG+s0=",
-    "gen-platform-0.1.4": "sha256-bGme6/leyfrg/PYL69idPfBpYaU8eCLdThMiyPNG+s0=",
-    "gen-types-0.1.4": "sha256-bGme6/leyfrg/PYL69idPfBpYaU8eCLdThMiyPNG+s0=",
+    "awase-0.1.0": "sha256-nqVGmi1ZeighARhz6WET92bqdmHDCB4bE4rM+25kgFE=",
+    "frost-builtins-0.1.0": "sha256-AUEF2IlPUCF3rt2Wj7FKYrkfU2pI2+zH7f7czo24dnA=",
+    "frost-exec-0.1.0": "sha256-AUEF2IlPUCF3rt2Wj7FKYrkfU2pI2+zH7f7czo24dnA=",
+    "frost-expand-0.1.0": "sha256-AUEF2IlPUCF3rt2Wj7FKYrkfU2pI2+zH7f7czo24dnA=",
+    "frost-glob-0.1.0": "sha256-AUEF2IlPUCF3rt2Wj7FKYrkfU2pI2+zH7f7czo24dnA=",
+    "frost-lexer-0.1.0": "sha256-AUEF2IlPUCF3rt2Wj7FKYrkfU2pI2+zH7f7czo24dnA=",
+    "frost-lisp-0.1.0": "sha256-AUEF2IlPUCF3rt2Wj7FKYrkfU2pI2+zH7f7czo24dnA=",
+    "frost-options-0.1.0": "sha256-AUEF2IlPUCF3rt2Wj7FKYrkfU2pI2+zH7f7czo24dnA=",
+    "frost-parser-0.1.0": "sha256-AUEF2IlPUCF3rt2Wj7FKYrkfU2pI2+zH7f7czo24dnA=",
+    "gen-macros-0.1.8": "sha256-hA8kXaLIsrlPaSGp+K2uHbD+Q9dkJwRAhZlgVdIDb/0=",
+    "gen-platform-0.1.8": "sha256-hA8kXaLIsrlPaSGp+K2uHbD+Q9dkJwRAhZlgVdIDb/0=",
+    "gen-types-0.1.8": "sha256-hA8kXaLIsrlPaSGp+K2uHbD+Q9dkJwRAhZlgVdIDb/0=",
     "ishou-tokens-0.1.0": "sha256-+kzhHYtbo1lxEI9chtwFve5D/0nor38nMdEADf3nvZ4=",
     "tatara-lisp-0.2.0": "sha256-5Lv0gja4VgaOiRf8HxhZQYmj9/HAcZeb0kNhiukgTWU=",
     "tatara-lisp-derive-0.2.0": "sha256-5Lv0gja4VgaOiRf8HxhZQYmj9/HAcZeb0kNhiukgTWU="
