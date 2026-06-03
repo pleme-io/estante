@@ -129,7 +129,7 @@ checksum = "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53"
 [[package]]
 name = "awase"
 version = "0.1.0"
-source = "git+https://github.com/pleme-io/awase#08c0974fbdc7d0c15a18cecf926b8a049076e491"
+source = "git+https://github.com/pleme-io/awase#7f931ca2b279006b2837501f83d529f4465f3aa2"
 dependencies = [
  "serde",
  "thiserror 2.0.18",
@@ -542,7 +542,7 @@ dependencies = [
 [[package]]
 name = "frost-builtins"
 version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#5f3bf664d8810c2f8c52dc0ecc29495092fe5e79"
+source = "git+https://github.com/pleme-io/frost?branch=main#559bd67c225f1672cbd1fbd607df178bb7b61896"
 dependencies = [
  "libc",
  "thiserror 2.0.18",
@@ -551,7 +551,7 @@ dependencies = [
 [[package]]
 name = "frost-exec"
 version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#5f3bf664d8810c2f8c52dc0ecc29495092fe5e79"
+source = "git+https://github.com/pleme-io/frost?branch=main#559bd67c225f1672cbd1fbd607df178bb7b61896"
 dependencies = [
  "awase",
  "compact_str",
@@ -572,7 +572,7 @@ dependencies = [
 [[package]]
 name = "frost-expand"
 version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#5f3bf664d8810c2f8c52dc0ecc29495092fe5e79"
+source = "git+https://github.com/pleme-io/frost?branch=main#559bd67c225f1672cbd1fbd607df178bb7b61896"
 dependencies = [
  "compact_str",
  "frost-lexer",
@@ -584,7 +584,7 @@ dependencies = [
 [[package]]
 name = "frost-glob"
 version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#5f3bf664d8810c2f8c52dc0ecc29495092fe5e79"
+source = "git+https://github.com/pleme-io/frost?branch=main#559bd67c225f1672cbd1fbd607df178bb7b61896"
 dependencies = [
  "thiserror 2.0.18",
 ]
@@ -592,7 +592,7 @@ dependencies = [
 [[package]]
 name = "frost-lexer"
 version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#5f3bf664d8810c2f8c52dc0ecc29495092fe5e79"
+source = "git+https://github.com/pleme-io/frost?branch=main#559bd67c225f1672cbd1fbd607df178bb7b61896"
 dependencies = [
  "bstr",
  "compact_str",
@@ -602,7 +602,7 @@ dependencies = [
 [[package]]
 name = "frost-lisp"
 version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#5f3bf664d8810c2f8c52dc0ecc29495092fe5e79"
+source = "git+https://github.com/pleme-io/frost?branch=main#559bd67c225f1672cbd1fbd607df178bb7b61896"
 dependencies = [
  "compact_str",
  "frost-exec",
@@ -619,7 +619,7 @@ dependencies = [
 [[package]]
 name = "frost-options"
 version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#5f3bf664d8810c2f8c52dc0ecc29495092fe5e79"
+source = "git+https://github.com/pleme-io/frost?branch=main#559bd67c225f1672cbd1fbd607df178bb7b61896"
 dependencies = [
  "thiserror 2.0.18",
 ]
@@ -627,7 +627,7 @@ dependencies = [
 [[package]]
 name = "frost-parser"
 version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#5f3bf664d8810c2f8c52dc0ecc29495092fe5e79"
+source = "git+https://github.com/pleme-io/frost?branch=main#559bd67c225f1672cbd1fbd607df178bb7b61896"
 dependencies = [
  "compact_str",
  "frost-lexer",
@@ -724,8 +724,8 @@ dependencies = [
 
 [[package]]
 name = "gen-macros"
-version = "0.1.4"
-source = "git+https://github.com/pleme-io/gen#2684ab51c68dad10b4bc59c685c123925990bc2a"
+version = "0.1.8"
+source = "git+https://github.com/pleme-io/gen#e4759b7b81b3b4f9505f3723d33bcd7e522dd6c3"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -734,8 +734,8 @@ dependencies = [
 
 [[package]]
 name = "gen-platform"
-version = "0.1.4"
-source = "git+https://github.com/pleme-io/gen#2684ab51c68dad10b4bc59c685c123925990bc2a"
+version = "0.1.8"
+source = "git+https://github.com/pleme-io/gen#e4759b7b81b3b4f9505f3723d33bcd7e522dd6c3"
 dependencies = [
  "gen-macros",
  "gen-types",
@@ -747,8 +747,8 @@ dependencies = [
 
 [[package]]
 name = "gen-types"
-version = "0.1.4"
-source = "git+https://github.com/pleme-io/gen#2684ab51c68dad10b4bc59c685c123925990bc2a"
+version = "0.1.8"
+source = "git+https://github.com/pleme-io/gen#e4759b7b81b3b4f9505f3723d33bcd7e522dd6c3"
 dependencies = [
  "blake3",
  "chrono",
