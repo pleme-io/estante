@@ -1,6 +1,6 @@
 {
   "schema_version": 1,
-  "cargo_lock_sha256": "aa32d46f85736f32d831090586aae05877f2da5d8e65bd1aadc6f714d46fec2e",
+  "cargo_lock_sha256": "64e85d48521e27d7a9d50f3c7ad393159997e46a80d2aad1843e0199d246a239",
   "target_resolves": {
     "base": {
       "adler2-2.0.1": {
@@ -870,7 +870,7 @@
           "std"
         ]
       },
-      "estante-0.1.1": {
+      "estante-0.1.3": {
         "runtime_dependencies": [
           {
             "name": "anyhow",
@@ -917,7 +917,7 @@
           },
           {
             "name": "estante_types",
-            "package_key": "estante-types-0.1.1",
+            "package_key": "estante-types-0.1.3",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1067,7 +1067,7 @@
         "build_dependencies": [],
         "features": []
       },
-      "estante-types-0.1.1": {
+      "estante-types-0.1.3": {
         "runtime_dependencies": [
           {
             "name": "blake3",
@@ -9291,11 +9291,8 @@
     "constant_time_eq-0.4.2": {
       "edition": "2024"
     },
-    "core-foundation-0.10.1": {
-      "edition": "2021"
-    },
-    "core-foundation-sys-0.8.7": {
-      "edition": "2018"
+    "cpufeatures-0.3.0": {
+      "edition": "2024"
     },
     "crc32fast-1.5.0": {
       "edition": "2021",
@@ -9326,7 +9323,7 @@
     "errno-0.3.14": {
       "edition": "2018"
     },
-    "estante-0.1.1": {
+    "estante-0.1.3": {
       "edition": "2024",
       "lib_target": {
         "name": "estante",
@@ -9339,7 +9336,7 @@
         }
       ]
     },
-    "estante-types-0.1.1": {
+    "estante-types-0.1.3": {
       "edition": "2024",
       "lib_target": {
         "name": "estante_types",
@@ -9538,6 +9535,9 @@
       "edition": "2021",
       "build_script": "build.rs"
     },
+    "linux-raw-sys-0.12.1": {
+      "edition": "2021"
+    },
     "litemap-0.8.2": {
       "edition": "2021"
     },
@@ -9580,6 +9580,9 @@
       "edition": "2018"
     },
     "once_cell-1.21.4": {
+      "edition": "2021"
+    },
+    "openssl-probe-0.2.1": {
       "edition": "2021"
     },
     "option-ext-0.2.0": {
@@ -9683,12 +9686,6 @@
       "edition": "2021"
     },
     "secrecy-0.10.3": {
-      "edition": "2021"
-    },
-    "security-framework-3.7.0": {
-      "edition": "2024"
-    },
-    "security-framework-sys-2.17.0": {
       "edition": "2021"
     },
     "serde-1.0.228": {
@@ -9934,13 +9931,16 @@
       "edition": "2021",
       "build_script": "build.rs"
     },
-    "cpufeatures-0.3.0": {
-      "edition": "2024"
-    },
-    "linux-raw-sys-0.12.1": {
+    "core-foundation-0.10.1": {
       "edition": "2021"
     },
-    "openssl-probe-0.2.1": {
+    "core-foundation-sys-0.8.7": {
+      "edition": "2018"
+    },
+    "security-framework-3.7.0": {
+      "edition": "2024"
+    },
+    "security-framework-sys-2.17.0": {
       "edition": "2021"
     }
   },
