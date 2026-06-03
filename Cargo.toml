@@ -69,7 +69,7 @@ tokio = { version = "1", features = ["rt-multi-thread", "macros", "fs", "process
 # GitHub SDK — the only registry. octocrab is the canonical Rust
 # client; search + tarball download + rate-limit budgeting all
 # flow through it.
-octocrab = "0.43"
+octocrab = "0.52"
 
 # `octocrab::body` is private — read response bodies via the
 # http-body-util `BodyExt::collect()` extension trait. octocrab
