@@ -27,7 +27,7 @@
   :deps-dev    ()
 
   ;; The wired-up binary is what `feira publish` releases.
-  :binarios    ("crates/estante")
+  :exe         ("crates/estante")
 
   ;; Bibliotecas vendored alongside the bin. estante-types is the
   ;; downstream-consumable typed surface — third-party packages or
