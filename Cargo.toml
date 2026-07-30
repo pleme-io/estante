@@ -45,9 +45,13 @@ gen-types = { git = "https://github.com/pleme-io/gen" }
 # section in `.cargo/config.toml` pointing at the local checkout.
 frost-lisp = { git = "https://github.com/pleme-io/frost", branch = "main" }
 
-# tatara-lisp pinned to the same rev frost uses so a single copy
-# resolves in the dep graph (no duplicate DeriveTataraDomain impls).
-tatara-lisp = { git = "https://github.com/pleme-io/tatara", rev = "a1062f8069bb336a87cb9b2c68a85885665e3234" }
+# tatara-lisp from crates.io, the same release frost resolves, so a single
+# copy lands in the dep graph (no duplicate DeriveTataraDomain impls). The
+# retired pleme-io/tatara git source published the same crate names, so
+# mixing the two put two `TataraDomain` traits in one graph and
+# `PkgSpec: TataraDomain` stopped being satisfied. frost moved to the
+# registry in 307d0e3; estante tracks frost by branch, so both now agree.
+tatara-lisp = "0.3.3"
 
 # Serialization
 serde = { version = "1", features = ["derive"] }
