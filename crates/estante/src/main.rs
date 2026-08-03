@@ -31,8 +31,9 @@ struct Cli {
 
     /// DEPRECATED — a token here is visible in the process table to
     /// every local user and lands in shell history. Set `$GITHUB_TOKEN`,
-    /// or point `$GITHUB_TOKEN_FILE` at a 0600 file, instead. Still
-    /// honored (and still highest precedence), but warns on every use.
+    /// or point `$GITHUB_TOKEN_FILE` at a 0600 file, instead. Both of
+    /// those WIN over this flag; it is honored only when neither is
+    /// set, and warns on every use.
     ///
     /// Note there is deliberately no clap `env = "GITHUB_TOKEN"` here:
     /// the env fallback lives in [`config::Config::resolve`] so that a
@@ -230,12 +231,18 @@ enum ToolCommand {
 
 #[tokio::main]
 async fn main() -> anyhow::Result<()> {
+    // stderr, not the fmt layer's stdout default: the deprecation
+    // warning for --github-token has to reach the operator even when
+    // stdout is a machine-readable channel (`export`, `attest --json`,
+    // `doctor --json`), and a diagnostic that corrupts that channel
+    // would just get redirected to /dev/null.
     tracing_subscriber::fmt()
         .with_env_filter(
             tracing_subscriber::EnvFilter::try_from_default_env()
                 .unwrap_or_else(|_| tracing_subscriber::EnvFilter::new("estante=info")),
         )
         .with_target(false)
+        .with_writer(std::io::stderr)
         .init();
 
     let cli = Cli::parse();
