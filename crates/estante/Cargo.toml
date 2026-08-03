@@ -21,6 +21,8 @@ estante-types = { workspace = true }
 frost-lisp = { workspace = true }
 tatara-lisp = { workspace = true }
 
+cofre-secret = { workspace = true }
+
 serde = { workspace = true }
 serde_json = { workspace = true }
 thiserror = { workspace = true }

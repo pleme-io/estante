@@ -1,10 +1,10 @@
 {
   "schema_version": 2,
-  "cargo_lock_sha256": "4225695718704b8b07bec1cb282d374f60c674b1e111de9d84e6945005a8b5c9",
+  "cargo_lock_sha256": "c4cb1e8b22cd20bd515e59d010bbdcaf7bfd066b9039cc5b0cb4a0aaad3300cf",
   "manifest_sha256": {
-    "Cargo.toml": "471800c490c2cc84dfe53b5dffa18612ae38dcf9fa4bf550e8f1c1d13cdb336e",
+    "Cargo.toml": "5c82b802e3d2faabb4f76643b13ab0881490da243a731ae1f0bf08a8cfd68d41",
     "crates/estante-types/Cargo.toml": "68bdae7772265171debfc48611e6c5e0048b7a89dfb1ecb7c18d9fa05057ca34",
-    "crates/estante/Cargo.toml": "b2bf4ea9b8041b6eed3d5bccd82f2410c331b9bc2dec918460251ea266cccf4c"
+    "crates/estante/Cargo.toml": "58a96963b73ecb32f070c2116e252fabb667168364a99a5d4600deac7de60f52"
   },
   "target_resolves": {
     "base": {
@@ -645,6 +645,11 @@
         "build_dependencies": [],
         "features": []
       },
+      "cofre-secret-0.1.0-4f70b8fa025f2b78b7ca062fb0feb31188a8d31a": {
+        "runtime_dependencies": [],
+        "build_dependencies": [],
+        "features": []
+      },
       "colorchoice-1.0.5": {
         "runtime_dependencies": [],
         "build_dependencies": [],
@@ -992,6 +997,16 @@
               "derive",
               "env"
             ],
+            "uses_default_features": true,
+            "optional": false,
+            "target": null,
+            "tree": "target"
+          },
+          {
+            "name": "cofre_secret",
+            "package_key": "cofre-secret-0.1.0-4f70b8fa025f2b78b7ca062fb0feb31188a8d31a",
+            "kind": "normal",
+            "features": [],
             "uses_default_features": true,
             "optional": false,
             "target": null,
@@ -10584,6 +10599,9 @@
     "clap_lex-1.1.0": {
       "edition": "2024"
     },
+    "cofre-secret-0.1.0-4f70b8fa025f2b78b7ca062fb0feb31188a8d31a": {
+      "edition": "2024"
+    },
     "colorchoice-1.0.5": {
       "edition": "2021"
     },
@@ -11320,6 +11338,7 @@
   },
   "git_nar_sha256": {
     "awase-0.1.1-7286b3bc2a1bc4c63929cc60b9d6d1ca2d82616f": "sha256-mtrSTNN3fPcYZy4ky2o328paZtGhkCNpGcd1MfOm6uo=",
+    "cofre-secret-0.1.0-4f70b8fa025f2b78b7ca062fb0feb31188a8d31a": "sha256-6zDJ/dwsxZgb3KL2RuZFWMfcsQqKp7XAJvDDJgiyzrA=",
     "frost-builtins-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": "sha256-pKhiQeGV3Q4Iit/+fTVYrPueoeSenDKhTJ5ThTS05zQ=",
     "frost-exec-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": "sha256-pKhiQeGV3Q4Iit/+fTVYrPueoeSenDKhTJ5ThTS05zQ=",
     "frost-expand-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": "sha256-pKhiQeGV3Q4Iit/+fTVYrPueoeSenDKhTJ5ThTS05zQ=",
