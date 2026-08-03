@@ -53,6 +53,12 @@ frost-lisp = { git = "https://github.com/pleme-io/frost", branch = "main" }
 # registry in 307d0e3; estante tracks frost by branch, so both now agree.
 tatara-lisp = "0.3.3"
 
+# cofre — the fleet credential primitive. `Secret` implements no
+# Display / AsRef<str> / AsRef<OsStr>, so a PAT held in one cannot be
+# interpolated into a format string or handed to Command::arg: the
+# leak is a compile error rather than a review finding. Dependency-free.
+cofre-secret = { git = "https://github.com/pleme-io/cofre" }
+
 # Serialization
 serde = { version = "1", features = ["derive"] }
 serde_json = "1"

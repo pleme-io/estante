@@ -29,9 +29,16 @@ struct Cli {
     #[arg(long, global = true, default_value = "shellpkg.lock.lisp")]
     lockfile: std::path::PathBuf,
 
-    /// GitHub access token. Falls back to `$GITHUB_TOKEN` then to
-    /// unauthenticated access (subject to the 60 req/h public limit).
-    #[arg(long, global = true, env = "GITHUB_TOKEN")]
+    /// DEPRECATED — a token here is visible in the process table to
+    /// every local user and lands in shell history. Set `$GITHUB_TOKEN`,
+    /// or point `$GITHUB_TOKEN_FILE` at a 0600 file, instead. Still
+    /// honored (and still highest precedence), but warns on every use.
+    ///
+    /// Note there is deliberately no clap `env = "GITHUB_TOKEN"` here:
+    /// the env fallback lives in [`config::Config::resolve`] so that a
+    /// `Some` in this field means the operator really typed the flag,
+    /// which is what the deprecation warning keys on.
+    #[arg(long, global = true)]
     github_token: Option<String>,
 }
 

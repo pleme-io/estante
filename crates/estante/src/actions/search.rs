@@ -5,7 +5,7 @@ use crate::config::Config;
 use crate::fetch;
 
 pub async fn run(query: &str, limit: u32, cfg: &Config) -> anyhow::Result<()> {
-    let client = fetch::build_client(cfg.github_token.as_deref())?;
+    let client = fetch::build_client(cfg.github_token_str())?;
     let q = format!("topic:estante-pkg {query}");
     let page = client
         .search()

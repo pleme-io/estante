@@ -19,7 +19,7 @@ pub async fn run(lockfile_path: &Path, cfg: &Config) -> anyhow::Result<()> {
         );
     }
     cache::ensure_layout(cfg)?;
-    let client = fetch::build_client(cfg.github_token.as_deref())?;
+    let client = fetch::build_client(cfg.github_token_str())?;
     let mut refreshed = 0_usize;
     for entry in &mut lock.entries {
         let dest = cfg.store_path(&entry.name, &entry.rev);

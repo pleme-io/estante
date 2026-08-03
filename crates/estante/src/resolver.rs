@@ -28,7 +28,7 @@ pub struct Resolver<'a> {
 
 impl<'a> Resolver<'a> {
     pub fn new(cfg: &'a Config) -> anyhow::Result<Self> {
-        let client = fetch::build_client(cfg.github_token.as_deref())?;
+        let client = fetch::build_client(cfg.github_token_str())?;
         Ok(Self {
             cfg,
             client,

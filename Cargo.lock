@@ -298,6 +298,11 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c8d4a3bb8b1e0c1050499d1815f5ab16d04f0959b233085fb31653fbfc9d98f9"
 
 [[package]]
+name = "cofre-secret"
+version = "0.1.0"
+source = "git+https://github.com/pleme-io/cofre#4f70b8fa025f2b78b7ca062fb0feb31188a8d31a"
+
+[[package]]
 name = "colorchoice"
 version = "1.0.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -471,6 +476,7 @@ dependencies = [
  "anyhow",
  "blake3",
  "clap",
+ "cofre-secret",
  "dirs 5.0.1",
  "estante-types",
  "flate2",
