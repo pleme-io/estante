@@ -29,6 +29,8 @@ jobs:
         # `runs-on: ubuntu-*`, which is why this kept billing after the fleet
         # was routed — recorded so the next sweep looks for both shapes.
         os:
+          # runner-policy: allow darwin coverage — Camelot is linux-only and this
+          # suite genuinely exercises the macOS path.
           - macos-15
           - ${{ github.event.repository.private && 'camelot-builder-pleme-eks' || 'ubuntu-latest' }}
     runs-on: ${{ matrix.os }}
@@ -72,6 +74,8 @@ jobs:
         # `runs-on: ubuntu-*`, which is why this kept billing after the fleet
         # was routed — recorded so the next sweep looks for both shapes.
         os:
+          # runner-policy: allow darwin coverage — Camelot is linux-only and this
+          # suite genuinely exercises the macOS path.
           - macos-15
           - ${{ github.event.repository.private && 'camelot-builder-pleme-eks' || 'ubuntu-latest' }}
     runs-on: ${{ matrix.os }}
