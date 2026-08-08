@@ -23,7 +23,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-15, ubuntu-latest]
+        # The linux leg routes on visibility; macOS stays metered because
+        # Camelot is linux-only and this suite genuinely exercises the darwin
+        # path. A matrix-supplied runner is invisible to a sweep for
+        # `runs-on: ubuntu-*`, which is why this kept billing after the fleet
+        # was routed — recorded so the next sweep looks for both shapes.
+        os:
+          - macos-15
+          - ${{ github.event.repository.private && 'camelot-builder-pleme-eks' || 'ubuntu-latest' }}
     runs-on: ${{ matrix.os }}
     steps:
       - name: Checkout estante
@@ -59,7 +66,14 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        os: [macos-15, ubuntu-latest]
+        # The linux leg routes on visibility; macOS stays metered because
+        # Camelot is linux-only and this suite genuinely exercises the darwin
+        # path. A matrix-supplied runner is invisible to a sweep for
+        # `runs-on: ubuntu-*`, which is why this kept billing after the fleet
+        # was routed — recorded so the next sweep looks for both shapes.
+        os:
+          - macos-15
+          - ${{ github.event.repository.private && 'camelot-builder-pleme-eks' || 'ubuntu-latest' }}
     runs-on: ${{ matrix.os }}
     needs: test
     steps:
