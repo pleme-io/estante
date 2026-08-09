@@ -471,7 +471,7 @@ dependencies = [
 
 [[package]]
 name = "estante"
-version = "0.1.3"
+version = "0.1.4"
 dependencies = [
  "anyhow",
  "blake3",
@@ -499,7 +499,7 @@ dependencies = [
 
 [[package]]
 name = "estante-types"
-version = "0.1.3"
+version = "0.1.4"
 dependencies = [
  "blake3",
  "frost-lisp",
