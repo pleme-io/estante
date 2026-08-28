@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "cargo_lock_sha256": "8aba5dc8732ddefb62cb1c91b3f8457fcd5e9d8be7e19c3abc291931e5c25d9b",
+  "cargo_lock_sha256": "cc6983f705662b3a6e267ee8ba14fa586234a71f325033896d519f70aeec0b78",
   "manifest_sha256": {
     "Cargo.toml": "3c7cd50ada22c4f27befa9a17a4334284269a831396a4b2f99145c0e4733036a",
     "crates/estante-types/Cargo.toml": "68bdae7772265171debfc48611e6c5e0048b7a89dfb1ecb7c18d9fa05057ca34",
@@ -1200,7 +1200,7 @@
           },
           {
             "name": "gen_platform",
-            "package_key": "gen-platform-0.1.8-e4759b7b81b3b4f9505f3723d33bcd7e522dd6c3",
+            "package_key": "gen-platform-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1210,7 +1210,7 @@
           },
           {
             "name": "gen_types",
-            "package_key": "gen-types-0.1.8-e4759b7b81b3b4f9505f3723d33bcd7e522dd6c3",
+            "package_key": "gen-types-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -2261,7 +2261,7 @@
           "std"
         ]
       },
-      "gen-macros-0.1.8-e4759b7b81b3b4f9505f3723d33bcd7e522dd6c3": {
+      "gen-macros-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": {
         "runtime_dependencies": [
           {
             "name": "proc_macro2",
@@ -2300,11 +2300,11 @@
         "build_dependencies": [],
         "features": []
       },
-      "gen-platform-0.1.8-e4759b7b81b3b4f9505f3723d33bcd7e522dd6c3": {
+      "gen-platform-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": {
         "runtime_dependencies": [
           {
             "name": "gen_macros",
-            "package_key": "gen-macros-0.1.8-e4759b7b81b3b4f9505f3723d33bcd7e522dd6c3",
+            "package_key": "gen-macros-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -2314,7 +2314,7 @@
           },
           {
             "name": "gen_types",
-            "package_key": "gen-types-0.1.8-e4759b7b81b3b4f9505f3723d33bcd7e522dd6c3",
+            "package_key": "gen-types-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -2368,7 +2368,7 @@
         "build_dependencies": [],
         "features": []
       },
-      "gen-types-0.1.8-e4759b7b81b3b4f9505f3723d33bcd7e522dd6c3": {
+      "gen-types-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": {
         "runtime_dependencies": [
           {
             "name": "blake3",
@@ -10764,14 +10764,14 @@
     "futures-util-0.3.32": {
       "edition": "2018"
     },
-    "gen-macros-0.1.8-e4759b7b81b3b4f9505f3723d33bcd7e522dd6c3": {
+    "gen-macros-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": {
       "edition": "2024",
       "proc_macro": true
     },
-    "gen-platform-0.1.8-e4759b7b81b3b4f9505f3723d33bcd7e522dd6c3": {
+    "gen-platform-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": {
       "edition": "2024"
     },
-    "gen-types-0.1.8-e4759b7b81b3b4f9505f3723d33bcd7e522dd6c3": {
+    "gen-types-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": {
       "edition": "2024"
     },
     "getrandom-0.2.17": {
@@ -11347,9 +11347,9 @@
     "frost-lisp-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": "sha256-pKhiQeGV3Q4Iit/+fTVYrPueoeSenDKhTJ5ThTS05zQ=",
     "frost-options-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": "sha256-pKhiQeGV3Q4Iit/+fTVYrPueoeSenDKhTJ5ThTS05zQ=",
     "frost-parser-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": "sha256-pKhiQeGV3Q4Iit/+fTVYrPueoeSenDKhTJ5ThTS05zQ=",
-    "gen-macros-0.1.8-e4759b7b81b3b4f9505f3723d33bcd7e522dd6c3": "sha256-hA8kXaLIsrlPaSGp+K2uHbD+Q9dkJwRAhZlgVdIDb/0=",
-    "gen-platform-0.1.8-e4759b7b81b3b4f9505f3723d33bcd7e522dd6c3": "sha256-hA8kXaLIsrlPaSGp+K2uHbD+Q9dkJwRAhZlgVdIDb/0=",
-    "gen-types-0.1.8-e4759b7b81b3b4f9505f3723d33bcd7e522dd6c3": "sha256-hA8kXaLIsrlPaSGp+K2uHbD+Q9dkJwRAhZlgVdIDb/0=",
+    "gen-macros-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": "sha256-Yi9xlwmGVT3JhG2JCqehVe9ZGL0JHbOEDKDDPevDAbk=",
+    "gen-platform-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": "sha256-Yi9xlwmGVT3JhG2JCqehVe9ZGL0JHbOEDKDDPevDAbk=",
+    "gen-types-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": "sha256-Yi9xlwmGVT3JhG2JCqehVe9ZGL0JHbOEDKDDPevDAbk=",
     "ishou-tokens-0.1.3-0197aeba1e9a7e17ff516272689dbca6a3ccc967": "sha256-kETqdHgzg9jFmR0SMhRT6mP1EYbHI6cqKLPbyj/rDuk="
   },
   "flake_metadata": {}
