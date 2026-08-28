@@ -1,6 +1,6 @@
 {
   "schema_version": 2,
-  "cargo_lock_sha256": "74c7147a4215691e413d233db30ec7c5c4da6a7a01181b0bcc26fe4bd3294fb0",
+  "cargo_lock_sha256": "2c088de299bec4b03ff260330f1ac5672b9b319d3381c2642e8e20f9edbe59fc",
   "manifest_sha256": {
     "Cargo.toml": "8096cddd1bc31ca4009322e9f2f61eba9be61d4e1e19a15ae962aafa6defe67d",
     "crates/estante-types/Cargo.toml": "68bdae7772265171debfc48611e6c5e0048b7a89dfb1ecb7c18d9fa05057ca34",
@@ -185,7 +185,7 @@
         "build_dependencies": [],
         "features": []
       },
-      "anyhow-1.0.102": {
+      "anyhow-1.0.104": {
         "runtime_dependencies": [],
         "build_dependencies": [],
         "features": [
@@ -276,7 +276,7 @@
         "runtime_dependencies": [
           {
             "name": "serde",
-            "package_key": "serde-1.0.228",
+            "package_key": "serde-1.0.229",
             "kind": "normal",
             "features": [
               "derive"
@@ -474,7 +474,7 @@
           },
           {
             "name": "serde",
-            "package_key": "serde-1.0.228",
+            "package_key": "serde-1.0.229",
             "kind": "normal",
             "features": [],
             "uses_default_features": false,
@@ -645,7 +645,7 @@
         "build_dependencies": [],
         "features": []
       },
-      "cofre-secret-0.1.0-4f70b8fa025f2b78b7ca062fb0feb31188a8d31a": {
+      "cofre-secret-0.1.4-3809d5ec6592e6ac0e6fead41984a498fff6caf9": {
         "runtime_dependencies": [],
         "build_dependencies": [],
         "features": []
@@ -971,7 +971,7 @@
         "runtime_dependencies": [
           {
             "name": "anyhow",
-            "package_key": "anyhow-1.0.102",
+            "package_key": "anyhow-1.0.104",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1004,7 +1004,7 @@
           },
           {
             "name": "cofre_secret",
-            "package_key": "cofre-secret-0.1.0-4f70b8fa025f2b78b7ca062fb0feb31188a8d31a",
+            "package_key": "cofre-secret-0.1.4-3809d5ec6592e6ac0e6fead41984a498fff6caf9",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1074,7 +1074,7 @@
           },
           {
             "name": "serde",
-            "package_key": "serde-1.0.228",
+            "package_key": "serde-1.0.229",
             "kind": "normal",
             "features": [
               "derive"
@@ -1086,7 +1086,7 @@
           },
           {
             "name": "serde_json",
-            "package_key": "serde_json-1.0.150",
+            "package_key": "serde_json-1.0.151",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1136,7 +1136,7 @@
           },
           {
             "name": "tokio",
-            "package_key": "tokio-1.52.3",
+            "package_key": "tokio-1.53.1",
             "kind": "normal",
             "features": [
               "fs",
@@ -1220,7 +1220,7 @@
           },
           {
             "name": "serde",
-            "package_key": "serde-1.0.228",
+            "package_key": "serde-1.0.229",
             "kind": "normal",
             "features": [
               "derive"
@@ -1232,7 +1232,7 @@
           },
           {
             "name": "serde_json",
-            "package_key": "serde_json-1.0.150",
+            "package_key": "serde_json-1.0.151",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1822,7 +1822,7 @@
           },
           {
             "name": "serde",
-            "package_key": "serde-1.0.228",
+            "package_key": "serde-1.0.229",
             "kind": "normal",
             "features": [
               "derive"
@@ -1834,7 +1834,7 @@
           },
           {
             "name": "serde_json",
-            "package_key": "serde_json-1.0.150",
+            "package_key": "serde_json-1.0.151",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -2334,7 +2334,7 @@
           },
           {
             "name": "serde",
-            "package_key": "serde-1.0.228",
+            "package_key": "serde-1.0.229",
             "kind": "normal",
             "features": [
               "derive"
@@ -2346,7 +2346,7 @@
           },
           {
             "name": "serde_json",
-            "package_key": "serde_json-1.0.150",
+            "package_key": "serde_json-1.0.151",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -2416,7 +2416,7 @@
           },
           {
             "name": "serde",
-            "package_key": "serde-1.0.228",
+            "package_key": "serde-1.0.229",
             "kind": "normal",
             "features": [
               "derive"
@@ -2428,7 +2428,7 @@
           },
           {
             "name": "serde_json",
-            "package_key": "serde_json-1.0.150",
+            "package_key": "serde_json-1.0.151",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -2951,7 +2951,7 @@
           },
           {
             "name": "tokio",
-            "package_key": "tokio-1.52.3",
+            "package_key": "tokio-1.53.1",
             "kind": "normal",
             "features": [
               "sync"
@@ -3046,7 +3046,7 @@
           },
           {
             "name": "tokio",
-            "package_key": "tokio-1.52.3",
+            "package_key": "tokio-1.53.1",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -3123,7 +3123,7 @@
           },
           {
             "name": "tokio",
-            "package_key": "tokio-1.52.3",
+            "package_key": "tokio-1.53.1",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -3241,7 +3241,7 @@
           },
           {
             "name": "tokio",
-            "package_key": "tokio-1.52.3",
+            "package_key": "tokio-1.53.1",
             "kind": "normal",
             "features": [],
             "uses_default_features": false,
@@ -3736,7 +3736,7 @@
           },
           {
             "name": "serde_core",
-            "package_key": "serde_core-1.0.228",
+            "package_key": "serde_core-1.0.229",
             "kind": "normal",
             "features": [],
             "uses_default_features": false,
@@ -3778,7 +3778,7 @@
           },
           {
             "name": "serde",
-            "package_key": "serde-1.0.228",
+            "package_key": "serde-1.0.229",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -3827,7 +3827,7 @@
         "runtime_dependencies": [
           {
             "name": "serde",
-            "package_key": "serde-1.0.228",
+            "package_key": "serde-1.0.229",
             "kind": "normal",
             "features": [
               "derive"
@@ -3872,7 +3872,7 @@
           },
           {
             "name": "serde",
-            "package_key": "serde-1.0.228",
+            "package_key": "serde-1.0.229",
             "kind": "normal",
             "features": [
               "derive"
@@ -3884,7 +3884,7 @@
           },
           {
             "name": "serde_json",
-            "package_key": "serde_json-1.0.150",
+            "package_key": "serde_json-1.0.151",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -3952,7 +3952,7 @@
           },
           {
             "name": "serde",
-            "package_key": "serde-1.0.228",
+            "package_key": "serde-1.0.229",
             "kind": "normal",
             "features": [
               "derive"
@@ -3964,7 +3964,7 @@
           },
           {
             "name": "serde_json",
-            "package_key": "serde_json-1.0.150",
+            "package_key": "serde_json-1.0.151",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -4530,7 +4530,7 @@
           },
           {
             "name": "serde",
-            "package_key": "serde-1.0.228",
+            "package_key": "serde-1.0.229",
             "kind": "normal",
             "features": [
               "derive"
@@ -4542,7 +4542,7 @@
           },
           {
             "name": "serde_json",
-            "package_key": "serde_json-1.0.150",
+            "package_key": "serde_json-1.0.151",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -4582,7 +4582,7 @@
           },
           {
             "name": "tokio",
-            "package_key": "tokio-1.52.3",
+            "package_key": "tokio-1.53.1",
             "kind": "normal",
             "features": [
               "time"
@@ -4789,7 +4789,7 @@
         "runtime_dependencies": [
           {
             "name": "anyhow",
-            "package_key": "anyhow-1.0.102",
+            "package_key": "anyhow-1.0.104",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -4868,7 +4868,7 @@
           },
           {
             "name": "serde",
-            "package_key": "serde-1.0.228",
+            "package_key": "serde-1.0.229",
             "kind": "normal",
             "features": [
               "derive"
@@ -5600,11 +5600,11 @@
         "build_dependencies": [],
         "features": []
       },
-      "serde-1.0.228": {
+      "serde-1.0.229": {
         "runtime_dependencies": [
           {
             "name": "serde_core",
-            "package_key": "serde_core-1.0.228",
+            "package_key": "serde_core-1.0.229",
             "kind": "normal",
             "features": [
               "result"
@@ -5616,7 +5616,7 @@
           },
           {
             "name": "serde_derive",
-            "package_key": "serde_derive-1.0.228",
+            "package_key": "serde_derive-1.0.229",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -5634,7 +5634,7 @@
           "std"
         ]
       },
-      "serde_core-1.0.228": {
+      "serde_core-1.0.229": {
         "runtime_dependencies": [],
         "build_dependencies": [],
         "features": [
@@ -5643,7 +5643,7 @@
           "std"
         ]
       },
-      "serde_derive-1.0.228": {
+      "serde_derive-1.0.229": {
         "runtime_dependencies": [
           {
             "name": "proc_macro2",
@@ -5671,7 +5671,7 @@
           },
           {
             "name": "syn",
-            "package_key": "syn-2.0.117",
+            "package_key": "syn-3.0.4",
             "kind": "normal",
             "features": [
               "clone-impls",
@@ -5691,7 +5691,7 @@
           "default"
         ]
       },
-      "serde_json-1.0.150": {
+      "serde_json-1.0.151": {
         "runtime_dependencies": [
           {
             "name": "itoa",
@@ -5715,7 +5715,7 @@
           },
           {
             "name": "serde_core",
-            "package_key": "serde_core-1.0.228",
+            "package_key": "serde_core-1.0.229",
             "kind": "normal",
             "features": [],
             "uses_default_features": false,
@@ -5754,7 +5754,7 @@
           },
           {
             "name": "serde_core",
-            "package_key": "serde_core-1.0.228",
+            "package_key": "serde_core-1.0.229",
             "kind": "normal",
             "features": [
               "alloc"
@@ -5802,7 +5802,7 @@
           },
           {
             "name": "serde",
-            "package_key": "serde-1.0.228",
+            "package_key": "serde-1.0.229",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -6101,6 +6101,48 @@
           "visit-mut"
         ]
       },
+      "syn-3.0.4": {
+        "runtime_dependencies": [
+          {
+            "name": "proc_macro2",
+            "package_key": "proc-macro2-1.0.106",
+            "kind": "normal",
+            "features": [],
+            "uses_default_features": false,
+            "optional": false,
+            "target": null,
+            "tree": "target"
+          },
+          {
+            "name": "quote",
+            "package_key": "quote-1.0.45",
+            "kind": "normal",
+            "features": [],
+            "uses_default_features": false,
+            "optional": true,
+            "target": null,
+            "tree": "target"
+          },
+          {
+            "name": "unicode_ident",
+            "package_key": "unicode-ident-1.0.24",
+            "kind": "normal",
+            "features": [],
+            "uses_default_features": true,
+            "optional": false,
+            "target": null,
+            "tree": "target"
+          }
+        ],
+        "build_dependencies": [],
+        "features": [
+          "clone-impls",
+          "derive",
+          "parsing",
+          "printing",
+          "proc-macro"
+        ]
+      },
       "sync_wrapper-1.0.2": {
         "runtime_dependencies": [],
         "build_dependencies": [],
@@ -6205,7 +6247,7 @@
           },
           {
             "name": "serde",
-            "package_key": "serde-1.0.228",
+            "package_key": "serde-1.0.229",
             "kind": "normal",
             "features": [
               "derive"
@@ -6217,7 +6259,7 @@
           },
           {
             "name": "serde_json",
-            "package_key": "serde_json-1.0.150",
+            "package_key": "serde_json-1.0.151",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -6549,7 +6591,7 @@
           "zerovec"
         ]
       },
-      "tokio-1.52.3": {
+      "tokio-1.53.1": {
         "runtime_dependencies": [
           {
             "name": "bytes",
@@ -6732,7 +6774,7 @@
           },
           {
             "name": "tokio",
-            "package_key": "tokio-1.52.3",
+            "package_key": "tokio-1.53.1",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -6791,7 +6833,7 @@
           },
           {
             "name": "tokio",
-            "package_key": "tokio-1.52.3",
+            "package_key": "tokio-1.53.1",
             "kind": "normal",
             "features": [
               "sync"
@@ -6851,7 +6893,7 @@
           },
           {
             "name": "tokio",
-            "package_key": "tokio-1.52.3",
+            "package_key": "tokio-1.53.1",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -7394,7 +7436,7 @@
           },
           {
             "name": "serde",
-            "package_key": "serde-1.0.228",
+            "package_key": "serde-1.0.229",
             "kind": "normal",
             "features": [],
             "uses_default_features": false,
@@ -7404,7 +7446,7 @@
           },
           {
             "name": "serde_derive",
-            "package_key": "serde_derive-1.0.228",
+            "package_key": "serde_derive-1.0.229",
             "kind": "normal",
             "features": [],
             "uses_default_features": false,
@@ -7459,7 +7501,7 @@
           },
           {
             "name": "serde",
-            "package_key": "serde-1.0.228",
+            "package_key": "serde-1.0.229",
             "kind": "normal",
             "features": [
               "derive"
@@ -7471,7 +7513,7 @@
           },
           {
             "name": "serde_json",
-            "package_key": "serde_json-1.0.150",
+            "package_key": "serde_json-1.0.151",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -10517,7 +10559,7 @@
     "anstyle-query-1.1.5": {
       "edition": "2021"
     },
-    "anyhow-1.0.102": {
+    "anyhow-1.0.104": {
       "edition": "2021",
       "build_script": "build.rs"
     },
@@ -10599,7 +10641,7 @@
     "clap_lex-1.1.0": {
       "edition": "2024"
     },
-    "cofre-secret-0.1.0-4f70b8fa025f2b78b7ca062fb0feb31188a8d31a": {
+    "cofre-secret-0.1.4-3809d5ec6592e6ac0e6fead41984a498fff6caf9": {
       "edition": "2024"
     },
     "colorchoice-1.0.5": {
@@ -11080,19 +11122,19 @@
     "security-framework-sys-2.17.0": {
       "edition": "2021"
     },
-    "serde-1.0.228": {
+    "serde-1.0.229": {
       "edition": "2021",
       "build_script": "build.rs"
     },
-    "serde_core-1.0.228": {
+    "serde_core-1.0.229": {
       "edition": "2021",
       "build_script": "build.rs"
     },
-    "serde_derive-1.0.228": {
+    "serde_derive-1.0.229": {
       "edition": "2021",
       "proc_macro": true
     },
-    "serde_json-1.0.150": {
+    "serde_json-1.0.151": {
       "edition": "2021",
       "build_script": "build.rs"
     },
@@ -11151,6 +11193,9 @@
     "syn-2.0.117": {
       "edition": "2021"
     },
+    "syn-3.0.4": {
+      "edition": "2021"
+    },
     "sync_wrapper-1.0.2": {
       "edition": "2021"
     },
@@ -11194,7 +11239,7 @@
     "tinystr-0.8.3": {
       "edition": "2021"
     },
-    "tokio-1.52.3": {
+    "tokio-1.53.1": {
       "edition": "2021"
     },
     "tokio-macros-2.7.0": {
@@ -11338,7 +11383,7 @@
   },
   "git_nar_sha256": {
     "awase-0.1.1-7286b3bc2a1bc4c63929cc60b9d6d1ca2d82616f": "sha256-mtrSTNN3fPcYZy4ky2o328paZtGhkCNpGcd1MfOm6uo=",
-    "cofre-secret-0.1.0-4f70b8fa025f2b78b7ca062fb0feb31188a8d31a": "sha256-6zDJ/dwsxZgb3KL2RuZFWMfcsQqKp7XAJvDDJgiyzrA=",
+    "cofre-secret-0.1.4-3809d5ec6592e6ac0e6fead41984a498fff6caf9": "sha256-cK34hH664hlF8L2ADoe7ZhsmDZcmKiKBpe6F9F0kuyU=",
     "frost-builtins-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": "sha256-pKhiQeGV3Q4Iit/+fTVYrPueoeSenDKhTJ5ThTS05zQ=",
     "frost-exec-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": "sha256-pKhiQeGV3Q4Iit/+fTVYrPueoeSenDKhTJ5ThTS05zQ=",
     "frost-expand-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": "sha256-pKhiQeGV3Q4Iit/+fTVYrPueoeSenDKhTJ5ThTS05zQ=",
