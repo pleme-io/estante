@@ -144,7 +144,7 @@ version = "0.1.1"
 source = "git+https://github.com/pleme-io/awase#7286b3bc2a1bc4c63929cc60b9d6d1ca2d82616f"
 dependencies = [
  "serde",
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
  "tracing",
 ]
 
@@ -491,7 +491,7 @@ dependencies = [
  "tar",
  "tatara-lisp",
  "tempfile",
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
  "tokio",
  "tracing",
  "tracing-subscriber",
@@ -511,7 +511,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tatara-lisp",
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -596,7 +596,7 @@ version = "0.1.0"
 source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
 dependencies = [
  "libc",
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -617,7 +617,7 @@ dependencies = [
  "libc",
  "nix",
  "pleme-io-wadachi",
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
  "tracing",
 ]
 
@@ -631,7 +631,7 @@ dependencies = [
  "frost-lexer",
  "frost-parser",
  "indexmap",
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -639,7 +639,7 @@ name = "frost-glob"
 version = "0.1.0"
 source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
 dependencies = [
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -649,7 +649,7 @@ source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0
 dependencies = [
  "bstr",
  "compact_str",
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -667,7 +667,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tatara-lisp",
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -675,7 +675,7 @@ name = "frost-options"
 version = "0.1.0"
 source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
 dependencies = [
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -685,7 +685,7 @@ source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0
 dependencies = [
  "compact_str",
  "frost-lexer",
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -805,7 +805,7 @@ dependencies = [
  "inventory",
  "serde",
  "serde_json",
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -819,7 +819,7 @@ dependencies = [
  "inventory",
  "serde",
  "serde_json",
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -1202,7 +1202,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7c1e6ec2a36084626fdbd4dcfb8beb53d0b5f6125b4cd54a4d45abddf6ffbbb9"
 dependencies = [
  "serde",
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -1733,7 +1733,7 @@ checksum = "a4e608c6638b9c18977b00b475ac1f28d14e84b27d8d42f70e0bf1e3dec127ac"
 dependencies = [
  "getrandom 0.2.17",
  "libredox",
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -2032,7 +2032,7 @@ checksum = "0d585997b0ac10be3c5ee635f1bab02d512760d14b7c468801ac8a01d9ae5f1d"
 dependencies = [
  "num-bigint",
  "num-traits",
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
  "time",
 ]
 
@@ -2163,7 +2163,7 @@ dependencies = [
  "serde",
  "serde_json",
  "tatara-lisp-derive",
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
@@ -2201,11 +2201,11 @@ dependencies = [
 
 [[package]]
 name = "thiserror"
-version = "2.0.18"
+version = "2.0.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "4288b5bcbc7920c07a1149a35cf9590a2aa808e0bc1eafaade0b80947865fbc4"
+checksum = "ec86235f5fcc2a73650310756d2ac5b138a5780bbbdfae3eeccec992c435ba4f"
 dependencies = [
- "thiserror-impl 2.0.18",
+ "thiserror-impl 2.0.20",
 ]
 
 [[package]]
@@ -2221,13 +2221,13 @@ dependencies = [
 
 [[package]]
 name = "thiserror-impl"
-version = "2.0.18"
+version = "2.0.20"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "ebc4ee7f67670e9b64d05fa4253e753e016c6c95ff35b89b7941d6b856dec1d5"
+checksum = "bc04cd3e1236dd4a98afca4569f2deb3f120e5422a4023be2cb683f8486292af"
 dependencies = [
  "proc-macro2",
  "quote",
- "syn 2.0.117",
+ "syn 3.0.4",
 ]
 
 [[package]]
@@ -2522,7 +2522,7 @@ dependencies = [
  "chrono",
  "serde",
  "serde_json",
- "thiserror 2.0.18",
+ "thiserror 2.0.20",
 ]
 
 [[package]]
