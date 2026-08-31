@@ -74,7 +74,7 @@ version = "1.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "40c48f72fd53cd289104fc64099abca73db4166ad86ea0b4341abe65af83dadc"
 dependencies = [
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -85,7 +85,7 @@ checksum = "291e6a250ff86cd4a820112fb8898808a366d8f9f58ce16d1f538353ad55747d"
 dependencies = [
  "anstyle",
  "once_cell_polyfill",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -140,8 +140,8 @@ checksum = "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53"
 
 [[package]]
 name = "awase"
-version = "0.1.1"
-source = "git+https://github.com/pleme-io/awase#7286b3bc2a1bc4c63929cc60b9d6d1ca2d82616f"
+version = "0.1.10"
+source = "git+https://github.com/pleme-io/awase#e579293a3c47f65584f86bc5d7a2053c9bbb1a52"
 dependencies = [
  "serde",
  "thiserror 2.0.18",
@@ -427,7 +427,7 @@ dependencies = [
  "libc",
  "option-ext",
  "redox_users 0.5.2",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -592,8 +592,8 @@ dependencies = [
 
 [[package]]
 name = "frost-builtins"
-version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
+version = "0.1.16"
+source = "git+https://github.com/pleme-io/frost?branch=main#e26550889326c241d20dd5803f140a69a2b7c41f"
 dependencies = [
  "libc",
  "thiserror 2.0.18",
@@ -601,8 +601,8 @@ dependencies = [
 
 [[package]]
 name = "frost-exec"
-version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
+version = "0.1.16"
+source = "git+https://github.com/pleme-io/frost?branch=main#e26550889326c241d20dd5803f140a69a2b7c41f"
 dependencies = [
  "awase",
  "compact_str",
@@ -623,8 +623,8 @@ dependencies = [
 
 [[package]]
 name = "frost-expand"
-version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
+version = "0.1.16"
+source = "git+https://github.com/pleme-io/frost?branch=main#e26550889326c241d20dd5803f140a69a2b7c41f"
 dependencies = [
  "compact_str",
  "frost-glob",
@@ -636,16 +636,16 @@ dependencies = [
 
 [[package]]
 name = "frost-glob"
-version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
+version = "0.1.16"
+source = "git+https://github.com/pleme-io/frost?branch=main#e26550889326c241d20dd5803f140a69a2b7c41f"
 dependencies = [
  "thiserror 2.0.18",
 ]
 
 [[package]]
 name = "frost-lexer"
-version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
+version = "0.1.16"
+source = "git+https://github.com/pleme-io/frost?branch=main#e26550889326c241d20dd5803f140a69a2b7c41f"
 dependencies = [
  "bstr",
  "compact_str",
@@ -654,8 +654,8 @@ dependencies = [
 
 [[package]]
 name = "frost-lisp"
-version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
+version = "0.1.16"
+source = "git+https://github.com/pleme-io/frost?branch=main#e26550889326c241d20dd5803f140a69a2b7c41f"
 dependencies = [
  "compact_str",
  "frost-builtins",
@@ -672,16 +672,16 @@ dependencies = [
 
 [[package]]
 name = "frost-options"
-version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
+version = "0.1.16"
+source = "git+https://github.com/pleme-io/frost?branch=main#e26550889326c241d20dd5803f140a69a2b7c41f"
 dependencies = [
  "thiserror 2.0.18",
 ]
 
 [[package]]
 name = "frost-parser"
-version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
+version = "0.1.16"
+source = "git+https://github.com/pleme-io/frost?branch=main#e26550889326c241d20dd5803f140a69a2b7c41f"
 dependencies = [
  "compact_str",
  "frost-lexer",
@@ -1412,7 +1412,7 @@ version = "0.50.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7957b9740744892f114936ab4a57b3f487491bbeafaf8083688b16841a4240e5"
 dependencies = [
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -2076,7 +2076,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "52d1cfed4120b4d927bf7c0f86d2087a4a7d6027c906d9f9d525a80573b9be51"
 dependencies = [
  "libc",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -2154,23 +2154,44 @@ dependencies = [
 ]
 
 [[package]]
-name = "tatara-lisp"
-version = "0.3.4"
+name = "tatara-closed-set"
+version = "0.3.52"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "00a94c0c1d40aae6109b2450b8b2a15ccc79a01461836753351b4bfd3a50cec9"
+checksum = "cdbc3e57c159c396aec523ded68022af0cda7db5555c3a0d756f6a4a0df8042a"
+dependencies = [
+ "tatara-closed-set-derive",
+]
+
+[[package]]
+name = "tatara-closed-set-derive"
+version = "0.3.52"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "92a6af70401cefaec3104bc41e97bef9078a673bf6d85d020e374c905e5052fa"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.117",
+]
+
+[[package]]
+name = "tatara-lisp"
+version = "0.3.52"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "78bc6ab626b4fea102768a09b0f4e4982c3c8ab88b8a0ee1f621e08f73805463"
 dependencies = [
  "blake3",
  "serde",
  "serde_json",
+ "tatara-closed-set",
  "tatara-lisp-derive",
  "thiserror 2.0.18",
 ]
 
 [[package]]
 name = "tatara-lisp-derive"
-version = "0.3.4"
+version = "0.3.52"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bdb05368da33f122fde05fd3f67a827022ef65ac4efbca6e27e0ea6e4f8036a9"
+checksum = "e83a01357cfeb3944eae956a4fc97dbbb9a024794b8125112d75aaba76f00190"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2673,7 +2694,7 @@ version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
- "windows-sys 0.48.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]
