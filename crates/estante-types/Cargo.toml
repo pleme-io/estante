@@ -20,6 +20,7 @@ serde = { workspace = true }
 serde_json = { workspace = true }
 thiserror = { workspace = true }
 blake3 = { workspace = true }
+tameshi = { workspace = true }
 gen-platform = { workspace = true }
 gen-types = { workspace = true }
 

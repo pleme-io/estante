@@ -6,7 +6,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.1.6"
+version = "0.2.0"
 edition = "2024"
 rust-version = "1.89.0"
 license = "MIT OR Apache-2.0"
@@ -69,6 +69,7 @@ anyhow = "1"
 
 # Hashing — BLAKE3 is the tameshi-chain attestation primitive.
 blake3 = "1"
+tameshi = { version = "0.1.10", default-features = false, features = ["content-address"] }
 
 # CLI
 clap = { version = "4", features = ["derive", "env"] }

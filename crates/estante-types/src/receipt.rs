@@ -9,7 +9,7 @@
 //! downstream Rust tool — caixa-frost renderer, frostmourne
 //! migrator, CI helper, etc. — can produce and verify receipts
 //! without depending on the estante CLI. The CLI's `attest` action
-//! is a thin wrapper around [`canonical_json`] / [`receipt_blake3`]
+//! is a thin wrapper around [`canonical_json`] / [`receipt_address`]
 //! / [`diff_receipts`] — re-exported here from the bin crate via
 //! `actions::attest::{Receipt, …}` for backward compat.
 //!
@@ -18,6 +18,7 @@
 //! the typed shape + the canonicalization.
 
 use serde::{Deserialize, Serialize};
+pub use tameshi::content_address::{ContentAddress, ContentAddressError};
 
 /// Schema version of the wire JSON. Bumping breaks downstream
 /// loaders; substrate's `receipt-loader.nix` validates this.
@@ -66,13 +67,47 @@ pub fn canonical_json(receipt: &Receipt) -> String {
     s
 }
 
-/// BLAKE3 over the canonical JSON bytes — the one-line attestation
-/// digest a downstream verifier can compare against.
-#[must_use]
-pub fn receipt_blake3(receipt: &Receipt) -> String {
-    blake3::hash(canonical_json(receipt).as_bytes())
-        .to_hex()
-        .to_string()
+/// The receipt's content address: BLAKE3 over sorted-key compact JSON, printed `b3:<hex>`.
+///
+/// It does not depend on struct field order, and a receipt with no
+/// canonical form is refused rather than hashed.
+pub fn receipt_address(receipt: &Receipt) -> Result<ContentAddress, ContentAddressError> {
+    ContentAddress::of_json(receipt)
+}
+
+/// A digest a verifier holds for a receipt, in either address form.
+#[derive(Debug, Clone, PartialEq, Eq)]
+pub enum ReceiptDigest {
+    /// `b3:<hex>`: the content address, from estante 0.2.0 on.
+    Content(ContentAddress),
+    /// Bare 64-hex: BLAKE3 over [`canonical_json`], emitted before 0.2.0.
+    Legacy([u8; 32]),
+}
+
+impl ReceiptDigest {
+    /// Parse `b3:<64 hex>` as the content address, or bare 64 lowercase hex as the legacy form.
+    pub fn parse(text: &str) -> Result<Self, ContentAddressError> {
+        if text.starts_with("b3:") {
+            return ContentAddress::from_b3(text).map(Self::Content);
+        }
+        let refuse = || ContentAddressError::NotAnAddress(text.to_owned());
+        if text.len() != 64 || !text.bytes().all(|b| matches!(b, b'0'..=b'9' | b'a'..=b'f')) {
+            return Err(refuse());
+        }
+        blake3::Hash::from_hex(text)
+            .map(|h| Self::Legacy(*h.as_bytes()))
+            .map_err(|_| refuse())
+    }
+
+    /// Whether this digest names `receipt`, under the form the digest was written in.
+    pub fn verifies(&self, receipt: &Receipt) -> Result<bool, ContentAddressError> {
+        match self {
+            Self::Content(address) => Ok(receipt_address(receipt)? == *address),
+            Self::Legacy(bytes) => {
+                Ok(blake3::hash(canonical_json(receipt).as_bytes()).as_bytes() == bytes)
+            }
+        }
+    }
 }
 
 /// Difference between a claimed and an actual receipt's field.
@@ -225,9 +260,97 @@ mod tests {
         assert!(d.iter().any(|m| m.field == "schemaVersion"));
     }
 
+    #[derive(Serialize)]
+    struct ReorderedReceipt<'a> {
+        entries: &'a Vec<EntryDigest>,
+        lockfile: &'a FileDigest,
+        manifest: &'a FileDigest,
+        estante: &'a EstanteInfo,
+        #[serde(rename = "schemaVersion")]
+        schema_version: u32,
+    }
+
+    const GOLDEN_ADDRESS: &str =
+        "b3:edf47eb94964c239671b02b070273933098f373da55fe92b9f35ff6446423ec3";
+
+    const LEGACY_DIGEST: &str = "28fc36a241f20077f7223aae91170b378fec6804f3b0470b9a9bbf23f49e1f67";
+
     #[test]
-    fn receipt_blake3_deterministic() {
+    fn receipt_address_deterministic() {
         let r = fixed_receipt();
-        assert_eq!(receipt_blake3(&r), receipt_blake3(&r));
+        assert_eq!(receipt_address(&r).unwrap(), receipt_address(&r).unwrap());
+    }
+
+    #[test]
+    fn receipt_address_ignores_field_order() {
+        let r = fixed_receipt();
+        let reordered = ReorderedReceipt {
+            entries: &r.entries,
+            lockfile: &r.lockfile,
+            manifest: &r.manifest,
+            estante: &r.estante,
+            schema_version: r.schema_version,
+        };
+        assert_eq!(
+            receipt_address(&r).unwrap(),
+            ContentAddress::of_json(&reordered).unwrap()
+        );
+    }
+
+    #[test]
+    fn receipt_address_golden_vector() {
+        assert_eq!(
+            receipt_address(&fixed_receipt()).unwrap().to_b3(),
+            GOLDEN_ADDRESS
+        );
+    }
+
+    #[test]
+    fn receipt_address_is_blake3_of_sorted_compact_json() {
+        let r = fixed_receipt();
+        let compact = serde_json::to_vec(&serde_json::to_value(&r).unwrap()).unwrap();
+        assert_eq!(
+            receipt_address(&r).unwrap().as_bytes(),
+            blake3::hash(&compact).as_bytes()
+        );
+    }
+
+    #[test]
+    fn legacy_digest_still_verifies() {
+        let r = fixed_receipt();
+        let digest = ReceiptDigest::parse(LEGACY_DIGEST).unwrap();
+        assert!(matches!(digest, ReceiptDigest::Legacy(_)));
+        assert!(digest.verifies(&r).unwrap());
+    }
+
+    #[test]
+    fn content_digest_verifies() {
+        let r = fixed_receipt();
+        let digest = ReceiptDigest::parse(GOLDEN_ADDRESS).unwrap();
+        assert!(matches!(digest, ReceiptDigest::Content(_)));
+        assert!(digest.verifies(&r).unwrap());
+    }
+
+    #[test]
+    fn digests_reject_a_changed_receipt() {
+        let mut r = fixed_receipt();
+        r.entries[0].placement = "nix".into();
+        for text in [LEGACY_DIGEST, GOLDEN_ADDRESS] {
+            assert!(!ReceiptDigest::parse(text).unwrap().verifies(&r).unwrap());
+        }
+    }
+
+    #[test]
+    fn digest_parse_refuses_malformed_text() {
+        for text in [
+            "",
+            "b3:",
+            "b3:xyz",
+            &"A".repeat(64),
+            &"a".repeat(63),
+            "blake3:00",
+        ] {
+            assert!(ReceiptDigest::parse(text).is_err(), "{text:?}");
+        }
     }
 }

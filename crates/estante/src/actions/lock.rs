@@ -82,9 +82,9 @@ pub async fn run_with_opts(
         let json = super::attest::canonical_json(&receipt);
         std::fs::write(&receipt_path, json.as_bytes())?;
         println!(
-            "Wrote receipt → {} (blake3 = {})",
+            "Wrote receipt → {} (address = {})",
             receipt_path.display(),
-            super::attest::receipt_blake3(&receipt),
+            super::attest::receipt_address(&receipt)?,
         );
     }
 

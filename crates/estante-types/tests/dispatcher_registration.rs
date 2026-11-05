@@ -9,19 +9,18 @@
 //!   git-ssh / gist / local)
 
 use estante_types::{Placement, Source};
-use gen_platform::{catalog, TypedDispatcherTrait};
+use gen_platform::{TypedDispatcherTrait, catalog};
 
 #[test]
 fn placement_registers() {
-    let entry = catalog::by_label("estante.placement")
-        .expect("estante-types must register Placement");
+    let entry =
+        catalog::by_label("estante.placement").expect("estante-types must register Placement");
     assert_eq!((entry.variant_count)(), 3);
 }
 
 #[test]
 fn source_registers() {
-    let entry = catalog::by_label("estante.source")
-        .expect("estante-types must register Source");
+    let entry = catalog::by_label("estante.source").expect("estante-types must register Source");
     assert_eq!((entry.variant_count)(), 5);
 }
 

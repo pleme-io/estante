@@ -62,7 +62,10 @@ impl Config {
         // An empty `--github-token ''` is a mistake, not a credential:
         // `Secret::new` would reject it, and it must not be treated as
         // "the operator supplied a token" either.
-        let flag = flag.filter(|s| !s.is_empty()).map(Secret::new).transpose()?;
+        let flag = flag
+            .filter(|s| !s.is_empty())
+            .map(Secret::new)
+            .transpose()?;
         let env_token = Secret::from_env(TOKEN_ENV).ok();
         let file_token = Self::token_from_file()?;
         Ok(Self::select_token(flag, env_token, file_token))
@@ -185,8 +188,7 @@ mod tests {
         file_token: Option<&str>,
     ) -> Option<String> {
         let mk = |v: Option<&str>| v.map(|v| Secret::new(v).unwrap());
-        Config::select_token(mk(flag), mk(env_token), mk(file_token))
-            .map(|s| s.expose().to_owned())
+        Config::select_token(mk(flag), mk(env_token), mk(file_token)).map(|s| s.expose().to_owned())
     }
 
     #[test]
@@ -256,7 +258,10 @@ mod tests {
         // teaches people to pass --no-verify.
         let cfg = Config::resolve(Some("sentinel-not-a-real-token".into())).unwrap();
         let rendered = format!("{cfg:?}");
-        assert!(!rendered.contains("sentinel-not-a-real-token"), "{rendered}");
+        assert!(
+            !rendered.contains("sentinel-not-a-real-token"),
+            "{rendered}"
+        );
         assert!(rendered.contains("Secret(***)"), "{rendered}");
     }
 

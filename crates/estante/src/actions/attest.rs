@@ -41,7 +41,7 @@ use anyhow::Context;
 use estante_types::receipt::SCHEMA_VERSION;
 pub use estante_types::receipt::{
     EntryDigest, EstanteInfo, FileDigest, Receipt, ReceiptMismatch, canonical_json, diff_receipts,
-    receipt_blake3,
+    receipt_address,
 };
 
 use crate::lockfile_io;
@@ -187,10 +187,10 @@ pub async fn run(
             std::fs::write(path, json.as_bytes())
                 .with_context(|| ["writing ", &path.display().to_string()].concat())?;
             eprintln!(
-                "wrote receipt to {} ({}b)\nblake3 = {}",
+                "wrote receipt to {} ({}b)\naddress = {}",
                 path.display(),
                 json.len(),
-                receipt_blake3(&receipt),
+                receipt_address(&receipt)?,
             );
         }
         None => {
@@ -271,12 +271,12 @@ mod tests {
         let r2 = build_receipt(&m, &l).unwrap();
         assert_eq!(r1, r2, "build_receipt must be deterministic");
         assert_eq!(canonical_json(&r1), canonical_json(&r2));
-        assert_eq!(receipt_blake3(&r1), receipt_blake3(&r2));
+        assert_eq!(receipt_address(&r1).unwrap(), receipt_address(&r2).unwrap());
         std::fs::remove_dir_all(&tmp).ok();
     }
 
     #[test]
-    fn receipt_blake3_changes_when_manifest_byte_changes() {
+    fn receipt_address_changes_when_manifest_byte_changes() {
         let tmp = std::env::temp_dir()
             .join(["estante-attest-drift-", &std::process::id().to_string()].concat());
         let _ = std::fs::remove_dir_all(&tmp);
@@ -288,7 +288,7 @@ mod tests {
         std::fs::write(&m, body).unwrap();
         let r2 = build_receipt(&m, &l).unwrap();
         assert_ne!(r1.manifest.blake3, r2.manifest.blake3);
-        assert_ne!(receipt_blake3(&r1), receipt_blake3(&r2));
+        assert_ne!(receipt_address(&r1).unwrap(), receipt_address(&r2).unwrap());
         std::fs::remove_dir_all(&tmp).ok();
     }
 
@@ -526,12 +526,12 @@ mod prop_tests {
             prop_assert_eq!(parsed, r);
         }
 
-        /// BLAKE3 of the canonical JSON is deterministic and stable
+        /// The content address is deterministic and stable
         /// across repeated calls on the same Receipt.
         #[test]
-        fn receipt_blake3_is_deterministic(r in receipt_strategy()) {
-            let h1 = receipt_blake3(&r);
-            let h2 = receipt_blake3(&r);
+        fn receipt_address_is_deterministic(r in receipt_strategy()) {
+            let h1 = receipt_address(&r).unwrap();
+            let h2 = receipt_address(&r).unwrap();
             prop_assert_eq!(h1, h2);
         }
 
