@@ -1,10 +1,10 @@
 {
   "schema_version": 2,
-  "cargo_lock_sha256": "ec9367c1f0843cdff9654791bc8da4cd857d37b4db2013f3d9b6a5a8a9bbbc85",
+  "cargo_lock_sha256": "9fe73f388894ffb4c1a24be4ac8c1991d96e207fa008456253011669f2bc4fe8",
   "manifest_sha256": {
-    "Cargo.toml": "be65ff20180830c42839655ca95ba9d65386245d486928bc7937ecb1019facc2",
+    "Cargo.toml": "2d91a4496f035251f98c5fceb188107df23ce6a7f2efbb3a75649ec85d71dbe1",
     "crates/estante-types/Cargo.toml": "68bdae7772265171debfc48611e6c5e0048b7a89dfb1ecb7c18d9fa05057ca34",
-    "crates/estante/Cargo.toml": "58a96963b73ecb32f070c2116e252fabb667168364a99a5d4600deac7de60f52"
+    "crates/estante/Cargo.toml": "236c37a21dcdeef560e901adf653c7b660cd06c763d3e94cb1282cd32a7e4fda"
   },
   "target_resolves": {
     "base": {
@@ -272,7 +272,7 @@
         "build_dependencies": [],
         "features": []
       },
-      "awase-0.1.1-7286b3bc2a1bc4c63929cc60b9d6d1ca2d82616f": {
+      "awase-0.1.10": {
         "runtime_dependencies": [
           {
             "name": "serde",
@@ -645,7 +645,7 @@
         "build_dependencies": [],
         "features": []
       },
-      "cofre-secret-0.1.4-3809d5ec6592e6ac0e6fead41984a498fff6caf9": {
+      "cofre-secret-0.1.30": {
         "runtime_dependencies": [],
         "build_dependencies": [],
         "features": []
@@ -1004,7 +1004,7 @@
           },
           {
             "name": "cofre_secret",
-            "package_key": "cofre-secret-0.1.4-3809d5ec6592e6ac0e6fead41984a498fff6caf9",
+            "package_key": "cofre-secret-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1044,7 +1044,7 @@
           },
           {
             "name": "frost_lisp",
-            "package_key": "frost-lisp-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549",
+            "package_key": "frost-lisp-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1106,7 +1106,7 @@
           },
           {
             "name": "tatara_lisp",
-            "package_key": "tatara-lisp-0.3.4",
+            "package_key": "tatara-lisp-0.3.64",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1190,7 +1190,7 @@
           },
           {
             "name": "frost_lisp",
-            "package_key": "frost-lisp-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549",
+            "package_key": "frost-lisp-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1200,7 +1200,7 @@
           },
           {
             "name": "gen_platform",
-            "package_key": "gen-platform-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec",
+            "package_key": "gen-platform-0.1.55",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1210,7 +1210,7 @@
           },
           {
             "name": "gen_types",
-            "package_key": "gen-types-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec",
+            "package_key": "gen-types-0.1.55",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1242,7 +1242,7 @@
           },
           {
             "name": "tatara_lisp",
-            "package_key": "tatara-lisp-0.3.4",
+            "package_key": "tatara-lisp-0.3.64",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1440,7 +1440,7 @@
           "std"
         ]
       },
-      "frost-builtins-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": {
+      "frost-builtins-0.1.30": {
         "runtime_dependencies": [
           {
             "name": "libc",
@@ -1466,11 +1466,11 @@
         "build_dependencies": [],
         "features": []
       },
-      "frost-exec-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": {
+      "frost-exec-0.1.30": {
         "runtime_dependencies": [
           {
             "name": "awase",
-            "package_key": "awase-0.1.1-7286b3bc2a1bc4c63929cc60b9d6d1ca2d82616f",
+            "package_key": "awase-0.1.10",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1500,7 +1500,7 @@
           },
           {
             "name": "frost_builtins",
-            "package_key": "frost-builtins-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549",
+            "package_key": "frost-builtins-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1510,7 +1510,7 @@
           },
           {
             "name": "frost_expand",
-            "package_key": "frost-expand-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549",
+            "package_key": "frost-expand-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1520,7 +1520,7 @@
           },
           {
             "name": "frost_glob",
-            "package_key": "frost-glob-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549",
+            "package_key": "frost-glob-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1530,7 +1530,7 @@
           },
           {
             "name": "frost_lexer",
-            "package_key": "frost-lexer-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549",
+            "package_key": "frost-lexer-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1540,7 +1540,7 @@
           },
           {
             "name": "frost_options",
-            "package_key": "frost-options-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549",
+            "package_key": "frost-options-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1550,7 +1550,7 @@
           },
           {
             "name": "frost_parser",
-            "package_key": "frost-parser-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549",
+            "package_key": "frost-parser-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1630,7 +1630,7 @@
           "frecency-wadachi"
         ]
       },
-      "frost-expand-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": {
+      "frost-expand-0.1.30": {
         "runtime_dependencies": [
           {
             "name": "compact_str",
@@ -1644,7 +1644,7 @@
           },
           {
             "name": "frost_glob",
-            "package_key": "frost-glob-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549",
+            "package_key": "frost-glob-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1654,7 +1654,7 @@
           },
           {
             "name": "frost_lexer",
-            "package_key": "frost-lexer-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549",
+            "package_key": "frost-lexer-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1664,7 +1664,7 @@
           },
           {
             "name": "frost_parser",
-            "package_key": "frost-parser-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549",
+            "package_key": "frost-parser-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1696,7 +1696,7 @@
         "build_dependencies": [],
         "features": []
       },
-      "frost-glob-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": {
+      "frost-glob-0.1.30": {
         "runtime_dependencies": [
           {
             "name": "thiserror",
@@ -1712,7 +1712,7 @@
         "build_dependencies": [],
         "features": []
       },
-      "frost-lexer-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": {
+      "frost-lexer-0.1.30": {
         "runtime_dependencies": [
           {
             "name": "bstr",
@@ -1748,7 +1748,7 @@
         "build_dependencies": [],
         "features": []
       },
-      "frost-lisp-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": {
+      "frost-lisp-0.1.30": {
         "runtime_dependencies": [
           {
             "name": "compact_str",
@@ -1762,7 +1762,7 @@
           },
           {
             "name": "frost_builtins",
-            "package_key": "frost-builtins-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549",
+            "package_key": "frost-builtins-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1772,7 +1772,7 @@
           },
           {
             "name": "frost_exec",
-            "package_key": "frost-exec-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549",
+            "package_key": "frost-exec-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1782,7 +1782,7 @@
           },
           {
             "name": "frost_lexer",
-            "package_key": "frost-lexer-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549",
+            "package_key": "frost-lexer-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1792,7 +1792,7 @@
           },
           {
             "name": "frost_options",
-            "package_key": "frost-options-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549",
+            "package_key": "frost-options-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1802,7 +1802,7 @@
           },
           {
             "name": "frost_parser",
-            "package_key": "frost-parser-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549",
+            "package_key": "frost-parser-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1812,7 +1812,7 @@
           },
           {
             "name": "ishou_tokens",
-            "package_key": "ishou-tokens-0.1.3-0197aeba1e9a7e17ff516272689dbca6a3ccc967",
+            "package_key": "ishou-tokens-0.1.24",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1844,7 +1844,7 @@
           },
           {
             "name": "tatara_lisp",
-            "package_key": "tatara-lisp-0.3.4",
+            "package_key": "tatara-lisp-0.3.64",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1866,7 +1866,7 @@
         "build_dependencies": [],
         "features": []
       },
-      "frost-options-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": {
+      "frost-options-0.1.30": {
         "runtime_dependencies": [
           {
             "name": "thiserror",
@@ -1882,7 +1882,7 @@
         "build_dependencies": [],
         "features": []
       },
-      "frost-parser-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": {
+      "frost-parser-0.1.30": {
         "runtime_dependencies": [
           {
             "name": "compact_str",
@@ -1896,7 +1896,7 @@
           },
           {
             "name": "frost_lexer",
-            "package_key": "frost-lexer-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549",
+            "package_key": "frost-lexer-0.1.30",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -2261,7 +2261,7 @@
           "std"
         ]
       },
-      "gen-macros-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": {
+      "gen-macros-0.1.55": {
         "runtime_dependencies": [
           {
             "name": "proc_macro2",
@@ -2300,11 +2300,11 @@
         "build_dependencies": [],
         "features": []
       },
-      "gen-platform-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": {
+      "gen-platform-0.1.55": {
         "runtime_dependencies": [
           {
             "name": "gen_macros",
-            "package_key": "gen-macros-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec",
+            "package_key": "gen-macros-0.1.55",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -2314,7 +2314,7 @@
           },
           {
             "name": "gen_types",
-            "package_key": "gen-types-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec",
+            "package_key": "gen-types-0.1.55",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -2368,7 +2368,7 @@
         "build_dependencies": [],
         "features": []
       },
-      "gen-types-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": {
+      "gen-types-0.1.55": {
         "runtime_dependencies": [
           {
             "name": "blake3",
@@ -3858,7 +3858,7 @@
           "default"
         ]
       },
-      "ishou-tokens-0.1.3-0197aeba1e9a7e17ff516272689dbca6a3ccc967": {
+      "ishou-tokens-0.1.24": {
         "runtime_dependencies": [
           {
             "name": "irodori",
@@ -6233,7 +6233,61 @@
           "xattr"
         ]
       },
-      "tatara-lisp-0.3.4": {
+      "tatara-closed-set-0.3.64": {
+        "runtime_dependencies": [
+          {
+            "name": "tatara_closed_set_derive",
+            "package_key": "tatara-closed-set-derive-0.3.64",
+            "kind": "normal",
+            "features": [],
+            "uses_default_features": true,
+            "optional": false,
+            "target": null,
+            "tree": "host"
+          }
+        ],
+        "build_dependencies": [],
+        "features": []
+      },
+      "tatara-closed-set-derive-0.3.64": {
+        "runtime_dependencies": [
+          {
+            "name": "proc_macro2",
+            "package_key": "proc-macro2-1.0.106",
+            "kind": "normal",
+            "features": [],
+            "uses_default_features": true,
+            "optional": false,
+            "target": null,
+            "tree": "target"
+          },
+          {
+            "name": "quote",
+            "package_key": "quote-1.0.45",
+            "kind": "normal",
+            "features": [],
+            "uses_default_features": true,
+            "optional": false,
+            "target": null,
+            "tree": "target"
+          },
+          {
+            "name": "syn",
+            "package_key": "syn-2.0.117",
+            "kind": "normal",
+            "features": [
+              "full"
+            ],
+            "uses_default_features": true,
+            "optional": false,
+            "target": null,
+            "tree": "target"
+          }
+        ],
+        "build_dependencies": [],
+        "features": []
+      },
+      "tatara-lisp-0.3.64": {
         "runtime_dependencies": [
           {
             "name": "blake3",
@@ -6268,8 +6322,18 @@
             "tree": "target"
           },
           {
+            "name": "tatara_closed_set",
+            "package_key": "tatara-closed-set-0.3.64",
+            "kind": "normal",
+            "features": [],
+            "uses_default_features": true,
+            "optional": false,
+            "target": null,
+            "tree": "target"
+          },
+          {
             "name": "tatara_lisp_derive",
-            "package_key": "tatara-lisp-derive-0.3.4",
+            "package_key": "tatara-lisp-derive-0.3.64",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -6293,7 +6357,7 @@
           "default"
         ]
       },
-      "tatara-lisp-derive-0.3.4": {
+      "tatara-lisp-derive-0.3.64": {
         "runtime_dependencies": [
           {
             "name": "proc_macro2",
@@ -10582,7 +10646,7 @@
     "autocfg-1.5.1": {
       "edition": "2015"
     },
-    "awase-0.1.1-7286b3bc2a1bc4c63929cc60b9d6d1ca2d82616f": {
+    "awase-0.1.10": {
       "edition": "2024"
     },
     "base64-0.22.1": {
@@ -10641,7 +10705,7 @@
     "clap_lex-1.1.0": {
       "edition": "2024"
     },
-    "cofre-secret-0.1.4-3809d5ec6592e6ac0e6fead41984a498fff6caf9": {
+    "cofre-secret-0.1.30": {
       "edition": "2024"
     },
     "colorchoice-1.0.5": {
@@ -10751,28 +10815,28 @@
     "form_urlencoded-1.2.2": {
       "edition": "2018"
     },
-    "frost-builtins-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": {
+    "frost-builtins-0.1.30": {
       "edition": "2024"
     },
-    "frost-exec-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": {
+    "frost-exec-0.1.30": {
       "edition": "2024"
     },
-    "frost-expand-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": {
+    "frost-expand-0.1.30": {
       "edition": "2024"
     },
-    "frost-glob-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": {
+    "frost-glob-0.1.30": {
       "edition": "2024"
     },
-    "frost-lexer-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": {
+    "frost-lexer-0.1.30": {
       "edition": "2024"
     },
-    "frost-lisp-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": {
+    "frost-lisp-0.1.30": {
       "edition": "2024"
     },
-    "frost-options-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": {
+    "frost-options-0.1.30": {
       "edition": "2024"
     },
-    "frost-parser-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": {
+    "frost-parser-0.1.30": {
       "edition": "2024"
     },
     "fsevent-sys-4.1.0": {
@@ -10806,14 +10870,14 @@
     "futures-util-0.3.32": {
       "edition": "2018"
     },
-    "gen-macros-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": {
+    "gen-macros-0.1.55": {
       "edition": "2024",
       "proc_macro": true
     },
-    "gen-platform-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": {
+    "gen-platform-0.1.55": {
       "edition": "2024"
     },
-    "gen-types-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": {
+    "gen-types-0.1.55": {
       "edition": "2024"
     },
     "getrandom-0.2.17": {
@@ -10918,7 +10982,7 @@
     "is_terminal_polyfill-1.70.2": {
       "edition": "2021"
     },
-    "ishou-tokens-0.1.3-0197aeba1e9a7e17ff516272689dbca6a3ccc967": {
+    "ishou-tokens-0.1.24": {
       "edition": "2024"
     },
     "itoa-1.0.18": {
@@ -11205,10 +11269,17 @@
     "tar-0.4.46": {
       "edition": "2021"
     },
-    "tatara-lisp-0.3.4": {
+    "tatara-closed-set-0.3.64": {
       "edition": "2021"
     },
-    "tatara-lisp-derive-0.3.4": {
+    "tatara-closed-set-derive-0.3.64": {
+      "edition": "2021",
+      "proc_macro": true
+    },
+    "tatara-lisp-0.3.64": {
+      "edition": "2021"
+    },
+    "tatara-lisp-derive-0.3.64": {
       "edition": "2021",
       "proc_macro": true
     },
@@ -11381,21 +11452,6 @@
       "build_script": "build.rs"
     }
   },
-  "git_nar_sha256": {
-    "awase-0.1.1-7286b3bc2a1bc4c63929cc60b9d6d1ca2d82616f": "sha256-mtrSTNN3fPcYZy4ky2o328paZtGhkCNpGcd1MfOm6uo=",
-    "cofre-secret-0.1.4-3809d5ec6592e6ac0e6fead41984a498fff6caf9": "sha256-cK34hH664hlF8L2ADoe7ZhsmDZcmKiKBpe6F9F0kuyU=",
-    "frost-builtins-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": "sha256-pKhiQeGV3Q4Iit/+fTVYrPueoeSenDKhTJ5ThTS05zQ=",
-    "frost-exec-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": "sha256-pKhiQeGV3Q4Iit/+fTVYrPueoeSenDKhTJ5ThTS05zQ=",
-    "frost-expand-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": "sha256-pKhiQeGV3Q4Iit/+fTVYrPueoeSenDKhTJ5ThTS05zQ=",
-    "frost-glob-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": "sha256-pKhiQeGV3Q4Iit/+fTVYrPueoeSenDKhTJ5ThTS05zQ=",
-    "frost-lexer-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": "sha256-pKhiQeGV3Q4Iit/+fTVYrPueoeSenDKhTJ5ThTS05zQ=",
-    "frost-lisp-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": "sha256-pKhiQeGV3Q4Iit/+fTVYrPueoeSenDKhTJ5ThTS05zQ=",
-    "frost-options-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": "sha256-pKhiQeGV3Q4Iit/+fTVYrPueoeSenDKhTJ5ThTS05zQ=",
-    "frost-parser-0.1.0-307d0e34693ff5cc8ee0028f57df001a561f4549": "sha256-pKhiQeGV3Q4Iit/+fTVYrPueoeSenDKhTJ5ThTS05zQ=",
-    "gen-macros-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": "sha256-Yi9xlwmGVT3JhG2JCqehVe9ZGL0JHbOEDKDDPevDAbk=",
-    "gen-platform-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": "sha256-Yi9xlwmGVT3JhG2JCqehVe9ZGL0JHbOEDKDDPevDAbk=",
-    "gen-types-0.1.43-6fd1ac3b9117b2c415e0904d89c072b288810eec": "sha256-Yi9xlwmGVT3JhG2JCqehVe9ZGL0JHbOEDKDDPevDAbk=",
-    "ishou-tokens-0.1.3-0197aeba1e9a7e17ff516272689dbca6a3ccc967": "sha256-kETqdHgzg9jFmR0SMhRT6mP1EYbHI6cqKLPbyj/rDuk="
-  },
+  "git_nar_sha256": {},
   "flake_metadata": {}
 }

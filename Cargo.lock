@@ -74,7 +74,7 @@ version = "1.1.5"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "40c48f72fd53cd289104fc64099abca73db4166ad86ea0b4341abe65af83dadc"
 dependencies = [
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -85,7 +85,7 @@ checksum = "291e6a250ff86cd4a820112fb8898808a366d8f9f58ce16d1f538353ad55747d"
 dependencies = [
  "anstyle",
  "once_cell_polyfill",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -140,8 +140,9 @@ checksum = "f2032f911046de80f0a198e0901378627c33f59ea0ac00e363d481118bd70a53"
 
 [[package]]
 name = "awase"
-version = "0.1.1"
-source = "git+https://github.com/pleme-io/awase#7286b3bc2a1bc4c63929cc60b9d6d1ca2d82616f"
+version = "0.1.10"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "095b30e5e7468d42dda5629743a7de9a930d860fdf6feb09ccc52cf8b2ee8fe2"
 dependencies = [
  "serde",
  "thiserror 2.0.18",
@@ -299,8 +300,9 @@ checksum = "c8d4a3bb8b1e0c1050499d1815f5ab16d04f0959b233085fb31653fbfc9d98f9"
 
 [[package]]
 name = "cofre-secret"
-version = "0.1.4"
-source = "git+https://github.com/pleme-io/cofre#3809d5ec6592e6ac0e6fead41984a498fff6caf9"
+version = "0.1.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "24daadbb64b61e4059ab6812c122f2b67becb5692cc440f1c0f628b276487ab5"
 
 [[package]]
 name = "colorchoice"
@@ -427,7 +429,7 @@ dependencies = [
  "libc",
  "option-ext",
  "redox_users 0.5.2",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -592,8 +594,9 @@ dependencies = [
 
 [[package]]
 name = "frost-builtins"
-version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
+version = "0.1.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "fd61d53f8083ced8b4dc8affbc8ade19ecb535747a1b1e43afb7c0f5e39577bc"
 dependencies = [
  "libc",
  "thiserror 2.0.18",
@@ -601,8 +604,9 @@ dependencies = [
 
 [[package]]
 name = "frost-exec"
-version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
+version = "0.1.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "996b8ce94397f1ff45151f20262e2e4dda28a858c1cf1633601dadebda16b4d2"
 dependencies = [
  "awase",
  "compact_str",
@@ -623,8 +627,9 @@ dependencies = [
 
 [[package]]
 name = "frost-expand"
-version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
+version = "0.1.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2b3c4c9854dd2eadfea07260fe81405a33821db064dd343a9ed484747ce5eb22"
 dependencies = [
  "compact_str",
  "frost-glob",
@@ -636,16 +641,18 @@ dependencies = [
 
 [[package]]
 name = "frost-glob"
-version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
+version = "0.1.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "61765ef1c618dc726d7c5db9b7fdbaf2480b249df36a52f2d4e0dc4647f7930d"
 dependencies = [
  "thiserror 2.0.18",
 ]
 
 [[package]]
 name = "frost-lexer"
-version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
+version = "0.1.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7052a3a4af65e09556293124bf0aa3c71e7902e378c354df84fbbb9d9048a612"
 dependencies = [
  "bstr",
  "compact_str",
@@ -654,8 +661,9 @@ dependencies = [
 
 [[package]]
 name = "frost-lisp"
-version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
+version = "0.1.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "af7ba1d7aba828eafd0f80d36da2a1d0ce46391f37bcaee4a31f7555c2be0769"
 dependencies = [
  "compact_str",
  "frost-builtins",
@@ -672,16 +680,18 @@ dependencies = [
 
 [[package]]
 name = "frost-options"
-version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
+version = "0.1.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "9a43bf42fd7f42b44e2ed17fe1bbd6867f0d21a7c025cb27d07e5b35799c309c"
 dependencies = [
  "thiserror 2.0.18",
 ]
 
 [[package]]
 name = "frost-parser"
-version = "0.1.0"
-source = "git+https://github.com/pleme-io/frost?branch=main#307d0e34693ff5cc8ee0028f57df001a561f4549"
+version = "0.1.30"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c58d92622356a8d31bdd2d590a8e3856ecfa54ee2f867d43d17d1c9a569a1b28"
 dependencies = [
  "compact_str",
  "frost-lexer",
@@ -787,8 +797,9 @@ dependencies = [
 
 [[package]]
 name = "gen-macros"
-version = "0.1.43"
-source = "git+https://github.com/pleme-io/gen#6fd1ac3b9117b2c415e0904d89c072b288810eec"
+version = "0.1.55"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "522e8f4d0f4af82ee13c37507c12907c0587a982f8a17c8b378b14ae81ac24c8"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -797,8 +808,9 @@ dependencies = [
 
 [[package]]
 name = "gen-platform"
-version = "0.1.43"
-source = "git+https://github.com/pleme-io/gen#6fd1ac3b9117b2c415e0904d89c072b288810eec"
+version = "0.1.55"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c2626761d01e0f872bb5ab92aa45fcfd1f820904a4da36f96b1b9a101ffa44fd"
 dependencies = [
  "gen-macros",
  "gen-types",
@@ -810,8 +822,9 @@ dependencies = [
 
 [[package]]
 name = "gen-types"
-version = "0.1.43"
-source = "git+https://github.com/pleme-io/gen#6fd1ac3b9117b2c415e0904d89c072b288810eec"
+version = "0.1.55"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "f6d5dd9f013ffd978542607400199cf39f3fdff3feb36e52d13a4f7c20b6b0bd"
 dependencies = [
  "blake3",
  "chrono",
@@ -1213,8 +1226,9 @@ checksum = "a6cb138bb79a146c1bd460005623e142ef0181e3d0219cb493e02f7d08a35695"
 
 [[package]]
 name = "ishou-tokens"
-version = "0.1.3"
-source = "git+https://github.com/pleme-io/ishou?rev=0197aeba1e9a7e17ff516272689dbca6a3ccc967#0197aeba1e9a7e17ff516272689dbca6a3ccc967"
+version = "0.1.24"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "eb80bb643d88653a42a4447c3a9d58e28e9ba084b80a881f34014fa3e5c46ae8"
 dependencies = [
  "irodori",
  "serde",
@@ -1412,7 +1426,7 @@ version = "0.50.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "7957b9740744892f114936ab4a57b3f487491bbeafaf8083688b16841a4240e5"
 dependencies = [
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -2076,7 +2090,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "52d1cfed4120b4d927bf7c0f86d2087a4a7d6027c906d9f9d525a80573b9be51"
 dependencies = [
  "libc",
- "windows-sys 0.60.2",
+ "windows-sys 0.61.2",
 ]
 
 [[package]]
@@ -2154,23 +2168,44 @@ dependencies = [
 ]
 
 [[package]]
-name = "tatara-lisp"
-version = "0.3.4"
+name = "tatara-closed-set"
+version = "0.3.64"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "00a94c0c1d40aae6109b2450b8b2a15ccc79a01461836753351b4bfd3a50cec9"
+checksum = "ab5957a85fdf3bbabe58332b59b4d1eae91c6d8e12d6aebfcad85d044fb01fd7"
+dependencies = [
+ "tatara-closed-set-derive",
+]
+
+[[package]]
+name = "tatara-closed-set-derive"
+version = "0.3.64"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "553e05104250924bb943f4427051e4f52ca6eac63218a0e0a0c18651edd1c2d3"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.117",
+]
+
+[[package]]
+name = "tatara-lisp"
+version = "0.3.64"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "e3c1ccb522ac57a35a9dbfdf3b7f2bca57391c807f95d4d4b2942d64bcecf18c"
 dependencies = [
  "blake3",
  "serde",
  "serde_json",
+ "tatara-closed-set",
  "tatara-lisp-derive",
  "thiserror 2.0.18",
 ]
 
 [[package]]
 name = "tatara-lisp-derive"
-version = "0.3.4"
+version = "0.3.64"
 source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "bdb05368da33f122fde05fd3f67a827022ef65ac4efbca6e27e0ea6e4f8036a9"
+checksum = "e41fe8cff169dbab6425e042c9a9293e0e2a828fe433be527eb7d1d72e113cfe"
 dependencies = [
  "proc-macro2",
  "quote",
@@ -2673,7 +2708,7 @@ version = "0.1.11"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "c2a7b1c03c876122aa43f3020e6c3c3ee5c05081c9a00739faf7503aeba10d22"
 dependencies = [
- "windows-sys 0.48.0",
+ "windows-sys 0.52.0",
 ]
 
 [[package]]

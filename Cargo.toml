@@ -28,22 +28,20 @@ doc_markdown = "allow"
 
 [workspace.dependencies]
 # Workspace crates
-estante-types = { path = "crates/estante-types" }
+estante-types = { path = "crates/estante-types", version = "0.1.7" }
 
 # Typed-dispatcher catalog integration
 # (theory/UNIFIED-COMPUTING-MODEL.md §VI).
-gen-platform = { git = "https://github.com/pleme-io/gen" }
-gen-types = { git = "https://github.com/pleme-io/gen" }
+gen-platform = "0.1.43"
+gen-types = "0.1.43"
 
 # pleme-io sibling crates — the typed forms (PkgSpec, LoadSpec,
 # LockedPkgSpec) live in frost-lisp::pkg; estante is a consumer, not
 # a duplicate source of truth (Pillar 12: solve once).
 #
-# Git dep keeps Dependabot happy (it can't follow `../` path deps);
-# `branch = "main"` so consumers always get the tip. Local
-# development: add a [patch.'https://github.com/pleme-io/frost']
-# section in `.cargo/config.toml` pointing at the local checkout.
-frost-lisp = { git = "https://github.com/pleme-io/frost", branch = "main" }
+# A registry version: crates.io refuses a git dependency, so a git
+# source here blocked every estante release.
+frost-lisp = "0.1"
 
 # tatara-lisp from crates.io, the same release frost resolves, so a single
 # copy lands in the dep graph (no duplicate DeriveTataraDomain impls). The
@@ -57,7 +55,7 @@ tatara-lisp = "0.3.3"
 # Display / AsRef<str> / AsRef<OsStr>, so a PAT held in one cannot be
 # interpolated into a format string or handed to Command::arg: the
 # leak is a compile error rather than a review finding. Dependency-free.
-cofre-secret = { git = "https://github.com/pleme-io/cofre" }
+cofre-secret = "0.1.4"
 
 # Serialization
 serde = { version = "1", features = ["derive"] }
