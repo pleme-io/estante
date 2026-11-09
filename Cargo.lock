@@ -299,8 +299,8 @@ checksum = "c8d4a3bb8b1e0c1050499d1815f5ab16d04f0959b233085fb31653fbfc9d98f9"
 
 [[package]]
 name = "cofre-secret"
-version = "0.1.4"
-source = "git+https://github.com/pleme-io/cofre#3809d5ec6592e6ac0e6fead41984a498fff6caf9"
+version = "0.1.27"
+source = "git+https://github.com/pleme-io/cofre#137c650ae0849a5b42b9b5fa505361414007860e"
 
 [[package]]
 name = "colorchoice"
