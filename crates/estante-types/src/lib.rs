@@ -20,7 +20,7 @@
 //! `Manifest` and `Lockfile` implement `Display` so emitting Lisp
 //! source from a typed value goes through `write!()` calls inside a
 //! `Display` impl. This is the *only* allowed string-emission surface
-//! per `theory/TYPED-EMISSION.md` (the `format!()` ban). Hand-rolled
+//! (the `format!()` ban). Hand-rolled
 //! string concatenation of Lisp syntax is forbidden — extend [`render`]
 //! instead.
 
@@ -78,8 +78,7 @@ pub enum Placement {
 // Fleet-wide dispatcher-catalog registration. THIRTEENTH consumer
 // class adopting gen-platform's typed-dispatcher catamorphism
 // (after gen / caixa / wasm-platform / cofre / shigoto / engenho /
-// magma / kura / pangea / tatara / hanshi / shikumi). See
-// theory/UNIFIED-COMPUTING-MODEL.md §VI.
+// magma / kura / pangea / tatara / hanshi / shikumi).
 gen_platform::register_dispatcher!("estante.placement", Placement);
 
 impl Placement {
