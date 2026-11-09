@@ -2,7 +2,7 @@
   "schema_version": 2,
   "cargo_lock_sha256": "109001d64bc85bc9f16b268f5a414a86962ddc2c25785df4db539a5264eecca0",
   "manifest_sha256": {
-    "Cargo.toml": "d126c53752da08aef19b320029e80e3ae3fa8863f8edbc780ecd20720b9893e5",
+    "Cargo.toml": "9dcf886161be7fb0370ff76d50a561f1b5012be935065a4521f79adffcf41014",
     "crates/estante-types/Cargo.toml": "68bdae7772265171debfc48611e6c5e0048b7a89dfb1ecb7c18d9fa05057ca34",
     "crates/estante/Cargo.toml": "236c37a21dcdeef560e901adf653c7b660cd06c763d3e94cb1282cd32a7e4fda"
   },
