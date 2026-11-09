@@ -1,8 +1,8 @@
 {
   "schema_version": 2,
-  "cargo_lock_sha256": "109001d64bc85bc9f16b268f5a414a86962ddc2c25785df4db539a5264eecca0",
+  "cargo_lock_sha256": "847844af5de86efc09f959322d927f1b5b37cb7e35ba9b03dc0ebd18adf10741",
   "manifest_sha256": {
-    "Cargo.toml": "9dcf886161be7fb0370ff76d50a561f1b5012be935065a4521f79adffcf41014",
+    "Cargo.toml": "f477990987c47b8c1c9a80d6e24f10c4cd58e39691bff2f4058f44cfe1c6806a",
     "crates/estante-types/Cargo.toml": "68bdae7772265171debfc48611e6c5e0048b7a89dfb1ecb7c18d9fa05057ca34",
     "crates/estante/Cargo.toml": "236c37a21dcdeef560e901adf653c7b660cd06c763d3e94cb1282cd32a7e4fda"
   },
@@ -967,7 +967,7 @@
           "std"
         ]
       },
-      "estante-0.1.8": {
+      "estante-0.1.9": {
         "runtime_dependencies": [
           {
             "name": "anyhow",
@@ -1024,7 +1024,7 @@
           },
           {
             "name": "estante_types",
-            "package_key": "estante-types-0.1.8",
+            "package_key": "estante-types-0.1.9",
             "kind": "normal",
             "features": [],
             "uses_default_features": true,
@@ -1176,7 +1176,7 @@
         "build_dependencies": [],
         "features": []
       },
-      "estante-types-0.1.8": {
+      "estante-types-0.1.9": {
         "runtime_dependencies": [
           {
             "name": "blake3",
@@ -10764,7 +10764,7 @@
     "errno-0.3.14": {
       "edition": "2018"
     },
-    "estante-0.1.8": {
+    "estante-0.1.9": {
       "edition": "2024",
       "lib_target": {
         "name": "estante",
@@ -10777,7 +10777,7 @@
         }
       ]
     },
-    "estante-types-0.1.8": {
+    "estante-types-0.1.9": {
       "edition": "2024",
       "lib_target": {
         "name": "estante_types",

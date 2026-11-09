@@ -6,7 +6,7 @@ members = [
 ]
 
 [workspace.package]
-version = "0.1.8"
+version = "0.1.9"
 edition = "2024"
 rust-version = "1.89.0"
 license = "MIT OR Apache-2.0"
@@ -28,7 +28,7 @@ doc_markdown = "allow"
 
 [workspace.dependencies]
 # Workspace crates
-estante-types = { path = "crates/estante-types", version = "0.1.8" }
+estante-types = { path = "crates/estante-types", version = "0.1.9" }
 
 # Typed-dispatcher catalog integration.
 gen-platform = "0.1.43"
