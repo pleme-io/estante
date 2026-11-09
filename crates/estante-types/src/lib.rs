@@ -51,11 +51,18 @@ pub use receipt::{
 ///
 /// `estante place <pkg> --to nix` shifts a single entry; `estante
 /// install --placement nix` makes nix the default for new entries.
-#[derive(Debug, Clone, Copy, PartialEq, Eq, Default,
-         gen_platform::TypedDispatcher,
-         gen_platform::Discriminant,
-         gen_platform::IsVariant,
-         gen_platform::FromStrKind)]
+#[derive(
+    Debug,
+    Clone,
+    Copy,
+    PartialEq,
+    Eq,
+    Default,
+    gen_platform::TypedDispatcher,
+    gen_platform::Discriminant,
+    gen_platform::IsVariant,
+    gen_platform::FromStrKind,
+)]
 pub enum Placement {
     /// User-local cache. Default for `estante install` / `estante run`.
     #[default]
@@ -143,10 +150,15 @@ pub type EstanteResult<T> = Result<T, EstanteError>;
 /// let s = Source::parse("github:org/repo@v1.0").unwrap();
 /// assert!(matches!(s, Source::Github { .. }));
 /// ```
-#[derive(Debug, Clone, PartialEq, Eq,
-         gen_platform::TypedDispatcher,
-         gen_platform::Discriminant,
-         gen_platform::IsVariant)]
+#[derive(
+    Debug,
+    Clone,
+    PartialEq,
+    Eq,
+    gen_platform::TypedDispatcher,
+    gen_platform::Discriminant,
+    gen_platform::IsVariant,
+)]
 pub enum Source {
     /// `github:owner/repo[@ref]`. Ref defaults to `"HEAD"` if absent.
     Github {
@@ -866,7 +878,11 @@ mod tests {
     fn source_is_github_classifies_all_variants() {
         assert!(Source::parse("github:o/r").unwrap().is_github_platform());
         assert!(Source::parse("gist:abc").unwrap().is_github_platform());
-        assert!(!Source::parse("git+https:x.org/y.git").unwrap().is_github_platform());
+        assert!(
+            !Source::parse("git+https:x.org/y.git")
+                .unwrap()
+                .is_github_platform()
+        );
         assert!(
             !Source::parse("git+ssh:git@x.org:y.git")
                 .unwrap()
